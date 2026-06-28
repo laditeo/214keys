@@ -3,14 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache">
   <title>214 ключей — 康熙部首</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zen+Kaku+Gothic+New:wght@300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
   <script>
     (function () {
+      var BUILD = "2";
       try {
+        var buildKey = "214keys-build";
+        var savedBuild = localStorage.getItem(buildKey);
+        var hasBust = /(?:^|[?&])214b=/.test(location.search);
+        if (savedBuild !== BUILD) {
+          localStorage.setItem(buildKey, BUILD);
+          if (!hasBust) {
+            var sep = location.search ? "&" : "?";
+            location.replace(location.pathname + location.search + sep + "214b=" + BUILD + location.hash);
+            return;
+          }
+        }
         var saved = localStorage.getItem("214keys-theme");
         var theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
         if (theme === "dark") document.documentElement.dataset.theme = "dark";
@@ -207,6 +220,6 @@
     </div>
   </dialog>
 
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/app.js?v=5a17a62"></script>
 </body>
 </html>
