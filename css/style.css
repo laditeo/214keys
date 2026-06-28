@@ -385,7 +385,7 @@ body.is-modal-open {
     transition: none;
   }
 
-  .speaker__loader {
+  .speaker-wait__spinner {
     animation: none;
   }
 }
@@ -819,6 +819,13 @@ html[data-theme="dark"] .modal-map__viewport {
   gap: 0.55rem;
 }
 
+.speaker-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
 .speaker {
   flex-shrink: 0;
   width: 1.65rem;
@@ -854,29 +861,34 @@ html[data-theme="dark"] .modal-map__viewport {
   box-shadow: inset 0 0 0 1px var(--speaker-active-border);
 }
 
-.speaker--loading {
-  cursor: wait;
-  pointer-events: none;
-}
-
 .speaker__icon {
   width: 0.85rem;
   height: 0.85rem;
 }
 
-.speaker__loader {
+.speaker-wait {
+  flex-shrink: 0;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 4px;
   display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  box-shadow: 0 1px 3px var(--shadow-sm);
+}
+
+.speaker-wait:not([hidden]) {
+  display: inline-flex;
+}
+
+.speaker-wait__spinner {
+  display: block;
   width: 0.85rem;
   height: 0.85rem;
+  transform-origin: 50% 50%;
   animation: speaker-spin 0.75s linear infinite;
-}
-
-.speaker--loading .speaker__icon {
-  display: none;
-}
-
-.speaker--loading .speaker__loader {
-  display: block;
 }
 
 @keyframes speaker-spin {

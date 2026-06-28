@@ -129,34 +129,42 @@
               <dt>日本語</dt>
               <dd class="modal__reading">
                 <span id="modal-jp"></span>
-                <button type="button" class="speaker" id="speaker-jp" aria-label="Произнести по-японски" title="Произнести">
-                  <svg class="speaker__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-                    <path class="speaker__wave speaker__wave--single" d="M15.5 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                    <path class="speaker__wave speaker__wave--double" d="M15.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
-                    <path class="speaker__wave speaker__wave--double" d="M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
-                  </svg>
-                  <svg class="speaker__loader" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 42"/>
-                  </svg>
-                </button>
+                <div class="speaker-controls">
+                  <button type="button" class="speaker" id="speaker-jp" aria-label="Произнести по-японски" title="Произнести">
+                    <svg class="speaker__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                      <path class="speaker__wave speaker__wave--single" d="M15.5 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                      <path class="speaker__wave speaker__wave--double" d="M15.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
+                      <path class="speaker__wave speaker__wave--double" d="M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
+                    </svg>
+                  </button>
+                  <span class="speaker-wait" id="speaker-wait-jp" hidden aria-hidden="true">
+                    <svg class="speaker-wait__spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 42"/>
+                    </svg>
+                  </span>
+                </div>
               </dd>
             </div>
             <div class="modal__row">
               <dt>中文</dt>
               <dd class="modal__reading">
                 <span id="modal-cn"></span>
-                <button type="button" class="speaker" id="speaker-cn" aria-label="Произнести по-китайски" title="Произнести">
-                  <svg class="speaker__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-                    <path class="speaker__wave speaker__wave--single" d="M15.5 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                    <path class="speaker__wave speaker__wave--double" d="M15.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
-                    <path class="speaker__wave speaker__wave--double" d="M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
-                  </svg>
-                  <svg class="speaker__loader" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 42"/>
-                  </svg>
-                </button>
+                <div class="speaker-controls">
+                  <button type="button" class="speaker" id="speaker-cn" aria-label="Произнести по-китайски" title="Произнести">
+                    <svg class="speaker__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                      <path class="speaker__wave speaker__wave--single" d="M15.5 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                      <path class="speaker__wave speaker__wave--double" d="M15.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
+                      <path class="speaker__wave speaker__wave--double" d="M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
+                    </svg>
+                  </button>
+                  <span class="speaker-wait" id="speaker-wait-cn" hidden aria-hidden="true">
+                    <svg class="speaker-wait__spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 42"/>
+                    </svg>
+                  </span>
+                </div>
               </dd>
             </div>
             <div class="modal__row modal__row--wide">

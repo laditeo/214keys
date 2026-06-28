@@ -264,6 +264,10 @@ export function speakRadical(item, lang, options = {}) {
   });
 }
 
+export function isSampleReady(lang, id) {
+  return bufferCache.has(resolveUrl(audioUrl(lang, id)));
+}
+
 export function isGroupLoaded(strokes, lang) {
   return loadedGroups.has(groupKey(lang, strokes));
 }

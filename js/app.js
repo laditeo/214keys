@@ -1,7 +1,7 @@
 import radicals from "./radicals.js";
 import {
   ensureStrokeGroupLoaded,
-  isGroupLoaded,
+  isSampleReady,
   prefetchRadical,
   speakRadical,
   unlockSpeech,
@@ -14,6 +14,8 @@ const searchMeta = document.getElementById("search-meta");
 const emptyState = document.getElementById("empty");
 const speakerJp = document.getElementById("speaker-jp");
 const speakerCn = document.getElementById("speaker-cn");
+const speakerWaitJp = document.getElementById("speaker-wait-jp");
+const speakerWaitCn = document.getElementById("speaker-wait-cn");
 const modalPrev = document.getElementById("modal-prev");
 const modalNext = document.getElementById("modal-next");
 const modalGroupPrev = document.getElementById("modal-group-prev");
@@ -141,23 +143,10 @@ function setSpeakerState(lang, active) {
 
 function setSpeakerLoading(lang, loading) {
   const btn = lang === "jp" ? speakerJp : speakerCn;
-  btn.classList.toggle("speaker--loading", loading);
+  const wait = lang === "jp" ? speakerWaitJp : speakerWaitCn;
+  wait.hidden = !loading;
+  wait.setAttribute("aria-hidden", String(!loading));
   btn.setAttribute("aria-busy", String(loading));
-}
-
-function beginSpeakerGroupLoad(item, lang) {
-  if (isGroupLoaded(item.strokes, lang)) return;
-
-  setSpeakerLoading(lang, true);
-  void ensureStrokeGroupLoaded(item.strokes, lang).finally(() => {
-    if (!activeItem || activeItem.strokes !== item.strokes) return;
-    if (!speaking[lang]) setSpeakerLoading(lang, false);
-  });
-}
-
-function prefetchModalAudio(item) {
-  beginSpeakerGroupLoad(item, "jp");
-  beginSpeakerGroupLoad(item, "cn");
 }
 
 function wireSpeaker(btn, lang) {
@@ -165,25 +154,30 @@ function wireSpeaker(btn, lang) {
     e.stopPropagation();
     if (!activeItem) return;
     unlockSpeech();
-    beginSpeakerGroupLoad(activeItem, lang);
-    if (isGroupLoaded(activeItem.strokes, lang)) {
-      prefetchRadical(activeItem, lang);
-    }
+    prefetchRadical(activeItem, lang);
+    void ensureStrokeGroupLoaded(activeItem.strokes, lang);
   });
 
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (!activeItem) return;
+    if (!activeItem || btn.getAttribute("aria-busy") === "true") return;
 
     unlockSpeech();
-    beginSpeakerGroupLoad(activeItem, lang);
+    const item = activeItem;
 
-    speakRadical(activeItem, lang, {
+    if (!isSampleReady(lang, item.id)) {
+      setSpeakerLoading(lang, true);
+    }
+
+    speakRadical(item, lang, {
       onStart: () => {
         setSpeakerLoading(lang, false);
         setSpeakerState(lang, true);
       },
-      onEnd: () => setSpeakerState(lang, false),
+      onEnd: () => {
+        setSpeakerLoading(lang, false);
+        setSpeakerState(lang, false);
+      },
     });
   });
 }
@@ -259,7 +253,6 @@ function fillModal(item) {
   fields.strokes.textContent = strokeSectionLabel(item.strokes);
 
   updateModalNav();
-  prefetchModalAudio(item);
 }
 
 function updateActiveCellEl(container, item, prevEl) {
