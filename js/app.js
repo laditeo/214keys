@@ -5,6 +5,7 @@ import {
   burstSpeakerParticles,
   clearSpeakerParticles,
   initSpeakerParticles,
+  resetSpeakerParticlePalette,
 } from "./speakerParticles.js";
 import {
   getSamplePeaks,
@@ -166,11 +167,11 @@ function setSpeakerState(lang, active) {
 function setSpeakerLoading(lang, loading) {
   const btn = lang === "jp" ? speakerJp : speakerCn;
   const wait = lang === "jp" ? speakerWaitJp : speakerWaitCn;
-  btn.hidden = loading;
-  btn.setAttribute("aria-hidden", String(loading));
+  const slot = btn.closest(".speaker-slot");
+  btn.disabled = loading;
   btn.setAttribute("aria-busy", String(loading));
-  wait.hidden = !loading;
   wait.setAttribute("aria-hidden", String(!loading));
+  slot?.classList.toggle("speaker-slot--loading", loading);
 }
 
 function resetReadingWaves() {
@@ -211,9 +212,8 @@ function wireSpeaker(btn, lang) {
 
   btn.addEventListener("pointerdown", (e) => {
     e.stopPropagation();
-    if (!activeItem || btn.hidden) return;
+    if (!activeItem || btn.disabled) return;
     unlockSpeech();
-    burstSpeakerParticles(btn, lang, activeItem);
   });
 
   btn.addEventListener("click", (e) => {
@@ -239,6 +239,7 @@ function wireSpeaker(btn, lang) {
         onLoadStart: () => setSpeakerLoading(lang, true),
         onStart: (rate) => {
           setSpeakerLoading(lang, false);
+          burstSpeakerParticles(btn, lang, item);
           applyPitchTint(pitchTintTargets(lang), rate);
           setSpeakerState(lang, true);
           wave.setPlaying(true);
@@ -689,6 +690,7 @@ function closeModal() {
   resetSpeakers();
   resetReadingWaves();
   clearSpeakerParticles();
+  resetSpeakerParticlePalette();
   modalPrev.disabled = true;
   modalNext.disabled = true;
   modalGroupPrev.disabled = true;

@@ -1,19 +1,17 @@
+import { getRadicalEmoji } from "./radicalEmoji.js";
+
 const LIFE_MS = 1000;
-const COUNT_NORMAL = [14, 22];
-const COUNT_REDUCED = [8, 12];
+const COUNT_NORMAL = [4, 7];
+const COUNT_REDUCED = [2, 4];
+const THEME_EMOJI_CHANCE = 0.72;
+const CN_HUE_STEPS = 12;
 
-const PALETTE = {
-  jp: ["white", "red"],
-  cn: ["yellow", "red"],
-};
-
-/** @type {HTMLElement | null} */
-let root = null;
-let rafId = 0;
-let lastTs = 0;
 /** @type {ActiveParticle[]} */
 let particles = [];
+let rafId = 0;
+let lastTs = 0;
 let reducedMotion = false;
+let cnPressIndex = 0;
 
 function collectGlyphs(item) {
   const glyphs = [item.char];
@@ -35,28 +33,27 @@ function pick(list) {
   return list[(Math.random() * list.length) | 0];
 }
 
-function ensureRoot() {
-  if (root) return root;
-  root = document.getElementById("speaker-particles-root");
-  if (!root) {
-    root = document.createElement("div");
-    root.id = "speaker-particles-root";
-    root.className = "speaker-particles-root";
-    root.setAttribute("aria-hidden", "true");
-    const frame = document.querySelector(".modal__frame");
-    (frame ?? document.getElementById("modal") ?? document.body).prepend(root);
-  }
-  return root;
+function nextCnOrangeColor() {
+  cnPressIndex += 1;
+  const t = (cnPressIndex % CN_HUE_STEPS) / (CN_HUE_STEPS - 1);
+  const h = 12 + t * 32;
+  const s = 86 - t * 6;
+  const l = 49 + t * 10;
+  return `hsl(${h}, ${s}%, ${l}%)`;
 }
 
-function originFromAnchor(anchorEl) {
-  const host = ensureRoot();
-  const anchor = anchorEl.getBoundingClientRect();
-  const hostRect = host.getBoundingClientRect();
-  return {
-    x: anchor.left + anchor.width / 2 - hostRect.left,
-    y: anchor.top + anchor.height / 2 - hostRect.top,
-  };
+function getBurstHost(anchorEl) {
+  const slot = anchorEl.closest(".speaker-slot");
+  if (!slot) return null;
+
+  let host = slot.querySelector(".speaker-particles-burst");
+  if (!host) {
+    host = document.createElement("span");
+    host.className = "speaker-particles-burst";
+    host.setAttribute("aria-hidden", "true");
+    slot.appendChild(host);
+  }
+  return host;
 }
 
 function stopLoop() {
@@ -65,25 +62,47 @@ function stopLoop() {
   lastTs = 0;
 }
 
-function spawnParticle(x, y, lang, glyphs) {
-  const mount = ensureRoot();
+function applyGlyphStyle(el, lang, cnColor) {
+  el.style.color = "";
+  el.className = "speaker-particle";
+
+  if (lang === "jp") {
+    el.classList.add(Math.random() < 0.5 ? "speaker-particle--jp-white" : "speaker-particle--jp-red");
+    return;
+  }
+
+  if (lang === "cn") {
+    el.classList.add("speaker-particle--cn");
+    el.style.color = cnColor;
+  }
+}
+
+function spawnParticle(host, lang, glyphs, opts = {}) {
+  const { emoji, cnColor } = opts;
   const angle = rand(0, Math.PI * 2);
   const speed = reducedMotion ? rand(70, 150) : rand(110, 280);
   const el = document.createElement("span");
-  el.className = `speaker-particle speaker-particle--${lang}-${pick(PALETTE[lang] ?? PALETTE.jp)}`;
-  el.textContent = pick(glyphs);
-  mount.appendChild(el);
+
+  if (emoji) {
+    el.className = "speaker-particle speaker-particle--emoji";
+    el.textContent = emoji;
+  } else {
+    applyGlyphStyle(el, lang, cnColor);
+    el.textContent = pick(glyphs);
+  }
+
+  host.appendChild(el);
 
   const particle = {
     el,
-    x,
-    y,
+    x: 0,
+    y: 0,
     vx: Math.cos(angle) * speed,
     vy: Math.sin(angle) * speed,
-    rotation: rand(-180, 180),
+    rotation: rand(-6, 6),
     spin: reducedMotion ? rand(-120, 120) : rand(-420, 420),
-    scale: rand(0.65, 1.45),
-    size: rand(15, 24),
+    scale: emoji ? rand(0.9, 1.35) : rand(0.85, 1.55),
+    size: emoji ? rand(18, 26) : rand(24, 38),
     life: LIFE_MS,
   };
 
@@ -147,13 +166,20 @@ function startLoop() {
 export function burstSpeakerParticles(anchorEl, lang, item) {
   if (!anchorEl || !item) return;
 
-  const { x, y } = originFromAnchor(anchorEl);
+  const host = getBurstHost(anchorEl);
+  if (!host) return;
+
   const glyphs = collectGlyphs(item);
+  const cnColor = lang === "cn" ? nextCnOrangeColor() : null;
   const [minCount, maxCount] = reducedMotion ? COUNT_REDUCED : COUNT_NORMAL;
   const count = (minCount + Math.random() * (maxCount - minCount + 1)) | 0;
 
   for (let i = 0; i < count; i++) {
-    particles.push(spawnParticle(x, y, lang, glyphs));
+    particles.push(spawnParticle(host, lang, glyphs, { cnColor }));
+  }
+
+  if (Math.random() < THEME_EMOJI_CHANCE) {
+    particles.push(spawnParticle(host, lang, glyphs, { emoji: getRadicalEmoji(item.id), cnColor }));
   }
 
   startLoop();
@@ -163,7 +189,9 @@ export function clearSpeakerParticles() {
   stopLoop();
   for (const p of particles) p.el.remove();
   particles = [];
-  if (root) root.textContent = "";
+  for (const host of document.querySelectorAll(".speaker-particles-burst")) {
+    host.textContent = "";
+  }
 }
 
 export function initSpeakerParticles() {
@@ -171,4 +199,8 @@ export function initSpeakerParticles() {
   matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", (e) => {
     reducedMotion = e.matches;
   });
+}
+
+export function resetSpeakerParticlePalette() {
+  cnPressIndex = 0;
 }

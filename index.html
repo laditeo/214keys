@@ -8,10 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@300&family=Zen+Kaku+Gothic+New:wght@300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=8">
   <script>
     (function () {
-      var BUILD = "4";
+      var BUILD = "8";
       try {
         var buildKey = "214keys-build";
         var savedBuild = localStorage.getItem(buildKey);
@@ -113,7 +113,6 @@
     </aside>
 
     <div class="modal__frame">
-      <div id="speaker-particles-root" class="speaker-particles-root" aria-hidden="true"></div>
       <button type="button" class="modal-nav modal-nav--prev" id="modal-prev" aria-label="Предыдущий ключ">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M15 6 9 12l6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -153,7 +152,7 @@
                         <path class="speaker__wave speaker__wave--double" d="M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
                       </svg>
                     </button>
-                    <span class="speaker-wait" id="speaker-wait-jp" hidden aria-hidden="true">
+                    <span class="speaker-wait" id="speaker-wait-jp" aria-hidden="true">
                       <svg class="speaker-wait__spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 42"/>
                       </svg>
@@ -179,7 +178,7 @@
                         <path class="speaker__wave speaker__wave--double" d="M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
                       </svg>
                     </button>
-                    <span class="speaker-wait" id="speaker-wait-cn" hidden aria-hidden="true">
+                    <span class="speaker-wait" id="speaker-wait-cn" aria-hidden="true">
                       <svg class="speaker-wait__spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 42"/>
                       </svg>
@@ -221,6 +220,6 @@
     </div>
   </dialog>
 
-  <script type="module" src="js/app.js?v=4"></script>
+  <script type="module" src="js/app.js?v=8"></script>
 </body>
 </html>

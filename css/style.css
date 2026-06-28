@@ -844,12 +844,22 @@ html[data-theme="dark"] .modal-map__viewport {
   flex-shrink: 0;
   width: 1.65rem;
   height: 1.65rem;
+  z-index: 1;
 }
 
 .speaker-slot .speaker,
 .speaker-slot .speaker-wait {
   position: absolute;
   inset: 0;
+}
+
+.speaker-slot--loading .speaker {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.speaker-slot--loading .speaker-wait {
+  display: inline-flex;
 }
 
 .audio-wave {
@@ -924,13 +934,9 @@ html[data-theme="dark"] .modal-map__viewport {
   display: none;
   align-items: center;
   justify-content: center;
-  background: var(--bg-elevated);
-  color: var(--text-muted);
+  background: var(--bg-elevated-solid);
+  color: var(--text);
   box-shadow: 0 1px 3px var(--shadow-sm);
-}
-
-.speaker-wait:not([hidden]) {
-  display: inline-flex;
 }
 
 .speaker-wait__spinner {
@@ -955,12 +961,21 @@ html[data-theme="dark"] .modal-map__viewport {
   display: block !important;
 }
 
-.speaker-particles-root {
+.speaker-slot .speaker {
+  z-index: 1;
+}
+
+.speaker-slot .speaker-wait {
+  z-index: 2;
+}
+
+.speaker-particles-burst {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 50;
+  left: 50%;
+  top: 50%;
   overflow: visible;
+  pointer-events: none;
+  z-index: 3;
 }
 
 .speaker-particle {
@@ -985,14 +1000,17 @@ html[data-theme="dark"] .modal-map__viewport {
     0 1px 3px rgba(40, 34, 28, 0.22);
 }
 
-.speaker-particle--jp-red,
-.speaker-particle--cn-red {
+.speaker-particle--jp-red {
   color: #d94848;
 }
 
-.speaker-particle--cn-yellow {
-  color: #e8c84a;
-  text-shadow: 0 1px 2px rgba(80, 60, 20, 0.18);
+.speaker-particle--cn {
+  text-shadow: 0 1px 2px rgba(80, 50, 10, 0.2);
+}
+
+.speaker-particle--emoji {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  line-height: 1;
 }
 
 .modal__row--wide dd {
