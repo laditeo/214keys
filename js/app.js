@@ -47,7 +47,7 @@ let viewportDrag = null;
 let gridDocAnchor = { top: 0, height: 0, width: 0 };
 let cachedMaxScroll = null;
 let minimapBaseScale = 1;
-let minimapPan = null;
+let mapPointer = null;
 let mapLayoutLandscape = null;
 const speaking = { jp: false, cn: false };
 
@@ -269,6 +269,16 @@ function setPageScrollY(next) {
   if (viewportDrag) syncViewportSelection();
 }
 
+function getMinimapScrollRange() {
+  return Math.max(1, getMaxScroll());
+}
+
+function scrollByMapDelta(deltaY) {
+  const mapH = modalMapFit.getBoundingClientRect().height;
+  if (!mapH) return;
+  setPageScrollY(savedScrollY + (deltaY / mapH) * getMinimapScrollRange());
+}
+
 function getTopLeftItemInViewport() {
   let best = null;
   let bestTop = Infinity;
@@ -300,101 +310,30 @@ function syncViewportSelection() {
   setActiveCell(item);
 }
 
-function docYToMinimapY(docY) {
-  const mapGridH = modalMapGrid.offsetHeight;
-  if (!mapGridH) return 0;
-
-  const mainChildren = grid.children;
-  const mapChildren = modalMapGrid.children;
-  if (mainChildren.length !== mapChildren.length || mainChildren.length === 0) {
-    const t = (docY - gridDocAnchor.top) / (gridDocAnchor.height || 1);
-    return Math.max(0, Math.min(mapGridH, t * mapGridH));
-  }
-
-  for (let i = 0; i < mainChildren.length; i++) {
-    const mainEl = mainChildren[i];
-    const mapEl = mapChildren[i];
-    const rect = mainEl.getBoundingClientRect();
-    const mainDocTop = savedScrollY + rect.top;
-    const mainDocBottom = savedScrollY + rect.bottom;
-
-    if (docY < mainDocTop) {
-      return i === 0 ? 0 : mapChildren[i - 1].offsetTop + mapChildren[i - 1].offsetHeight;
-    }
-
-    if (docY <= mainDocBottom) {
-      const t = (docY - mainDocTop) / (mainDocBottom - mainDocTop || 1);
-      return mapEl.offsetTop + t * mapEl.offsetHeight;
-    }
-  }
-
-  return mapGridH;
-}
-
-function minimapYToDocY(mapY) {
-  const mainChildren = grid.children;
-  const mapChildren = modalMapGrid.children;
-  if (mainChildren.length !== mapChildren.length || mainChildren.length === 0) {
-    const t = mapY / (modalMapGrid.offsetHeight || 1);
-    return gridDocAnchor.top + t * gridDocAnchor.height;
-  }
-
-  for (let i = 0; i < mapChildren.length; i++) {
-    const mapEl = mapChildren[i];
-    const mapTop = mapEl.offsetTop;
-    const mapBottom = mapTop + mapEl.offsetHeight;
-
-    if (mapY < mapTop) {
-      if (i === 0) return gridDocAnchor.top;
-      const prevMain = mainChildren[i - 1];
-      const pr = prevMain.getBoundingClientRect();
-      return savedScrollY + pr.bottom;
-    }
-
-    if (mapY <= mapBottom) {
-      const t = (mapY - mapTop) / (mapBottom - mapTop || 1);
-      const mainEl = mainChildren[i];
-      const mr = mainEl.getBoundingClientRect();
-      const mainDocTop = savedScrollY + mr.top;
-      const mainDocBottom = savedScrollY + mr.bottom;
-      return mainDocTop + t * (mainDocBottom - mainDocTop);
-    }
-  }
-
-  return gridDocAnchor.top + gridDocAnchor.height;
+function docYToMinimapRatio(docY) {
+  const { top, height } = getGridDocumentMetrics();
+  if (!height) return 0;
+  return Math.max(0, Math.min(1, (docY - top) / height));
 }
 
 function computeMinimapViewportBox() {
-  const gridDocTop = gridDocAnchor.top;
-  const gridDocHeight = gridDocAnchor.height;
-  const fitW = modalMapFit.offsetWidth;
-  const fitH = modalMapFit.offsetHeight;
-  const mapGridH = modalMapGrid.offsetHeight;
-  if (!gridDocHeight || !fitW || !fitH || !mapGridH) return null;
+  const { top: gridTop, height: gridHeight } = getGridDocumentMetrics();
+  if (!gridHeight) return null;
 
   const viewDocTop = savedScrollY;
   const viewDocBottom = savedScrollY + window.innerHeight;
-  const gridDocBottom = gridDocTop + gridDocHeight;
+  const gridDocBottom = gridTop + gridHeight;
 
-  if (viewDocBottom <= gridDocTop || viewDocTop >= gridDocBottom) return null;
+  if (viewDocBottom <= gridTop || viewDocTop >= gridDocBottom) return null;
 
-  const visDocTop = Math.max(viewDocTop, gridDocTop);
+  const visDocTop = Math.max(viewDocTop, gridTop);
   const visDocBottom = Math.min(viewDocBottom, gridDocBottom);
-  const mapVisTop = docYToMinimapY(visDocTop);
-  const mapVisBottom = docYToMinimapY(visDocBottom);
+  const topPct = docYToMinimapRatio(visDocTop) * 100;
+  const heightPct = ((visDocBottom - visDocTop) / gridHeight) * 100;
 
-  if (mapVisBottom <= mapVisTop + 1) return null;
+  if (heightPct <= 0) return null;
 
-  const topPct = (mapVisTop / mapGridH) * 100;
-  const heightPct = ((mapVisBottom - mapVisTop) / mapGridH) * 100;
-
-  const winAspect = window.innerWidth / window.innerHeight;
-  const heightPx = (heightPct / 100) * fitH;
-  const widthPx = heightPx * winAspect;
-  const widthPct = Math.min(100, (widthPx / fitW) * 100);
-  const leftPct = Math.max(0, (100 - widthPct) / 2);
-
-  return { topPct, heightPct, widthPct, leftPct };
+  return { topPct, heightPct, widthPct: 100, leftPct: 0 };
 }
 
 function applyMinimapViewportBox(box) {
@@ -412,11 +351,11 @@ function applyMinimapViewportBox(box) {
 }
 
 function jumpScrollToMinimapRatio(ratio) {
-  const mapGridH = modalMapGrid.offsetHeight;
-  if (!mapGridH) return;
+  const { top, height } = getGridDocumentMetrics();
+  if (!height) return;
 
   const clamped = Math.max(0, Math.min(1, ratio));
-  const docY = minimapYToDocY(clamped * mapGridH);
+  const docY = top + clamped * height;
   setPageScrollY(docY - window.innerHeight * 0.5);
 }
 
@@ -451,13 +390,10 @@ function startViewportDrag(e) {
   refreshGridDocAnchor();
   viewportDrag = {
     pointerId: e.pointerId,
-    startY: e.clientY,
-    startScrollY: savedScrollY,
+    lastY: e.clientY,
   };
   modalMapViewport.classList.add("is-dragging");
-  window.addEventListener("pointermove", onViewportDragMove);
-  window.addEventListener("pointerup", endViewportDrag);
-  window.addEventListener("pointercancel", endViewportDrag);
+  modalMapStage.setPointerCapture(e.pointerId);
 }
 
 function applyMinimapTransform() {
@@ -468,7 +404,7 @@ function applyMinimapTransform() {
   modalMapFit.style.width = `${gridW}px`;
   modalMapFit.style.height = `${gridH}px`;
   modalMapFit.style.transform = `scale(${minimapBaseScale})`;
-  modalMapFit.style.transformOrigin = "center center";
+  modalMapFit.style.transformOrigin = "top center";
 }
 
 function updateMinimapCompactLabels() {
@@ -479,10 +415,8 @@ function updateMinimapCompactLabels() {
     Number.parseInt(getComputedStyle(document.documentElement).getPropertyValue("--grid-columns"), 10) ||
     9;
   const visualCellW = (gridW / columns) * minimapBaseScale;
-  const compact =
-    window.matchMedia("(max-width: 720px)").matches && visualCellW < 28;
 
-  modalMapGrid.classList.toggle("is-compact", compact);
+  modalMapGrid.classList.toggle("is-compact", visualCellW < 40);
 }
 
 function syncMinimapLayout() {
@@ -500,15 +434,15 @@ function syncMinimapLayout() {
 
   const stageW = modalMapStage.clientWidth;
   const stageH = modalMapStage.clientHeight;
-  minimapBaseScale = Math.max(stageW / gridW, stageH / gridH);
+  minimapBaseScale = Math.min(stageW / gridW, stageH / gridH);
   applyMinimapTransform();
   updateMinimapCompactLabels();
 
-  if (!viewportDrag && !minimapPan) updateMinimapViewport();
+  if (!viewportDrag && !mapPointer) updateMinimapViewport();
 }
 
 const minimapLayoutObserver = new ResizeObserver(() => {
-  if (modalMap.hidden) return;
+  if (modalMap.hidden || viewportDrag || mapPointer) return;
   refreshGridDocAnchor();
   syncMinimapLayout();
 });
@@ -617,7 +551,7 @@ function navigateModal(delta) {
 function closeModal() {
   if (modal.open) modal.close();
   modalMap.hidden = true;
-  minimapPan = null;
+  mapPointer = null;
   mapLayoutLandscape = null;
   setActiveCell(null);
   activeItem = null;
@@ -750,45 +684,86 @@ modalMapToggle.addEventListener("click", (e) => {
   requestAnimationFrame(syncMinimapLayout);
 });
 
-function scrollFromMinimapFingerDelta(deltaY, startScrollY) {
-  const fitRect = modalMapFit.getBoundingClientRect();
-  const { height: gridDocHeight } = getGridDocumentMetrics();
-  if (!fitRect.height || !gridDocHeight) return;
+function onMapPointerDown(e) {
+  if (modalMap.hidden || e.button !== 0) return;
+  if (e.target.closest(".cell")) return;
 
-  setPageScrollY(startScrollY + (deltaY / fitRect.height) * gridDocHeight);
-}
+  if (isPointInViewport(e.clientX, e.clientY)) {
+    e.preventDefault();
+    startViewportDrag(e);
+    return;
+  }
 
-function onMinimapTouchStart(e) {
-  if (modalMap.hidden || e.touches.length !== 1) return;
-
-  minimapPan = {
-    startY: e.touches[0].clientY,
-    startScrollY: savedScrollY,
+  mapPointer = {
+    pointerId: e.pointerId,
+    startY: e.clientY,
+    lastY: e.clientY,
+    moved: false,
   };
+  modalMapStage.setPointerCapture(e.pointerId);
+  modalMapViewport.classList.add("is-dragging");
 }
 
-function onMinimapTouchMove(e) {
-  if (!minimapPan || e.touches.length !== 1) return;
+function onMapPointerMove(e) {
+  if (viewportDrag) {
+    if (e.pointerId !== viewportDrag.pointerId) return;
+    e.preventDefault();
+    const dy = e.clientY - viewportDrag.lastY;
+    viewportDrag.lastY = e.clientY;
+    scrollByMapDelta(dy);
+    return;
+  }
 
-  const deltaY = e.touches[0].clientY - minimapPan.startY;
-  if (Math.abs(deltaY) < 4) return;
+  if (!mapPointer || e.pointerId !== mapPointer.pointerId) return;
+
+  const dy = e.clientY - mapPointer.lastY;
+  mapPointer.lastY = e.clientY;
+
+  if (Math.abs(e.clientY - mapPointer.startY) > 4) {
+    mapPointer.moved = true;
+  }
+  if (!mapPointer.moved) return;
 
   e.preventDefault();
-  scrollFromMinimapFingerDelta(deltaY, minimapPan.startScrollY);
-  syncViewportSelection();
+  scrollByMapDelta(dy);
 }
 
-function onMinimapTouchEnd() {
-  if (!minimapPan) return;
-  minimapPan = null;
+function onMapPointerUp(e) {
+  if (viewportDrag && e.pointerId === viewportDrag.pointerId) {
+    viewportDrag = null;
+    modalMapViewport.classList.remove("is-dragging");
+    if (modalMapStage.hasPointerCapture(e.pointerId)) {
+      modalMapStage.releasePointerCapture(e.pointerId);
+    }
+    refreshGridDocAnchor();
+    updateMinimapViewport();
+    syncViewportSelection();
+    return;
+  }
+
+  if (!mapPointer || e.pointerId !== mapPointer.pointerId) return;
+
+  if (!mapPointer.moved && !modalMapViewport.hidden) {
+    const fitRect = modalMapFit.getBoundingClientRect();
+    if (fitRect.height) {
+      jumpScrollToMinimapRatio((e.clientY - fitRect.top) / fitRect.height);
+      syncViewportSelection();
+    }
+  }
+
+  mapPointer = null;
+  modalMapViewport.classList.remove("is-dragging");
+  if (modalMapStage.hasPointerCapture(e.pointerId)) {
+    modalMapStage.releasePointerCapture(e.pointerId);
+  }
   refreshGridDocAnchor();
   updateMinimapViewport();
 }
 
-modalMapStage.addEventListener("touchstart", onMinimapTouchStart, { passive: false });
-modalMapStage.addEventListener("touchmove", onMinimapTouchMove, { passive: false });
-modalMapStage.addEventListener("touchend", onMinimapTouchEnd);
-modalMapStage.addEventListener("touchcancel", onMinimapTouchEnd);
+modalMapStage.addEventListener("pointerdown", onMapPointerDown);
+modalMapStage.addEventListener("pointermove", onMapPointerMove);
+modalMapStage.addEventListener("pointerup", onMapPointerUp);
+modalMapStage.addEventListener("pointercancel", onMapPointerUp);
 
 modalMapStage.addEventListener(
   "wheel",
@@ -802,57 +777,10 @@ modalMapStage.addEventListener(
   { passive: false },
 );
 
-modalMapFit.addEventListener("pointerdown", (e) => {
-  if (e.target.closest(".cell")) return;
-
-  if (isPointInViewport(e.clientX, e.clientY)) {
-    e.preventDefault();
-    e.stopPropagation();
-    startViewportDrag(e);
-    return;
-  }
-
-  if (modalMapViewport.hidden) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  const fitRect = modalMapFit.getBoundingClientRect();
-  if (!fitRect.height) return;
-
-  jumpScrollToMinimapRatio((e.clientY - fitRect.top) / fitRect.height);
-  syncViewportSelection();
-});
-
-function onViewportDragMove(e) {
-  if (!viewportDrag || e.pointerId !== viewportDrag.pointerId) return;
-  e.preventDefault();
-
-  const fitRect = modalMapFit.getBoundingClientRect();
-  const { height: gridDocHeight } = getGridDocumentMetrics();
-  if (!fitRect.height || !gridDocHeight) return;
-
-  const deltaY = e.clientY - viewportDrag.startY;
-  const deltaScroll = (deltaY / fitRect.height) * gridDocHeight;
-  setPageScrollY(viewportDrag.startScrollY + deltaScroll);
-}
-
-function endViewportDrag(e) {
-  if (!viewportDrag || e.pointerId !== viewportDrag.pointerId) return;
-  viewportDrag = null;
-  modalMapViewport.classList.remove("is-dragging");
-  window.removeEventListener("pointermove", onViewportDragMove);
-  window.removeEventListener("pointerup", endViewportDrag);
-  window.removeEventListener("pointercancel", endViewportDrag);
-  refreshGridDocAnchor();
-  updateMinimapViewport();
-  syncViewportSelection();
-}
-
 window.addEventListener("resize", () => {
   if (!modal.open) return;
   syncMapCollapsedToOrientation();
-  if (!modalMap.hidden) {
+  if (!modalMap.hidden && !viewportDrag && !mapPointer) {
     refreshGridDocAnchor();
     syncMinimapLayout();
   }
