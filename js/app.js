@@ -47,8 +47,8 @@ let viewportDrag = null;
 let gridDocAnchor = { top: 0, height: 0, width: 0 };
 let cachedMaxScroll = null;
 let minimapBaseScale = 1;
-let minimapExtraScale = 1;
-let minimapTouch = null;
+let minimapPan = null;
+let mapLayoutLandscape = null;
 const speaking = { jp: false, cn: false };
 
 const strokeLabels = {
@@ -467,8 +467,22 @@ function applyMinimapTransform() {
 
   modalMapFit.style.width = `${gridW}px`;
   modalMapFit.style.height = `${gridH}px`;
-  modalMapFit.style.transform = `scale(${minimapBaseScale * minimapExtraScale})`;
+  modalMapFit.style.transform = `scale(${minimapBaseScale})`;
   modalMapFit.style.transformOrigin = "center center";
+}
+
+function updateMinimapCompactLabels() {
+  const gridW = modalMapGrid.offsetWidth;
+  if (!gridW) return;
+
+  const columns =
+    Number.parseInt(getComputedStyle(document.documentElement).getPropertyValue("--grid-columns"), 10) ||
+    9;
+  const visualCellW = (gridW / columns) * minimapBaseScale;
+  const compact =
+    window.matchMedia("(max-width: 720px)").matches && visualCellW < 28;
+
+  modalMapGrid.classList.toggle("is-compact", compact);
 }
 
 function syncMinimapLayout() {
@@ -488,8 +502,9 @@ function syncMinimapLayout() {
   const stageH = modalMapStage.clientHeight;
   minimapBaseScale = Math.max(stageW / gridW, stageH / gridH);
   applyMinimapTransform();
+  updateMinimapCompactLabels();
 
-  if (!viewportDrag && !minimapTouch) updateMinimapViewport();
+  if (!viewportDrag && !minimapPan) updateMinimapViewport();
 }
 
 const minimapLayoutObserver = new ResizeObserver(() => {
@@ -518,6 +533,10 @@ function scrollActiveCellIntoView() {
   setPageScrollY(savedScrollY + delta);
 }
 
+function isLandscapeViewport() {
+  return window.matchMedia("(orientation: landscape)").matches;
+}
+
 function applyMapCollapsed(collapsed) {
   modalMap.classList.toggle("is-collapsed", collapsed);
   modalMapToggle.setAttribute("aria-expanded", String(!collapsed));
@@ -525,11 +544,14 @@ function applyMapCollapsed(collapsed) {
     "aria-label",
     collapsed ? "Развернуть мини-карту" : "Свернуть мини-карту",
   );
-  try {
-    localStorage.setItem(MAP_COLLAPSED_KEY, collapsed ? "1" : "0");
-  } catch {
-    /* ignore */
-  }
+}
+
+function syncMapCollapsedToOrientation() {
+  if (modalMap.hidden) return;
+  const landscape = isLandscapeViewport();
+  if (landscape === mapLayoutLandscape) return;
+  mapLayoutLandscape = landscape;
+  applyMapCollapsed(!landscape);
 }
 
 function lockScroll() {
@@ -574,11 +596,8 @@ function openModal(item) {
   }
 
   modalMap.hidden = false;
-  try {
-    applyMapCollapsed(localStorage.getItem(MAP_COLLAPSED_KEY) === "1");
-  } catch {
-    applyMapCollapsed(false);
-  }
+  mapLayoutLandscape = isLandscapeViewport();
+  applyMapCollapsed(!mapLayoutLandscape);
   renderMinimap(visibleItems);
   setActiveCell(item);
   requestAnimationFrame(() => {
@@ -598,8 +617,8 @@ function navigateModal(delta) {
 function closeModal() {
   if (modal.open) modal.close();
   modalMap.hidden = true;
-  minimapExtraScale = 1;
-  minimapTouch = null;
+  minimapPan = null;
+  mapLayoutLandscape = null;
   setActiveCell(null);
   activeItem = null;
   activeMinimapCellEl = null;
@@ -731,16 +750,6 @@ modalMapToggle.addEventListener("click", (e) => {
   requestAnimationFrame(syncMinimapLayout);
 });
 
-function minimapTouchSpan(touches) {
-  const dx = touches[0].clientX - touches[1].clientX;
-  const dy = touches[0].clientY - touches[1].clientY;
-  return Math.hypot(dx, dy);
-}
-
-function minimapTouchMidY(touches) {
-  return (touches[0].clientY + touches[1].clientY) / 2;
-}
-
 function scrollFromMinimapFingerDelta(deltaY, startScrollY) {
   const fitRect = modalMapFit.getBoundingClientRect();
   const { height: gridDocHeight } = getGridDocumentMetrics();
@@ -750,36 +759,28 @@ function scrollFromMinimapFingerDelta(deltaY, startScrollY) {
 }
 
 function onMinimapTouchStart(e) {
-  if (modalMap.hidden || e.touches.length !== 2) return;
-  e.preventDefault();
+  if (modalMap.hidden || e.touches.length !== 1) return;
 
-  minimapTouch = {
-    startSpan: minimapTouchSpan(e.touches),
-    startScale: minimapExtraScale,
-    startMidY: minimapTouchMidY(e.touches),
+  minimapPan = {
+    startY: e.touches[0].clientY,
     startScrollY: savedScrollY,
   };
 }
 
 function onMinimapTouchMove(e) {
-  if (!minimapTouch || e.touches.length !== 2) return;
+  if (!minimapPan || e.touches.length !== 1) return;
+
+  const deltaY = e.touches[0].clientY - minimapPan.startY;
+  if (Math.abs(deltaY) < 4) return;
+
   e.preventDefault();
-
-  const span = minimapTouchSpan(e.touches);
-  minimapExtraScale = Math.max(
-    0.75,
-    Math.min(2.5, minimapTouch.startScale * (span / minimapTouch.startSpan)),
-  );
-  applyMinimapTransform();
-
-  const deltaY = minimapTouchMidY(e.touches) - minimapTouch.startMidY;
-  scrollFromMinimapFingerDelta(deltaY, minimapTouch.startScrollY);
+  scrollFromMinimapFingerDelta(deltaY, minimapPan.startScrollY);
   syncViewportSelection();
 }
 
-function onMinimapTouchEnd(e) {
-  if (e.touches.length >= 2) return;
-  minimapTouch = null;
+function onMinimapTouchEnd() {
+  if (!minimapPan) return;
+  minimapPan = null;
   refreshGridDocAnchor();
   updateMinimapViewport();
 }
@@ -849,10 +850,20 @@ function endViewportDrag(e) {
 }
 
 window.addEventListener("resize", () => {
-  if (modal.open && !modalMap.hidden) {
+  if (!modal.open) return;
+  syncMapCollapsedToOrientation();
+  if (!modalMap.hidden) {
     refreshGridDocAnchor();
     syncMinimapLayout();
   }
+});
+
+window.addEventListener("orientationchange", () => {
+  requestAnimationFrame(() => {
+    if (!modal.open) return;
+    syncMapCollapsedToOrientation();
+    if (!modalMap.hidden) syncMinimapLayout();
+  });
 });
 
 modal.addEventListener("close", unlockScroll);
@@ -873,7 +884,6 @@ wireSpeaker(speakerCn, "cn");
 
 const THEME_KEY = "214keys-theme";
 const FONT_KEY = "214keys-font";
-const MAP_COLLAPSED_KEY = "214keys-map-collapsed";
 const themeButtons = document.querySelectorAll(".theme-toggle__btn");
 const fontButtons = document.querySelectorAll(".font-toggle__btn");
 

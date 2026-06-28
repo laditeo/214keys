@@ -608,6 +608,10 @@ body.is-modal-open {
   background: var(--border);
 }
 
+.modal-map__grid.is-compact .cell__num {
+  display: none;
+}
+
 .modal-map__viewport {
   position: absolute;
   margin: 0;
@@ -859,9 +863,9 @@ html[data-theme="dark"] .modal-map__viewport {
   color: var(--text-muted);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 720px) and (orientation: landscape) {
   .modal-map {
-    display: none;
+    --map-panel-width: 12.5rem;
   }
 }
 
