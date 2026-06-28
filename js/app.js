@@ -28,6 +28,7 @@ const modalMapZoom = document.getElementById("modal-map-zoom");
 const modalMapFit = document.getElementById("modal-map-fit");
 const modalMapGrid = document.getElementById("modal-map-grid");
 const modalMapViewport = document.getElementById("modal-map-viewport");
+const modalRuFit = document.querySelector(".modal__ru-fit");
 const fields = {
   num: document.getElementById("modal-num"),
   char: document.getElementById("modal-char"),
@@ -49,7 +50,47 @@ let minimapBaseScale = 1;
 let mapPointer = null;
 let mapLayoutLandscape = null;
 let mapSuppressClickUntil = 0;
+let modalRuScaleReady = false;
 const speaking = { jp: false, cn: false };
+
+function ensureModalRuScale() {
+  if (modalRuScaleReady || !modalRuFit) return;
+
+  const fitStyles = getComputedStyle(modalRuFit);
+  const fitWidth = modalRuFit.clientWidth;
+  const fitHeight = modalRuFit.clientHeight;
+  if (!fitWidth || !fitHeight) return;
+
+  const probe = document.createElement("div");
+  probe.style.cssText = [
+    "position:fixed",
+    "left:-9999px",
+    "top:0",
+    "visibility:hidden",
+    "pointer-events:none",
+    `width:${fitWidth}px`,
+    `font-size:${fitStyles.fontSize}`,
+    `line-height:1.45`,
+    `font-family:${fitStyles.fontFamily}`,
+  ].join(";");
+  document.body.appendChild(probe);
+
+  let minScale = 1;
+  for (const item of radicals) {
+    probe.textContent = item.ru;
+    const naturalH = probe.scrollHeight;
+    if (naturalH > fitHeight) {
+      minScale = Math.min(minScale, fitHeight / naturalH);
+    }
+  }
+
+  probe.remove();
+  document.documentElement.style.setProperty(
+    "--modal-ru-scale",
+    Math.max(0.72, minScale).toFixed(4),
+  );
+  modalRuScaleReady = true;
+}
 
 const strokeLabels = {
   1: "1 черта",
@@ -101,6 +142,22 @@ function setSpeakerState(lang, active) {
 function setSpeakerLoading(lang, loading) {
   const btn = lang === "jp" ? speakerJp : speakerCn;
   btn.classList.toggle("speaker--loading", loading);
+  btn.setAttribute("aria-busy", String(loading));
+}
+
+function beginSpeakerGroupLoad(item, lang) {
+  if (isGroupLoaded(item.strokes, lang)) return;
+
+  setSpeakerLoading(lang, true);
+  void ensureStrokeGroupLoaded(item.strokes, lang).finally(() => {
+    if (!activeItem || activeItem.strokes !== item.strokes) return;
+    if (!speaking[lang]) setSpeakerLoading(lang, false);
+  });
+}
+
+function prefetchModalAudio(item) {
+  beginSpeakerGroupLoad(item, "jp");
+  beginSpeakerGroupLoad(item, "cn");
 }
 
 function wireSpeaker(btn, lang) {
@@ -108,7 +165,10 @@ function wireSpeaker(btn, lang) {
     e.stopPropagation();
     if (!activeItem) return;
     unlockSpeech();
-    prefetchRadical(activeItem, lang);
+    beginSpeakerGroupLoad(activeItem, lang);
+    if (isGroupLoaded(activeItem.strokes, lang)) {
+      prefetchRadical(activeItem, lang);
+    }
   });
 
   btn.addEventListener("click", (e) => {
@@ -116,16 +176,13 @@ function wireSpeaker(btn, lang) {
     if (!activeItem) return;
 
     unlockSpeech();
-
-    if (!isGroupLoaded(activeItem.strokes, lang)) {
-      setSpeakerLoading(lang, true);
-      void ensureStrokeGroupLoaded(activeItem.strokes, lang).finally(() => {
-        setSpeakerLoading(lang, false);
-      });
-    }
+    beginSpeakerGroupLoad(activeItem, lang);
 
     speakRadical(activeItem, lang, {
-      onStart: () => setSpeakerState(lang, true),
+      onStart: () => {
+        setSpeakerLoading(lang, false);
+        setSpeakerState(lang, true);
+      },
       onEnd: () => setSpeakerState(lang, false),
     });
   });
@@ -202,6 +259,7 @@ function fillModal(item) {
   fields.strokes.textContent = strokeSectionLabel(item.strokes);
 
   updateModalNav();
+  prefetchModalAudio(item);
 }
 
 function updateActiveCellEl(container, item, prevEl) {
@@ -524,6 +582,7 @@ function openModal(item) {
   renderMinimap(visibleItems);
   setActiveCell(item);
   requestAnimationFrame(() => {
+    ensureModalRuScale();
     scrollActiveCellIntoView();
     syncMinimapLayout();
   });
