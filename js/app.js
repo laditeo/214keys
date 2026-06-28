@@ -213,12 +213,12 @@ function wireSpeaker(btn, lang) {
     e.stopPropagation();
     if (!activeItem || btn.hidden) return;
     unlockSpeech();
+    burstSpeakerParticles(btn, lang, activeItem);
   });
 
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
     if (!activeItem || btn.getAttribute("aria-busy") === "true") return;
-    burstSpeakerParticles(btn, lang, activeItem);
 
     unlockSpeech();
     const item = activeItem;

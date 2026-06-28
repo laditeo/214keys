@@ -394,10 +394,6 @@ body.is-modal-open {
   .speaker-wait__spinner {
     animation: none;
   }
-
-  .speaker-particles-root {
-    display: none;
-  }
 }
 
 .cell__num {
@@ -457,6 +453,7 @@ body.is-modal-open {
 }
 
 .modal__frame {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -959,18 +956,19 @@ html[data-theme="dark"] .modal-map__viewport {
 }
 
 .speaker-particles-root {
-  position: fixed;
+  position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 30;
+  z-index: 50;
   overflow: visible;
 }
 
 .speaker-particle {
-  position: fixed;
+  position: absolute;
   margin: 0;
   padding: 0;
   pointer-events: none;
+  z-index: 1;
   font-family: var(--font-han);
   font-weight: 300;
   line-height: 1;

@@ -1,6 +1,6 @@
 const LIFE_MS = 1000;
-const COUNT_MIN = 14;
-const COUNT_MAX = 22;
+const COUNT_NORMAL = [14, 22];
+const COUNT_REDUCED = [8, 12];
 
 const PALETTE = {
   jp: ["white", "red"],
@@ -43,10 +43,20 @@ function ensureRoot() {
     root.id = "speaker-particles-root";
     root.className = "speaker-particles-root";
     root.setAttribute("aria-hidden", "true");
-    const modal = document.getElementById("modal");
-    (modal ?? document.body).appendChild(root);
+    const frame = document.querySelector(".modal__frame");
+    (frame ?? document.getElementById("modal") ?? document.body).prepend(root);
   }
   return root;
+}
+
+function originFromAnchor(anchorEl) {
+  const host = ensureRoot();
+  const anchor = anchorEl.getBoundingClientRect();
+  const hostRect = host.getBoundingClientRect();
+  return {
+    x: anchor.left + anchor.width / 2 - hostRect.left,
+    y: anchor.top + anchor.height / 2 - hostRect.top,
+  };
 }
 
 function stopLoop() {
@@ -58,7 +68,7 @@ function stopLoop() {
 function spawnParticle(x, y, lang, glyphs) {
   const mount = ensureRoot();
   const angle = rand(0, Math.PI * 2);
-  const speed = rand(110, 280);
+  const speed = reducedMotion ? rand(70, 150) : rand(110, 280);
   const el = document.createElement("span");
   el.className = `speaker-particle speaker-particle--${lang}-${pick(PALETTE[lang] ?? PALETTE.jp)}`;
   el.textContent = pick(glyphs);
@@ -71,7 +81,7 @@ function spawnParticle(x, y, lang, glyphs) {
     vx: Math.cos(angle) * speed,
     vy: Math.sin(angle) * speed,
     rotation: rand(-180, 180),
-    spin: rand(-420, 420),
+    spin: reducedMotion ? rand(-120, 120) : rand(-420, 420),
     scale: rand(0.65, 1.45),
     size: rand(15, 24),
     life: LIFE_MS,
@@ -135,14 +145,12 @@ function startLoop() {
 }
 
 export function burstSpeakerParticles(anchorEl, lang, item) {
-  if (reducedMotion || !anchorEl || !item) return;
+  if (!anchorEl || !item) return;
 
-  ensureRoot();
-  const rect = anchorEl.getBoundingClientRect();
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height / 2;
+  const { x, y } = originFromAnchor(anchorEl);
   const glyphs = collectGlyphs(item);
-  const count = (COUNT_MIN + Math.random() * (COUNT_MAX - COUNT_MIN + 1)) | 0;
+  const [minCount, maxCount] = reducedMotion ? COUNT_REDUCED : COUNT_NORMAL;
+  const count = (minCount + Math.random() * (maxCount - minCount + 1)) | 0;
 
   for (let i = 0; i < count; i++) {
     particles.push(spawnParticle(x, y, lang, glyphs));
@@ -162,6 +170,5 @@ export function initSpeakerParticles() {
   reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", (e) => {
     reducedMotion = e.matches;
-    if (reducedMotion) clearSpeakerParticles();
   });
 }
