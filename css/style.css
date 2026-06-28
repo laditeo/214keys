@@ -637,13 +637,6 @@ body.is-modal-open {
   touch-action: none;
   pointer-events: none;
   z-index: 4;
-  transition:
-    top 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.modal-map__viewport.is-dragging {
-  transition: none;
 }
 
 html[data-theme="dark"] .modal-map__viewport {

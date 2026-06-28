@@ -48,6 +48,7 @@ let cachedMaxScroll = null;
 let minimapBaseScale = 1;
 let mapPointer = null;
 let mapLayoutLandscape = null;
+let mapSuppressClickUntil = 0;
 const speaking = { jp: false, cn: false };
 
 const strokeLabels = {
@@ -273,8 +274,17 @@ function getMinimapScrollRange() {
 
 function scrollByMapDelta(deltaY) {
   const mapH = modalMapFit.getBoundingClientRect().height;
-  if (!mapH) return;
-  setPageScrollY(savedScrollY + (deltaY / mapH) * getMinimapScrollRange());
+  const { height: gridHeight } = getGridDocumentMetrics();
+  if (!mapH || !gridHeight) return;
+  setPageScrollY(savedScrollY + (deltaY / mapH) * gridHeight);
+}
+
+function shouldSuppressMapClick() {
+  return performance.now() < mapSuppressClickUntil;
+}
+
+function suppressMapClickBriefly() {
+  mapSuppressClickUntil = performance.now() + 400;
 }
 
 function getTopLeftItemInViewport() {
@@ -586,6 +596,7 @@ function createGridFragment(items, onCellClick) {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
+      if (shouldSuppressMapClick()) return;
       onCellClick(item);
     });
     frag.appendChild(btn);
@@ -703,33 +714,51 @@ function onMapPointerMove(e) {
 function onMapPointerUp(e) {
   if (!mapPointer || e.pointerId !== mapPointer.pointerId) return;
 
-  if (!mapPointer.moved) {
-    if (mapPointer.pendingCell) {
-      mapPointer.pendingCell.click();
-    } else if (!modalMapViewport.hidden) {
-      const fitRect = modalMapFit.getBoundingClientRect();
-      if (fitRect.height) {
-        jumpScrollToMinimapRatio((e.clientY - fitRect.top) / fitRect.height);
-        syncViewportSelection();
-      }
-    }
-  } else {
-    refreshGridDocAnchor();
-    updateMinimapViewport();
-    syncViewportSelection();
-  }
-
+  const { moved, pendingCell } = mapPointer;
   mapPointer = null;
   modalMapViewport.classList.remove("is-dragging");
+
   if (modalMapStage.hasPointerCapture(e.pointerId)) {
     modalMapStage.releasePointerCapture(e.pointerId);
+  }
+
+  if (moved) {
+    e.preventDefault();
+    suppressMapClickBriefly();
+    syncViewportSelection();
+    return;
+  }
+
+  if (pendingCell) {
+    const itemId = Number(pendingCell.dataset.id);
+    const item = visibleItems.find((entry) => entry.id === itemId);
+    if (item && item.id !== activeItem?.id) selectRadical(item);
+    return;
+  }
+
+  if (!modalMapViewport.hidden) {
+    const fitRect = modalMapFit.getBoundingClientRect();
+    if (fitRect.height) {
+      jumpScrollToMinimapRatio((e.clientY - fitRect.top) / fitRect.height);
+      syncViewportSelection();
+    }
   }
 }
 
 modalMapStage.addEventListener("pointerdown", onMapPointerDown, { capture: true });
 modalMapStage.addEventListener("pointermove", onMapPointerMove);
-modalMapStage.addEventListener("pointerup", onMapPointerUp);
-modalMapStage.addEventListener("pointercancel", onMapPointerUp);
+modalMapStage.addEventListener("pointerup", onMapPointerUp, { passive: false });
+modalMapStage.addEventListener("pointercancel", onMapPointerUp, { passive: false });
+
+modalMapStage.addEventListener(
+  "click",
+  (e) => {
+    if (!shouldSuppressMapClick()) return;
+    e.preventDefault();
+    e.stopPropagation();
+  },
+  true,
+);
 
 modalMapStage.addEventListener(
   "wheel",
