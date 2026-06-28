@@ -522,7 +522,7 @@ body.is-modal-open {
 
 .modal-map__dock {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   height: 100%;
   pointer-events: auto;
   transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
@@ -533,6 +533,7 @@ body.is-modal-open {
 }
 
 .modal-map__panel {
+  flex-shrink: 0;
   width: var(--map-panel-width);
   height: 100%;
   border: 1px solid var(--border-strong);
@@ -547,7 +548,7 @@ body.is-modal-open {
   flex-shrink: 0;
   width: var(--map-toggle-size);
   height: var(--map-toggle-size);
-  margin-left: 0.35rem;
+  margin: 0.5rem 0 0 0.35rem;
   padding: 0.28rem;
   border: 1px solid var(--border-strong);
   border-radius: 4px;
@@ -563,8 +564,9 @@ body.is-modal-open {
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
-.modal-map.is-collapsed .modal-map__toggle {
-  margin-left: 0.35rem;
+.modal-map__toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--focus-ring-strong);
 }
 
 .modal-map__toggle:hover {
@@ -573,22 +575,13 @@ body.is-modal-open {
   border-color: var(--border-strong);
 }
 
-.modal-map__toggle:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--focus-ring-strong);
-}
-
 .modal-map__toggle-icon {
   width: 0.95rem;
   height: 0.95rem;
 }
 
 .modal-map__stage {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
   height: 100%;
-  padding: 0;
   overflow: hidden;
   touch-action: none;
 }
@@ -597,22 +590,35 @@ body.is-modal-open {
   position: relative;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  overflow: hidden;
 }
 
 .modal-map__fit {
-  position: relative;
-  transform-origin: top center;
-  flex-shrink: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
 }
 
 .modal-map__grid {
+  width: 100%;
+  --grid-columns: 12;
   border: none;
   border-radius: 0;
   background: var(--border);
+}
+
+.modal-map__grid .cell {
+  padding: 0.28rem 0.1rem;
+}
+
+.modal-map__grid .cell__char {
+  font-size: clamp(0.55rem, 52cqi, 1.1rem);
+}
+
+.modal-map__grid .section-label {
+  padding: 0.28rem 0.4rem;
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
 }
 
 .modal-map__grid.is-compact .cell__num {
