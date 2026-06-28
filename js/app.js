@@ -765,8 +765,22 @@ modal.addEventListener("close", unlockScroll);
 document.addEventListener("keydown", (e) => {
   if (!modal.open) return;
   if (e.key === "Escape") closeModal();
-  if (e.key === "ArrowLeft") navigateModal(-1);
-  if (e.key === "ArrowRight") navigateModal(1);
+  if (e.key === "ArrowLeft") {
+    e.preventDefault();
+    navigateModal(-1);
+  }
+  if (e.key === "ArrowRight") {
+    e.preventDefault();
+    navigateModal(1);
+  }
+  if (e.key === "ArrowUp") {
+    e.preventDefault();
+    navigateStrokeGroup(-1);
+  }
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    navigateStrokeGroup(1);
+  }
 });
 
 searchInput.addEventListener("input", () => {
