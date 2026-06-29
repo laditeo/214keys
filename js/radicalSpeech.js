@@ -7,23 +7,12 @@ const TRIM_PAD_SEC = 0.004;
 const TRIM_TAIL_SEC = 0.012;
 const PITCH_MIN = 0.78;
 const PITCH_MAX = 1.38;
-const HERO_SFX_MAX_SEC = 0.42;
 export { PITCH_MIN, PITCH_MAX };
 
-const BATCH_SIZE = 6;
-const BATCH_GAP_MS = 16;
 const SFX_BATCH_SIZE = 14;
 const SFX_BATCH_GAP_MS = 8;
-const SPEECH_BATCH_SIZE = 4;
-const SPEECH_BATCH_GAP_MS = 24;
-
-/** @type {Map<number, number[]>} */
-const idsByStrokes = new Map();
-for (const item of radicals) {
-  const list = idsByStrokes.get(item.strokes) ?? [];
-  list.push(item.id);
-  idsByStrokes.set(item.strokes, list);
-}
+const SPEECH_BATCH_SIZE = 6;
+const SPEECH_BATCH_GAP_MS = 16;
 
 let audioContext = null;
 let masterGain = null;
@@ -33,10 +22,6 @@ let activeSession = 0;
 const bufferCache = new Map();
 /** @type {Map<string, Promise<AudioBuffer | null>>} */
 const decodeFlights = new Map();
-/** @type {Set<string>} */
-const loadedGroups = new Set();
-/** @type {Map<string, Promise<void>>} */
-const groupLoads = new Map();
 
 /** @type {{ source: AudioBufferSourceNode, session: number, lang: string }[]} */
 const activeVoices = [];
@@ -54,10 +39,6 @@ export function audioUrl(lang, id) {
 
 function speakKey(lang, id) {
   return `${lang}:${id}`;
-}
-
-function groupKey(lang, strokes) {
-  return `${lang}:${strokes}`;
 }
 
 function randomPitchRate() {
@@ -279,71 +260,13 @@ export function preloadAllSpeechSamples() {
     urls.push(audioUrl("cn", item.id));
   }
 
-  speechPreloadPromise = pumpBatches(urls, SPEECH_BATCH_SIZE, SPEECH_BATCH_GAP_MS).then(() => {
-    for (const strokes of idsByStrokes.keys()) {
-      loadedGroups.add(groupKey("jp", strokes));
-      loadedGroups.add(groupKey("cn", strokes));
-    }
-  });
-
+  speechPreloadPromise = pumpBatches(urls, SPEECH_BATCH_SIZE, SPEECH_BATCH_GAP_MS);
   return speechPreloadPromise;
-}
-
-function scheduleSpeechPreload() {
-  const start = () => {
-    void preloadAllSpeechSamples();
-  };
-  if ("requestIdleCallback" in window) {
-    requestIdleCallback(start, { timeout: 1500 });
-  } else {
-    window.setTimeout(start, 0);
-  }
 }
 
 export function initAudioPreload() {
   void preloadAllRadicalSfx();
-
-  if (document.readyState === "complete") {
-    scheduleSpeechPreload();
-  } else {
-    window.addEventListener("load", scheduleSpeechPreload, { once: true });
-  }
-}
-
-export function ensureStrokeGroupLoaded(strokes, lang) {
-  const key = groupKey(lang, strokes);
-  if (loadedGroups.has(key)) return Promise.resolve();
-  const existing = groupLoads.get(key);
-  if (existing) return existing;
-
-  const ids = idsByStrokes.get(strokes) ?? [];
-  const urls = ids.map((id) => audioUrl(lang, id));
-
-  const task = (async () => {
-    let index = 0;
-    await new Promise((resolve) => {
-      const pump = () => {
-        const batch = urls.slice(index, index + BATCH_SIZE);
-        index += BATCH_SIZE;
-        void preloadBatch(batch).finally(() => {
-          if (index < urls.length) window.setTimeout(pump, BATCH_GAP_MS);
-          else resolve();
-        });
-      };
-      pump();
-    });
-    loadedGroups.add(key);
-  })().finally(() => {
-    groupLoads.delete(key);
-  });
-
-  groupLoads.set(key, task);
-  return task;
-}
-
-export function prefetchRadical(item, lang) {
-  unlockSpeech();
-  void decodeBuffer(audioUrl(lang, item.id));
+  void preloadAllSpeechSamples();
 }
 
 function outputLatencySec(ctx) {
@@ -452,7 +375,6 @@ export function speakRadical(item, lang, options = {}) {
   };
 
   unlockSpeech();
-  void ensureStrokeGroupLoaded(item.strokes, lang);
 
   const url = audioUrl(lang, item.id);
   const cached = bufferCache.get(resolveUrl(url));
@@ -499,8 +421,4 @@ export function isSampleReady(lang, id) {
 
 export function isSampleLoading(lang, id) {
   return decodeFlights.has(resolveUrl(audioUrl(lang, id)));
-}
-
-export function isGroupLoaded(strokes, lang) {
-  return loadedGroups.has(groupKey(lang, strokes));
 }
