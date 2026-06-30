@@ -44,7 +44,8 @@ let fpsBenchmarkSum = 0;
 let fpsBenchmarkLastTs = 0;
 let fpsBenchmarkFinalizeTimer = 0;
 
-const HERO_RENDER_MODE_KEY = "214keys-hero-render";
+const HERO_RENDER_MODE_KEY = "214keys-hero-render-v2";
+const LEGACY_HERO_RENDER_MODE_KEY = "214keys-hero-render";
 const FPS_BENCHMARK_TAPS = 2;
 const FPS_PROBE_MS = 750;
 const FPS_SIMPLE_THRESHOLD = 15;
@@ -158,12 +159,17 @@ export function profileLevelFromName(name) {
   return index >= 0 ? index + 1 : PROFILE_ORDER.length;
 }
 
+function isWeakDeviceProfile() {
+  return particleProfileName === "android" || particleProfileName === "ios";
+}
+
 function isEconomyMode() {
   if (particleProfileName === "lowfps") return true;
   if (heroRenderMode === "simple") return true;
   if (heroRenderMode === "full") return false;
+  if (isWeakDeviceProfile()) return true;
   if (!fpsBenchmarkDone) return false;
-  return particleProfileName === "android" || particleProfileName === "ios";
+  return false;
 }
 
 function maxVisibleParticles() {
@@ -177,9 +183,15 @@ export function initParticleProfileAutoDetect() {
 
 function loadHeroRenderMode() {
   try {
+    sessionStorage.removeItem(LEGACY_HERO_RENDER_MODE_KEY);
     const saved = sessionStorage.getItem(HERO_RENDER_MODE_KEY);
-    if (saved === "simple" || saved === "full") {
-      heroRenderMode = saved;
+    if (saved === "simple") {
+      heroRenderMode = "simple";
+      fpsBenchmarkDone = true;
+      return;
+    }
+    if (saved === "full" && !isWeakDeviceProfile()) {
+      heroRenderMode = "full";
       fpsBenchmarkDone = true;
     }
   } catch {
@@ -216,10 +228,14 @@ function finalizeFpsBenchmark() {
   }
 
   const avgFps =
-    fpsBenchmarkFrames > 0 ? 1000 / (fpsBenchmarkSum / fpsBenchmarkFrames) : FPS_SIMPLE_THRESHOLD;
-  heroRenderMode = avgFps < FPS_SIMPLE_THRESHOLD ? "simple" : "full";
+    fpsBenchmarkFrames > 0 ? 1000 / (fpsBenchmarkSum / fpsBenchmarkFrames) : 0;
+  if (isWeakDeviceProfile()) {
+    heroRenderMode = "simple";
+  } else {
+    heroRenderMode = avgFps >= FPS_SIMPLE_THRESHOLD ? "full" : "simple";
+  }
   saveHeroRenderMode(heroRenderMode);
-  if (heroRenderMode === "simple") trimParticles();
+  trimParticles();
 }
 
 function onHeroBenchmarkTap() {
