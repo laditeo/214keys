@@ -5,13 +5,20 @@ const COUNT_REDUCED = [3, 5];
 const JP_WHITE_CHANCE = 0.72;
 const THEME_EMOJI_CHANCE = 0.72;
 const CN_HUE_STEPS = 12;
+const HERO_OCTANTS = 8;
+const HERO_SLOT = Math.PI / 8;
+const HERO_SUN_BASE = -Math.PI / 2;
 
-const isIOSUi =
+const isIOSDevice =
   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-const isMobileUi =
-  matchMedia("(pointer: coarse)").matches || isIOSUi;
+const isAndroidDevice = /Android/i.test(navigator.userAgent);
+
+const isCoarsePointer = matchMedia("(pointer: coarse)").matches;
+
+/** @type {"android" | "ios" | "desktop"} */
+let particleProfileName = "desktop";
 
 /** @type {ActiveParticle[]} */
 let particles = [];
@@ -23,14 +30,71 @@ let cnPressIndex = 0;
 let heroPlaybackTimer = 0;
 let heroPlaybackAnchor = null;
 let heroPlaybackItem = null;
-
-const HERO_PLAYBACK_MS = 520;
-const HERO_PLAYBACK_MS_REDUCED = 900;
-const HERO_CLICK_LIFE_MS = isIOSUi ? 820 : isMobileUi ? 1400 : 2600;
-const HERO_PLAYBACK_LIFE_MS = isIOSUi ? 680 : isMobileUi ? 900 : 1200;
-const MAX_PARTICLES = isIOSUi ? 48 : isMobileUi ? 120 : 1200;
-const COUNT_NORMAL = isIOSUi ? [3, 5] : [6, 10];
 let heroBurstSpin = 0;
+
+const PARTICLE_PROFILES = {
+  desktop: {
+    maxParticles: 1200,
+    skipFrame: false,
+    fastCullOnBurst: false,
+    cullLifeMs: 0,
+    heroClickLifeMs: 2600,
+    heroPlaybackLifeMs: 1200,
+    speakerCount: [6, 10],
+  },
+  android: {
+    maxParticles: 200,
+    skipFrame: false,
+    fastCullOnBurst: true,
+    cullLifeMs: 140,
+    heroClickLifeMs: 2100,
+    heroPlaybackLifeMs: 900,
+    speakerCount: [4, 8],
+  },
+  ios: {
+    maxParticles: 112,
+    skipFrame: true,
+    fastCullOnBurst: true,
+    cullLifeMs: 120,
+    heroClickLifeMs: 1800,
+    heroPlaybackLifeMs: 780,
+    speakerCount: [3, 6],
+  },
+};
+
+const PROFILE_ORDER = ["android", "ios", "desktop"];
+
+function detectParticleProfile() {
+  if (isIOSDevice) return "ios";
+  if (isAndroidDevice || isCoarsePointer) return "android";
+  return "desktop";
+}
+
+function activeProfile() {
+  return PARTICLE_PROFILES[particleProfileName] ?? PARTICLE_PROFILES.desktop;
+}
+
+export function setParticleProfile(name) {
+  if (!PARTICLE_PROFILES[name]) return;
+  particleProfileName = name;
+}
+
+export function getParticleProfile() {
+  return particleProfileName;
+}
+
+export function profileNameFromLevel(level) {
+  return PROFILE_ORDER[Math.min(PROFILE_ORDER.length - 1, Math.max(0, Math.round(level) - 1))] ?? "desktop";
+}
+
+export function profileLevelFromName(name) {
+  const index = PROFILE_ORDER.indexOf(name);
+  return index >= 0 ? index + 1 : 3;
+}
+
+export function initParticleProfileAutoDetect() {
+  particleProfileName = detectParticleProfile();
+}
 
 function collectGlyphs(item) {
   const glyphs = [item.char];
@@ -88,13 +152,26 @@ function getHeroSpawnCenter(anchorEl) {
 }
 
 function trimParticles() {
-  if (particles.length <= MAX_PARTICLES) return;
+  const max = activeProfile().maxParticles;
+  if (particles.length <= max) return;
 
-  const excess = particles.length - MAX_PARTICLES;
+  const excess = particles.length - max;
   for (let i = 0; i < excess; i++) {
     particles[i].el.remove();
   }
   particles = particles.slice(excess);
+}
+
+function cullHeroParticlesForNextBurst() {
+  const profile = activeProfile();
+  if (!profile.fastCullOnBurst || !profile.cullLifeMs) return;
+
+  for (const p of particles) {
+    if (!p.fixed || p.culling) continue;
+    p.culling = true;
+    p.life = Math.min(p.life, profile.cullLifeMs);
+    p.lifeMax = Math.min(p.lifeMax ?? p.life, profile.cullLifeMs);
+  }
 }
 
 function getBurstHost(anchorEl) {
@@ -141,33 +218,27 @@ function glyphParticleSize(lang, variant) {
   return rand(24, 38);
 }
 
-const HERO_OCTANT = Math.PI / 4;
-const HERO_SLOT = Math.PI / 8;
-const HERO_SUN_BASE = -Math.PI / 2;
-
 function heroSunSlots() {
   /** @type {{ kind: "emoji" | "glyph", angle: number }[]} */
   const slots = [];
-  const octants = isIOSUi ? 3 : isMobileUi ? 4 : 8;
 
-  for (let i = 0; i < octants; i++) {
-    const octant = HERO_SUN_BASE + i * (Math.PI * 2 / octants);
+  for (let i = 0; i < HERO_OCTANTS; i++) {
+    const octant = HERO_SUN_BASE + i * (Math.PI * 2 / HERO_OCTANTS);
     slots.push({ kind: "emoji", angle: octant });
-    if (!isMobileUi) {
-      slots.push({ kind: "glyph", angle: octant + HERO_SLOT });
-    }
+    slots.push({ kind: "glyph", angle: octant + HERO_SLOT });
   }
 
   return slots;
 }
 
 function spawnHeroParticle(root, center, item, opts = {}) {
+  const profile = activeProfile();
   const {
     emoji = getRadicalEmoji(item.id),
     glyph = null,
     sizeMin = 22,
     sizeMax = 36,
-    life = HERO_CLICK_LIFE_MS,
+    life = profile.heroClickLifeMs,
     angle = 0,
     speedMin = 190,
     speedMax = 380,
@@ -202,6 +273,7 @@ function spawnHeroParticle(root, center, item, opts = {}) {
     size: rand(sizeMin, sizeMax),
     life,
     lifeMax: life,
+    culling: false,
   };
 
   applyParticleStyle(particle, 0);
@@ -238,6 +310,7 @@ function spawnParticle(host, lang, glyphs, opts = {}) {
     size: emoji ? rand(18, 28) : glyphParticleSize(lang, variant),
     life: LIFE_MS,
     lifeMax: LIFE_MS,
+    culling: false,
   };
 
   applyParticleStyle(particle, 0);
@@ -245,8 +318,16 @@ function spawnParticle(host, lang, glyphs, opts = {}) {
 }
 
 function applyParticleStyle(p, t) {
-  const alpha = 1 - t;
-  const scale = p.scale * (1 - t * 0.85);
+  let fade = t;
+  let scaleFalloff = 0.85;
+
+  if (p.culling) {
+    fade = Math.min(1, t * 2.35 + 0.42);
+    scaleFalloff = 1.05;
+  }
+
+  const alpha = 1 - fade;
+  const scale = p.scale * Math.max(0.04, 1 - fade * scaleFalloff);
   p.el.style.position = p.fixed ? "fixed" : "absolute";
   p.el.style.opacity = String(Math.max(0, alpha));
   p.el.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) translate(-50%, -50%) rotate(${p.rotation}deg) scale(${scale})`;
@@ -266,12 +347,13 @@ function tick(ts) {
     return;
   }
 
-  if (isIOSUi && skipFrame) {
+  const profile = activeProfile();
+  if (profile.skipFrame && skipFrame) {
     skipFrame = false;
     rafId = requestAnimationFrame(tick);
     return;
   }
-  skipFrame = isIOSUi;
+  skipFrame = profile.skipFrame;
 
   const dt = lastTs ? Math.min(32, ts - lastTs) : 16;
   lastTs = ts;
@@ -308,19 +390,20 @@ function startLoop() {
   }
 }
 
-function pushHeroBurst(anchorEl, item, profile) {
+function pushHeroBurst(anchorEl, item, profileKind) {
   const root = getHeroParticlesRoot();
   const center = getHeroSpawnCenter(anchorEl);
   if (!root || !center || !item) return;
 
+  const profile = activeProfile();
   const themeEmoji = getRadicalEmoji(item.id);
   const glyphs = collectGlyphs(item);
-  const isClick = profile === "click";
-  const isPlayback = profile === "playback";
+  const isClick = profileKind === "click";
+  const isPlayback = profileKind === "playback";
   const slots = heroSunSlots();
   const emojiSize = isPlayback ? [20, 34] : [26, 44];
   const glyphSize = isPlayback ? [18, 28] : [20, 32];
-  const life = isClick ? HERO_CLICK_LIFE_MS : HERO_PLAYBACK_LIFE_MS;
+  const life = isClick ? profile.heroClickLifeMs : profile.heroPlaybackLifeMs;
   const speedMin = isClick ? 240 : 190;
   const speedMax = isClick ? 520 : 380;
   const spin = isClick ? heroBurstSpin : 0;
@@ -387,9 +470,13 @@ export function burstHeroGlyphWhisper(anchorEl, item) {
 }
 
 export function burstHeroCharSalute(anchorEl, item) {
+  cullHeroParticlesForNextBurst();
   heroBurstSpin += rand(0.06, 0.14);
   pushHeroBurst(anchorEl, item, "click");
 }
+
+const HERO_PLAYBACK_MS = 520;
+const HERO_PLAYBACK_MS_REDUCED = 900;
 
 export function startHeroPlaybackEmojis(anchorEl, item) {
   stopHeroPlaybackEmojis();
@@ -419,7 +506,7 @@ export function burstSpeakerParticles(anchorEl, lang, item) {
 
   const glyphs = collectGlyphs(item);
   const cnColor = lang === "cn" ? nextCnOrangeColor() : null;
-  const [minCount, maxCount] = reducedMotion ? COUNT_REDUCED : COUNT_NORMAL;
+  const [minCount, maxCount] = reducedMotion ? COUNT_REDUCED : activeProfile().speakerCount;
   const count = (minCount + Math.random() * (maxCount - minCount + 1)) | 0;
 
   for (let i = 0; i < count; i++) {
@@ -447,6 +534,7 @@ export function clearSpeakerParticles() {
 }
 
 export function initSpeakerParticles() {
+  initParticleProfileAutoDetect();
   reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", (e) => {
     reducedMotion = e.matches;

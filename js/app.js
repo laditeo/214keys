@@ -1,6 +1,7 @@
 import radicals from "./radicals.js";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
+import { mountLocalDebug } from "./localDebug.js";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -64,10 +65,10 @@ const fields = {
   cn: document.getElementById("modal-cn"),
   ru: document.getElementById("modal-ru"),
   strokes: document.getElementById("modal-strokes"),
-  copyToast: document.getElementById("modal-copy-toast"),
+  copyBtn: document.getElementById("modal-copy-btn"),
 };
 
-let copyToastTimer = 0;
+let copyBtnTimer = 0;
 
 let activeItem = null;
 let visibleItems = radicals;
@@ -218,9 +219,64 @@ function syncModalReadingWaves(item) {
   syncReadingWave(item, "cn");
 }
 
-function wireSpeaker(btn, lang) {
+function triggerReadingPlayback(lang) {
+  const btn = lang === "jp" ? speakerJp : speakerCn;
   const wave = readingWaves[lang];
+  if (!activeItem || btn.disabled) return;
 
+  unlockSpeech();
+  const item = activeItem;
+  const needsWait = !isSampleReady(lang, item.id) || isSampleLoading(lang, item.id);
+
+  if (needsWait) {
+    setSpeakerLoading(lang, true);
+  }
+
+  const runSpeak = () => {
+    if (!activeItem || activeItem.id !== item.id) {
+      setSpeakerLoading(lang, false);
+      wave.setPlaying(false);
+      return;
+    }
+
+    speakRadical(item, lang, {
+      onLoadStart: () => setSpeakerLoading(lang, true),
+      onStart: (rate) => {
+        setSpeakerLoading(lang, false);
+        applyPitchTint(pitchTintTargets(lang), rate);
+        setSpeakerState(lang, true);
+        wave.setPlaying(true);
+        const peaks = getSamplePeaks(lang, item.id);
+        if (peaks) {
+          wave.setPeaks(peaks);
+          wave.resize();
+        }
+        try {
+          burstSpeakerParticles(btn, lang, item);
+          burstHeroGlyphWhisper(fields.charWrap, item);
+        } catch {
+          /* particles are optional */
+        }
+      },
+      onProgress: (t) => wave.setProgress(t),
+      onEnd: () => {
+        setSpeakerLoading(lang, false);
+        setSpeakerState(lang, false);
+        if (!speaking.jp && !speaking.cn) stopHeroPlaybackEmojis();
+        wave.setPlaying(false);
+        wave.setProgress(0);
+      },
+    });
+  };
+
+  if (needsWait) {
+    requestAnimationFrame(runSpeak);
+  } else {
+    runSpeak();
+  }
+}
+
+function wireSpeaker(btn, lang) {
   btn.addEventListener("pointerdown", (e) => {
     e.stopPropagation();
     if (!activeItem || btn.disabled) return;
@@ -229,58 +285,23 @@ function wireSpeaker(btn, lang) {
 
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (!activeItem) return;
+    triggerReadingPlayback(lang);
+  });
+}
 
+function wireReadingWave(rootEl, lang) {
+  const btn = lang === "jp" ? speakerJp : speakerCn;
+
+  rootEl.addEventListener("pointerdown", (e) => {
+    e.stopPropagation();
+    if (rootEl.hidden || !activeItem || btn.disabled) return;
     unlockSpeech();
-    const item = activeItem;
-    const needsWait = !isSampleReady(lang, item.id) || isSampleLoading(lang, item.id);
+  });
 
-    if (needsWait) {
-      setSpeakerLoading(lang, true);
-    }
-
-    const runSpeak = () => {
-      if (!activeItem || activeItem.id !== item.id) {
-        setSpeakerLoading(lang, false);
-        wave.setPlaying(false);
-        return;
-      }
-
-      speakRadical(item, lang, {
-        onLoadStart: () => setSpeakerLoading(lang, true),
-        onStart: (rate) => {
-          setSpeakerLoading(lang, false);
-          applyPitchTint(pitchTintTargets(lang), rate);
-          setSpeakerState(lang, true);
-          wave.setPlaying(true);
-          const peaks = getSamplePeaks(lang, item.id);
-          if (peaks) {
-            wave.setPeaks(peaks);
-            wave.resize();
-          }
-          try {
-            burstSpeakerParticles(btn, lang, item);
-            burstHeroGlyphWhisper(fields.charWrap, item);
-          } catch {
-            /* particles are optional */
-          }
-        },
-        onProgress: (t) => wave.setProgress(t),
-        onEnd: () => {
-          setSpeakerLoading(lang, false);
-          setSpeakerState(lang, false);
-          if (!speaking.jp && !speaking.cn) stopHeroPlaybackEmojis();
-          wave.setPlaying(false);
-          wave.setProgress(0);
-        },
-      });
-    };
-
-    if (needsWait) {
-      requestAnimationFrame(runSpeak);
-    } else {
-      runSpeak();
-    }
+  rootEl.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (rootEl.hidden || !activeItem || btn.disabled) return;
+    triggerReadingPlayback(lang);
   });
 }
 
@@ -345,19 +366,19 @@ function updateModalNav() {
   updateStrokeGroupNav();
 }
 
-function hideCopyToast() {
-  if (copyToastTimer) {
-    window.clearTimeout(copyToastTimer);
-    copyToastTimer = 0;
+function resetCopyButton() {
+  if (copyBtnTimer) {
+    window.clearTimeout(copyBtnTimer);
+    copyBtnTimer = 0;
   }
-  fields.copyToast?.classList.remove("is-visible");
+  fields.copyBtn?.classList.remove("is-copied");
 }
 
-function showCopyToast() {
-  if (!fields.copyToast) return;
-  fields.copyToast.classList.add("is-visible");
-  if (copyToastTimer) window.clearTimeout(copyToastTimer);
-  copyToastTimer = window.setTimeout(hideCopyToast, 2400);
+function markCopyButtonCopied() {
+  if (!fields.copyBtn) return;
+  fields.copyBtn.classList.add("is-copied");
+  if (copyBtnTimer) window.clearTimeout(copyBtnTimer);
+  copyBtnTimer = window.setTimeout(resetCopyButton, 2400);
 }
 
 async function copyHeroCharToClipboard() {
@@ -388,11 +409,11 @@ async function copyHeroCharToClipboard() {
 function fillModal(item) {
   activeItem = item;
   resetSpeakers();
-  hideCopyToast();
+  resetCopyButton();
 
   fields.num.textContent = `#${item.id} · 部首 ${item.id}`;
   fields.char.textContent = item.char;
-  fields.charWrap?.setAttribute("aria-label", `Ключ ${item.char}, скопировать в буфер`);
+  fields.charWrap?.setAttribute("aria-label", `Нажать на ключ ${item.char}`);
   fields.variants.textContent = item.variants
     ? `варианты: ${item.variants.split(/\s+/).join(" · ")}`
     : "";
@@ -764,7 +785,7 @@ function closeModal() {
   clearSpeakerParticles();
   resetSpeakerParticlePalette();
   fields.charWrap?.classList.remove("modal__char-wrap--salute");
-  hideCopyToast();
+  resetCopyButton();
   modalPrev.disabled = true;
   modalNext.disabled = true;
   modalGroupPrev.disabled = true;
@@ -1033,14 +1054,22 @@ function triggerHeroCharSalute() {
   pulseHeroCharSpring();
   unlockSpeech();
   playRadicalSfx(activeItem.id);
-  void copyHeroCharToClipboard().then((ok) => {
-    if (ok) showCopyToast();
-  });
   try {
     burstHeroCharSalute(fields.charWrap, activeItem);
   } catch {
     /* particles are optional */
   }
+}
+
+function wireCopyButton() {
+  if (!fields.copyBtn) return;
+
+  fields.copyBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    void copyHeroCharToClipboard().then((ok) => {
+      if (ok) markCopyButtonCopied();
+    });
+  });
 }
 
 document.addEventListener("keydown", (e) => {
@@ -1108,8 +1137,12 @@ function wireHeroChar() {
 
 wireSpeaker(speakerJp, "jp");
 wireSpeaker(speakerCn, "cn");
+wireReadingWave(waveRoots.jp, "jp");
+wireReadingWave(waveRoots.cn, "cn");
 wireHeroChar();
+wireCopyButton();
 initSpeakerParticles();
+mountLocalDebug();
 initAudioPreload();
 
 const THEME_KEY = "214keys-theme";
@@ -1119,35 +1152,92 @@ const themeButtons = document.querySelectorAll(".theme-toggle__btn");
 const fontButtons = document.querySelectorAll(".font-toggle__btn");
 const fontWeightSlider = document.getElementById("font-weight-slider");
 const fontWeightValue = document.getElementById("font-weight-value");
+const fontWeightControl = fontWeightSlider?.closest(".font-weight-control");
+const FONT_WEIGHT_LEVEL_MIN = 1;
+const FONT_WEIGHT_LEVEL_MAX = 9;
+const FONT_WEIGHT_LEVEL_DEFAULT = 3;
 
-function fontWeightBounds() {
+function fontWeightCssBounds() {
   return document.documentElement.dataset.font === "linear"
     ? { min: 300, max: 700 }
     : { min: 200, max: 700 };
 }
 
-function applyFontWeight(weight, { persist = true } = {}) {
-  const { min, max } = fontWeightBounds();
-  const next = Math.min(max, Math.max(min, Math.round(Number(weight) || 300)));
+function fontWeightLevelBounds() {
+  return { min: FONT_WEIGHT_LEVEL_MIN, max: FONT_WEIGHT_LEVEL_MAX };
+}
 
-  document.documentElement.style.setProperty("--font-han-weight", String(next));
+function fontWeightStepCount() {
+  return FONT_WEIGHT_LEVEL_MAX - FONT_WEIGHT_LEVEL_MIN;
+}
+
+function levelToCssWeight(level) {
+  const { min, max } = fontWeightCssBounds();
+  const next = Math.min(
+    FONT_WEIGHT_LEVEL_MAX,
+    Math.max(FONT_WEIGHT_LEVEL_MIN, Math.round(Number(level) || FONT_WEIGHT_LEVEL_DEFAULT)),
+  );
+  const t = (next - FONT_WEIGHT_LEVEL_MIN) / fontWeightStepCount();
+  return Math.round(min + t * (max - min));
+}
+
+function cssWeightToLevel(cssWeight) {
+  const { min, max } = fontWeightCssBounds();
+  const weight = Math.min(max, Math.max(min, Math.round(Number(cssWeight) || min)));
+  const t = max === min ? 0 : (weight - min) / (max - min);
+  return Math.min(
+    FONT_WEIGHT_LEVEL_MAX,
+    Math.max(FONT_WEIGHT_LEVEL_MIN, Math.round(t * fontWeightStepCount() + FONT_WEIGHT_LEVEL_MIN)),
+  );
+}
+
+function parseSavedFontLevel(raw) {
+  const n = Number(raw);
+  if (Number.isFinite(n) && n >= FONT_WEIGHT_LEVEL_MIN && n <= FONT_WEIGHT_LEVEL_MAX) {
+    return Math.round(n);
+  }
+  if (Number.isFinite(n) && n >= 100) {
+    return cssWeightToLevel(n);
+  }
+  return FONT_WEIGHT_LEVEL_DEFAULT;
+}
+
+function syncFontWeightSliderLayout() {
+  if (!fontWeightControl || !fontWeightSlider) return;
+
+  const steps = fontWeightStepCount();
+  const trackWidth = fontWeightSlider.clientWidth;
+  const thumbW = steps > 0 ? trackWidth / steps : trackWidth;
+
+  fontWeightControl.style.setProperty("--font-weight-steps", String(steps));
+  fontWeightControl.style.setProperty("--font-weight-thumb-w", `${thumbW}px`);
+}
+
+function applyFontWeight(level, { persist = true } = {}) {
+  const { min, max } = fontWeightLevelBounds();
+  const nextLevel = Math.min(max, Math.max(min, Math.round(Number(level) || FONT_WEIGHT_LEVEL_DEFAULT)));
+  const cssWeight = levelToCssWeight(nextLevel);
+
+  document.documentElement.style.setProperty("--font-han-weight", String(cssWeight));
 
   if (fontWeightSlider) {
     fontWeightSlider.min = String(min);
     fontWeightSlider.max = String(max);
-    fontWeightSlider.value = String(next);
+    fontWeightSlider.value = String(nextLevel);
     fontWeightSlider.setAttribute("aria-valuemin", String(min));
     fontWeightSlider.setAttribute("aria-valuemax", String(max));
-    fontWeightSlider.setAttribute("aria-valuenow", String(next));
+    fontWeightSlider.setAttribute("aria-valuenow", String(nextLevel));
   }
 
   if (fontWeightValue) {
-    fontWeightValue.textContent = String(next);
+    fontWeightValue.textContent = String(nextLevel);
   }
+
+  syncFontWeightSliderLayout();
 
   if (persist) {
     try {
-      localStorage.setItem(FONT_WEIGHT_KEY, String(next));
+      localStorage.setItem(FONT_WEIGHT_KEY, String(nextLevel));
     } catch {
       /* ignore */
     }
@@ -1182,7 +1272,7 @@ function applyFont(mode) {
   } catch {
     /* ignore */
   }
-  applyFontWeight(fontWeightSlider?.value ?? 300, { persist: false });
+  applyFontWeight(fontWeightSlider?.value ?? FONT_WEIGHT_LEVEL_DEFAULT, { persist: false });
 }
 
 for (const btn of themeButtons) {
@@ -1196,6 +1286,9 @@ for (const btn of fontButtons) {
 fontWeightSlider?.addEventListener("input", () => {
   applyFontWeight(fontWeightSlider.value);
 });
+
+window.addEventListener("resize", syncFontWeightSliderLayout);
+requestAnimationFrame(syncFontWeightSliderLayout);
 
 try {
   const savedTheme = localStorage.getItem(THEME_KEY);
@@ -1212,9 +1305,9 @@ try {
 }
 
 try {
-  applyFontWeight(localStorage.getItem(FONT_WEIGHT_KEY) || 300);
+  applyFontWeight(parseSavedFontLevel(localStorage.getItem(FONT_WEIGHT_KEY)));
 } catch {
-  applyFontWeight(300);
+  applyFontWeight(FONT_WEIGHT_LEVEL_DEFAULT);
 }
 
 modalPrev.disabled = true;

@@ -1,2 +1,5 @@
 node_modules/
 generate-audio.log
+
+# Local-only debug UI (не пушится)
+local/particleDebug.local.js

@@ -8,10 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=16">
+  <link rel="stylesheet" href="css/style.css?v=27">
   <script>
     (function () {
-      var BUILD = "16";
+      var BUILD = "27";
       try {
         var buildKey = "214keys-build";
         var savedBuild = localStorage.getItem(buildKey);
@@ -76,24 +76,23 @@
           </button>
         </div>
 
-        <div class="font-weight-control">
-          <label class="font-weight-control__label" for="font-weight-slider">
-            <span>Толщина</span>
-            <span class="font-weight-control__value" id="font-weight-value">300</span>
-          </label>
+        <label class="font-weight-control" for="font-weight-slider">
+          <span class="font-weight-control__title" aria-hidden="true">Толщина</span>
+          <span class="font-weight-control__value" id="font-weight-value">3</span>
           <input
             type="range"
             id="font-weight-slider"
             class="font-weight-control__slider"
-            min="200"
-            max="700"
-            step="50"
-            value="300"
-            aria-valuemin="200"
-            aria-valuemax="700"
-            aria-valuenow="300"
+            min="1"
+            max="9"
+            step="1"
+            value="3"
+            aria-label="Толщина шрифта"
+            aria-valuemin="1"
+            aria-valuemax="9"
+            aria-valuenow="3"
           >
-        </div>
+        </label>
       </div>
     </div>
 
@@ -181,7 +180,7 @@
                       </svg>
                     </span>
                   </div>
-                  <div class="audio-wave" id="audio-wave-jp" hidden>
+                  <div class="audio-wave" id="audio-wave-jp" hidden title="Произнести">
                     <canvas class="audio-wave__canvas" aria-hidden="true"></canvas>
                   </div>
                 </div>
@@ -207,7 +206,7 @@
                       </svg>
                     </span>
                   </div>
-                  <div class="audio-wave" id="audio-wave-cn" hidden>
+                  <div class="audio-wave" id="audio-wave-cn" hidden title="Произнести">
                     <canvas class="audio-wave__canvas" aria-hidden="true"></canvas>
                   </div>
                 </div>
@@ -225,15 +224,21 @@
             <span class="modal__strokes" id="modal-strokes"></span>
           </div>
         </div>
-        <div class="modal__copy-toast" id="modal-copy-toast" role="status" aria-live="polite" aria-label="Скопировано в буфер обмена">
-          <svg class="modal__copy-toast-icon modal__copy-toast-icon--copy" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <button
+          type="button"
+          class="modal__copy-btn"
+          id="modal-copy-btn"
+          title="копировать в clipboard"
+          aria-label="Копировать в буфер обмена"
+        >
+          <svg class="modal__copy-btn-icon modal__copy-btn-icon--copy" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <rect x="8" y="8" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
             <path d="M6 16V5a1.5 1.5 0 0 1 1.5-1.5H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          <svg class="modal__copy-toast-icon modal__copy-toast-icon--done" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <svg class="modal__copy-btn-icon modal__copy-btn-icon--done" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M6 12.5 10 16.5 18 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-        </div>
+        </button>
         </div>
 
         <button type="button" class="modal-group-nav modal-group-nav--next" id="modal-group-next" aria-label="Следующая группа по чертам" disabled>
@@ -252,6 +257,6 @@
     </div>
   </dialog>
 
-  <script type="module" src="js/app.js?v=16"></script>
+  <script type="module" src="js/app.js?v=27"></script>
 </body>
 </html>
