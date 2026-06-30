@@ -1,7 +1,6 @@
 import { getRadicalEmoji } from "./radicalEmoji.js";
 
 const LIFE_MS = 1000;
-const COUNT_NORMAL = [6, 10];
 const COUNT_REDUCED = [3, 5];
 const JP_WHITE_CHANCE = 0.72;
 const THEME_EMOJI_CHANCE = 0.72;
