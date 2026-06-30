@@ -1152,10 +1152,6 @@ const themeButtons = document.querySelectorAll(".theme-toggle__btn");
 const fontButtons = document.querySelectorAll(".font-toggle__btn");
 const fontWeightSlider = document.getElementById("font-weight-slider");
 const fontWeightValue = document.getElementById("font-weight-value");
-const fontWeightControl = fontWeightSlider?.closest(".font-weight-control");
-const FONT_WEIGHT_LEVEL_MIN = 1;
-const FONT_WEIGHT_LEVEL_MAX = 9;
-const FONT_WEIGHT_LEVEL_DEFAULT = 3;
 
 function fontWeightCssBounds() {
   return document.documentElement.dataset.font === "linear"
@@ -1163,81 +1159,54 @@ function fontWeightCssBounds() {
     : { min: 200, max: 700 };
 }
 
-function fontWeightLevelBounds() {
-  return { min: FONT_WEIGHT_LEVEL_MIN, max: FONT_WEIGHT_LEVEL_MAX };
-}
-
-function fontWeightStepCount() {
-  return FONT_WEIGHT_LEVEL_MAX - FONT_WEIGHT_LEVEL_MIN;
-}
-
-function levelToCssWeight(level) {
+function defaultCssWeight() {
   const { min, max } = fontWeightCssBounds();
-  const next = Math.min(
-    FONT_WEIGHT_LEVEL_MAX,
-    Math.max(FONT_WEIGHT_LEVEL_MIN, Math.round(Number(level) || FONT_WEIGHT_LEVEL_DEFAULT)),
-  );
-  const t = (next - FONT_WEIGHT_LEVEL_MIN) / fontWeightStepCount();
+  return Math.round(min + ((max - min) * 2) / 7);
+}
+
+function clampCssWeight(weight) {
+  const { min, max } = fontWeightCssBounds();
+  return Math.min(max, Math.max(min, Math.round(Number(weight) || defaultCssWeight())));
+}
+
+function legacyLevelToCssWeight(level, stepCount = 8) {
+  const { min, max } = fontWeightCssBounds();
+  const clamped = Math.min(stepCount, Math.max(1, Math.round(Number(level) || 1)));
+  const t = (clamped - 1) / (stepCount - 1);
   return Math.round(min + t * (max - min));
 }
 
-function cssWeightToLevel(cssWeight) {
-  const { min, max } = fontWeightCssBounds();
-  const weight = Math.min(max, Math.max(min, Math.round(Number(cssWeight) || min)));
-  const t = max === min ? 0 : (weight - min) / (max - min);
-  return Math.min(
-    FONT_WEIGHT_LEVEL_MAX,
-    Math.max(FONT_WEIGHT_LEVEL_MIN, Math.round(t * fontWeightStepCount() + FONT_WEIGHT_LEVEL_MIN)),
-  );
-}
-
-function parseSavedFontLevel(raw) {
+function parseSavedFontWeight(raw) {
   const n = Number(raw);
-  if (Number.isFinite(n) && n >= FONT_WEIGHT_LEVEL_MIN && n <= FONT_WEIGHT_LEVEL_MAX) {
-    return Math.round(n);
-  }
-  if (Number.isFinite(n) && n >= 100) {
-    return cssWeightToLevel(n);
-  }
-  return FONT_WEIGHT_LEVEL_DEFAULT;
+  if (!Number.isFinite(n)) return defaultCssWeight();
+  if (n >= 100) return clampCssWeight(n);
+  if (n >= 1 && n <= 9) return legacyLevelToCssWeight(n, 9);
+  if (n >= 1 && n <= 8) return legacyLevelToCssWeight(n, 8);
+  return defaultCssWeight();
 }
 
-function syncFontWeightSliderLayout() {
-  if (!fontWeightControl || !fontWeightSlider) return;
-
-  const steps = fontWeightStepCount();
-  const trackWidth = fontWeightSlider.clientWidth;
-  const thumbW = steps > 0 ? trackWidth / steps : trackWidth;
-
-  fontWeightControl.style.setProperty("--font-weight-steps", String(steps));
-  fontWeightControl.style.setProperty("--font-weight-thumb-w", `${thumbW}px`);
-}
-
-function applyFontWeight(level, { persist = true } = {}) {
-  const { min, max } = fontWeightLevelBounds();
-  const nextLevel = Math.min(max, Math.max(min, Math.round(Number(level) || FONT_WEIGHT_LEVEL_DEFAULT)));
-  const cssWeight = levelToCssWeight(nextLevel);
+function applyFontWeight(rawWeight, { persist = true } = {}) {
+  const { min, max } = fontWeightCssBounds();
+  const cssWeight = clampCssWeight(rawWeight);
 
   document.documentElement.style.setProperty("--font-han-weight", String(cssWeight));
 
   if (fontWeightSlider) {
     fontWeightSlider.min = String(min);
     fontWeightSlider.max = String(max);
-    fontWeightSlider.value = String(nextLevel);
+    fontWeightSlider.value = String(cssWeight);
     fontWeightSlider.setAttribute("aria-valuemin", String(min));
     fontWeightSlider.setAttribute("aria-valuemax", String(max));
-    fontWeightSlider.setAttribute("aria-valuenow", String(nextLevel));
+    fontWeightSlider.setAttribute("aria-valuenow", String(cssWeight));
   }
 
   if (fontWeightValue) {
-    fontWeightValue.textContent = String(nextLevel);
+    fontWeightValue.textContent = String(cssWeight);
   }
-
-  syncFontWeightSliderLayout();
 
   if (persist) {
     try {
-      localStorage.setItem(FONT_WEIGHT_KEY, String(nextLevel));
+      localStorage.setItem(FONT_WEIGHT_KEY, String(cssWeight));
     } catch {
       /* ignore */
     }
@@ -1272,7 +1241,7 @@ function applyFont(mode) {
   } catch {
     /* ignore */
   }
-  applyFontWeight(fontWeightSlider?.value ?? FONT_WEIGHT_LEVEL_DEFAULT, { persist: false });
+  applyFontWeight(fontWeightSlider?.value ?? defaultCssWeight(), { persist: false });
 }
 
 for (const btn of themeButtons) {
@@ -1286,9 +1255,6 @@ for (const btn of fontButtons) {
 fontWeightSlider?.addEventListener("input", () => {
   applyFontWeight(fontWeightSlider.value);
 });
-
-window.addEventListener("resize", syncFontWeightSliderLayout);
-requestAnimationFrame(syncFontWeightSliderLayout);
 
 try {
   const savedTheme = localStorage.getItem(THEME_KEY);
@@ -1305,9 +1271,9 @@ try {
 }
 
 try {
-  applyFontWeight(parseSavedFontLevel(localStorage.getItem(FONT_WEIGHT_KEY)));
+  applyFontWeight(parseSavedFontWeight(localStorage.getItem(FONT_WEIGHT_KEY)));
 } catch {
-  applyFontWeight(FONT_WEIGHT_LEVEL_DEFAULT);
+  applyFontWeight(defaultCssWeight());
 }
 
 modalPrev.disabled = true;

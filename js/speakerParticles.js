@@ -1,6 +1,5 @@
 import { getRadicalEmoji } from "./radicalEmoji.js";
 
-const LIFE_MS = 1000;
 const COUNT_REDUCED = [3, 5];
 const JP_WHITE_CHANCE = 0.72;
 const THEME_EMOJI_CHANCE = 0.72;
@@ -17,8 +16,9 @@ const isAndroidDevice = /Android/i.test(navigator.userAgent);
 
 const isCoarsePointer = matchMedia("(pointer: coarse)").matches;
 
-/** @type {"android" | "ios" | "desktop"} */
+/** @type {"android" | "ios" | "lowfps" | "desktop"} */
 let particleProfileName = "desktop";
+let debugHeroRenderOverride = false;
 
 /** @type {ActiveParticle[]} */
 let particles = [];
@@ -44,53 +44,72 @@ let fpsProbeStartedAt = 0;
 const HERO_RENDER_MODE_KEY = "214keys-hero-render";
 const FPS_PROBE_MS = 750;
 const FPS_SIMPLE_THRESHOLD = 15;
+const GLOBAL_MAX_PARTICLES = 64;
+const ECONOMY_MAX_PARTICLES = 6;
+const ECONOMY_SPEAKER_GLYPHS = 2;
+const ECONOMY_SPEAKER_EMOJI = 2;
+const ECONOMY_SPEAKER_HERO_EMOJI = 2;
 const HERO_SIMPLE_EMOJI_COUNT = 6;
-const HERO_SCALE_FALLOFF = 0.85;
-const HERO_SCALE_MIN = 0.2;
+const SPEAKER_LIFE_MS = 1000;
+const SPEAKER_SCALE_FALLOFF = 0.85;
+const SPEAKER_SCALE_MIN = 0.2;
+const HERO_PARTICLE_SCALE_FALLOFF = 1.35;
+const HERO_PARTICLE_SCALE_MIN = 0.14;
+const HERO_FADE_HOLD = 0.4;
 
 const PARTICLE_PROFILES = {
   desktop: {
-    maxParticles: 1200,
+    maxParticles: GLOBAL_MAX_PARTICLES,
     skipFrame: false,
     fastCullOnBurst: false,
-    heroClickLifeMs: 2600,
-    heroPlaybackLifeMs: 1200,
+    heroClickLifeMs: 1300,
+    heroPlaybackLifeMs: 600,
     speakerCount: [6, 10],
   },
   android: {
-    maxParticles: 200,
+    maxParticles: ECONOMY_MAX_PARTICLES,
     skipFrame: false,
     fastCullOnBurst: true,
     maxHeroBursts: 2,
-    cullFadeMs: 520,
-    heroClickLifeMs: 2100,
-    heroPlaybackLifeMs: 900,
+    cullFadeMs: 260,
+    heroClickLifeMs: 1050,
+    heroPlaybackLifeMs: 450,
     speakerCount: [4, 8],
   },
   ios: {
-    maxParticles: 112,
+    maxParticles: ECONOMY_MAX_PARTICLES,
     skipFrame: true,
     fastCullOnBurst: true,
     maxHeroBursts: 2,
-    cullFadeMs: 460,
-    heroClickLifeMs: 1800,
-    heroPlaybackLifeMs: 780,
+    cullFadeMs: 230,
+    heroClickLifeMs: 900,
+    heroPlaybackLifeMs: 390,
     speakerCount: [3, 6],
+  },
+  lowfps: {
+    maxParticles: ECONOMY_MAX_PARTICLES,
+    skipFrame: false,
+    fastCullOnBurst: true,
+    maxHeroBursts: 1,
+    cullFadeMs: 160,
+    heroClickLifeMs: 700,
+    heroPlaybackLifeMs: 340,
+    speakerCount: [4, 4],
   },
 };
 
 const SIMPLE_HERO_PROFILE = {
-  maxParticles: 96,
+  maxParticles: ECONOMY_MAX_PARTICLES,
   skipFrame: false,
   fastCullOnBurst: true,
-  maxHeroBursts: 2,
-  cullFadeMs: 420,
-  heroClickLifeMs: 1700,
-  heroPlaybackLifeMs: 760,
-  speakerCount: [3, 5],
+  maxHeroBursts: 1,
+  cullFadeMs: 190,
+  heroClickLifeMs: 750,
+  heroPlaybackLifeMs: 350,
+  speakerCount: [4, 4],
 };
 
-const PROFILE_ORDER = ["android", "ios", "desktop"];
+const PROFILE_ORDER = ["android", "ios", "lowfps", "desktop"];
 
 function detectParticleProfile() {
   if (isIOSDevice) return "ios";
@@ -105,10 +124,24 @@ function activeProfile() {
 export function setParticleProfile(name) {
   if (!PARTICLE_PROFILES[name]) return;
   particleProfileName = name;
+  if (name === "lowfps") {
+    heroRenderMode = "simple";
+    debugHeroRenderOverride = true;
+    return;
+  }
+  if (debugHeroRenderOverride) {
+    debugHeroRenderOverride = false;
+    loadHeroRenderMode();
+  }
 }
 
 export function getParticleProfile() {
   return particleProfileName;
+}
+
+export function getParticleProfileLabel(name = particleProfileName) {
+  if (name === "lowfps") return "<15 fps";
+  return name;
 }
 
 export function profileNameFromLevel(level) {
@@ -117,7 +150,18 @@ export function profileNameFromLevel(level) {
 
 export function profileLevelFromName(name) {
   const index = PROFILE_ORDER.indexOf(name);
-  return index >= 0 ? index + 1 : 3;
+  return index >= 0 ? index + 1 : PROFILE_ORDER.length;
+}
+
+function isEconomyMode() {
+  if (particleProfileName === "lowfps") return true;
+  if (heroRenderMode === "simple") return true;
+  if (heroRenderMode === "full") return false;
+  return particleProfileName === "android" || particleProfileName === "ios";
+}
+
+function maxVisibleParticles() {
+  return isEconomyMode() ? ECONOMY_MAX_PARTICLES : GLOBAL_MAX_PARTICLES;
 }
 
 export function initParticleProfileAutoDetect() {
@@ -145,9 +189,13 @@ function saveHeroRenderMode(mode) {
 }
 
 function heroEffectProfile() {
-  if (heroRenderMode === "simple") return SIMPLE_HERO_PROFILE;
-  if (heroRenderMode === "full") return PARTICLE_PROFILES.desktop;
-  return activeProfile();
+  if (isEconomyMode()) {
+    if (particleProfileName === "lowfps") return PARTICLE_PROFILES.lowfps;
+    if (particleProfileName === "ios") return PARTICLE_PROFILES.ios;
+    if (particleProfileName === "android") return PARTICLE_PROFILES.android;
+    return SIMPLE_HERO_PROFILE;
+  }
+  return PARTICLE_PROFILES.desktop;
 }
 
 function startFpsProbe() {
@@ -240,7 +288,7 @@ function getHeroSpawnCenter(anchorEl) {
 }
 
 function trimParticles() {
-  const max = heroEffectProfile().maxParticles;
+  const max = maxVisibleParticles();
   if (particles.length <= max) return;
 
   const excess = particles.length - max;
@@ -262,12 +310,12 @@ function getActiveHeroBurstIds() {
 
 function beginHeroParticleFadeOut(p, fadeMs) {
   if (p.culling) return;
-  const fade = particleLifeFade(p);
+  const fade = particleFadeAmount(p);
   p.culling = true;
   p.cullFadeMs = fadeMs;
   p.cullAge = 0;
   p.cullStartAlpha = 1 - fade;
-  p.cullStartScaleMul = Math.max(HERO_SCALE_MIN, 1 - fade * HERO_SCALE_FALLOFF);
+  p.cullStartScaleMul = Math.max(HERO_PARTICLE_SCALE_MIN, 1 - fade * HERO_PARTICLE_SCALE_FALLOFF);
 }
 
 function cullHeroParticlesForNextBurst() {
@@ -335,7 +383,7 @@ function heroSunSlots() {
   /** @type {{ kind: "emoji" | "glyph", angle: number }[]} */
   const slots = [];
 
-  if (heroRenderMode === "simple") {
+  if (isEconomyMode()) {
     for (let i = 0; i < HERO_SIMPLE_EMOJI_COUNT; i++) {
       const angle = HERO_SUN_BASE + i * (Math.PI * 2 / HERO_SIMPLE_EMOJI_COUNT);
       slots.push({ kind: "emoji", angle });
@@ -431,13 +479,21 @@ function spawnParticle(host, lang, glyphs, opts = {}) {
     spin: reducedMotion ? rand(-120, 120) : rand(-420, 420),
     scale: emoji ? rand(0.95, 1.4) : variant === "jp-white" ? rand(0.95, 1.65) : variant === "jp-red" ? rand(0.75, 1.2) : rand(0.85, 1.55),
     size: emoji ? rand(18, 28) : glyphParticleSize(lang, variant),
-    life: LIFE_MS,
-    lifeMax: LIFE_MS,
+    life: SPEAKER_LIFE_MS,
+    lifeMax: SPEAKER_LIFE_MS,
     culling: false,
   };
 
   applyParticleStyle(particle);
   return particle;
+}
+
+function particleScaleFalloff(p) {
+  return p.fixed ? HERO_PARTICLE_SCALE_FALLOFF : SPEAKER_SCALE_FALLOFF;
+}
+
+function particleScaleMin(p) {
+  return p.fixed ? HERO_PARTICLE_SCALE_MIN : SPEAKER_SCALE_MIN;
 }
 
 function applyParticleStyle(p) {
@@ -447,11 +503,13 @@ function applyParticleStyle(p) {
   if (p.culling) {
     const t = smoothstep(Math.min(1, p.cullAge / p.cullFadeMs));
     alpha = p.cullStartAlpha * (1 - t);
-    scaleMul = p.cullStartScaleMul + (HERO_SCALE_MIN - p.cullStartScaleMul) * t;
+    const scaleMin = particleScaleMin(p);
+    scaleMul = p.cullStartScaleMul + (scaleMin - p.cullStartScaleMul) * t;
   } else {
-    const fade = particleLifeFade(p);
+    const fade = particleFadeAmount(p);
     alpha = 1 - fade;
-    scaleMul = Math.max(HERO_SCALE_MIN, 1 - fade * HERO_SCALE_FALLOFF);
+    const scaleMin = particleScaleMin(p);
+    scaleMul = Math.max(scaleMin, 1 - fade * particleScaleFalloff(p));
   }
 
   const scale = p.scale * scaleMul;
@@ -461,9 +519,21 @@ function applyParticleStyle(p) {
   if (p.fixed) p.el.style.zIndex = "1";
 }
 
-function particleLifeFade(p) {
-  const lifeMax = p.lifeMax ?? LIFE_MS;
+function particleLifeProgress(p) {
+  const lifeMax = p.lifeMax ?? SPEAKER_LIFE_MS;
   return 1 - p.life / lifeMax;
+}
+
+function heroExitFade(progress) {
+  if (progress <= HERO_FADE_HOLD) return 0;
+  const tail = (progress - HERO_FADE_HOLD) / (1 - HERO_FADE_HOLD);
+  return smoothstep(tail);
+}
+
+function particleFadeAmount(p) {
+  const progress = particleLifeProgress(p);
+  if (!p.fixed) return progress;
+  return heroExitFade(progress);
 }
 
 function smoothstep(t) {
@@ -605,7 +675,7 @@ export function burstHeroGlyphWhisper(anchorEl, item) {
         angle: rand(0, Math.PI * 2),
         sizeMin: 14,
         sizeMax: 22,
-        life: 1300,
+        life: 650,
         speedMin: 90,
         speedMax: 170,
       }),
@@ -653,6 +723,23 @@ export function burstSpeakerParticles(anchorEl, lang, item) {
 
   const glyphs = collectGlyphs(item);
   const cnColor = lang === "cn" ? nextCnOrangeColor() : null;
+
+  if (isEconomyMode()) {
+    const themeEmoji = getRadicalEmoji(item.id);
+    for (let i = 0; i < ECONOMY_SPEAKER_GLYPHS; i++) {
+      particles.push(spawnParticle(host, lang, glyphs, { cnColor }));
+    }
+    for (let i = 0; i < ECONOMY_SPEAKER_EMOJI; i++) {
+      particles.push(spawnParticle(host, lang, glyphs, { emoji: themeEmoji, cnColor }));
+    }
+    for (let i = 0; i < ECONOMY_SPEAKER_HERO_EMOJI; i++) {
+      particles.push(spawnParticle(host, lang, glyphs, { emoji: themeEmoji, cnColor }));
+    }
+    trimParticles();
+    startLoop();
+    return;
+  }
+
   const [minCount, maxCount] = reducedMotion ? COUNT_REDUCED : activeProfile().speakerCount;
   const count = (minCount + Math.random() * (maxCount - minCount + 1)) | 0;
 

@@ -8,10 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=30">
+  <link rel="stylesheet" href="css/style.css?v=40">
   <script>
     (function () {
-      var BUILD = "30";
+      var BUILD = "40";
       try {
         var buildKey = "214keys-build";
         var savedBuild = localStorage.getItem(buildKey);
@@ -78,19 +78,19 @@
 
         <label class="font-weight-control" for="font-weight-slider">
           <span class="font-weight-control__title" aria-hidden="true">Толщина</span>
-          <span class="font-weight-control__value" id="font-weight-value">3</span>
+          <span class="font-weight-control__value" id="font-weight-value">343</span>
           <input
             type="range"
             id="font-weight-slider"
             class="font-weight-control__slider"
-            min="1"
-            max="9"
+            min="200"
+            max="700"
             step="1"
-            value="3"
+            value="343"
             aria-label="Толщина шрифта"
-            aria-valuemin="1"
-            aria-valuemax="9"
-            aria-valuenow="3"
+            aria-valuemin="200"
+            aria-valuemax="700"
+            aria-valuenow="343"
           >
         </label>
       </div>
@@ -257,6 +257,6 @@
     </div>
   </dialog>
 
-  <script type="module" src="js/app.js?v=30"></script>
+  <script type="module" src="js/app.js?v=40"></script>
 </body>
 </html>

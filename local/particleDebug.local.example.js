@@ -3,19 +3,20 @@
 
 import {
   getParticleProfile,
+  getParticleProfileLabel,
   profileLevelFromName,
   profileNameFromLevel,
   setParticleProfile,
 } from "../js/speakerParticles.js";
 
 const PARTICLE_DEBUG_KEY = "214keys-particle-debug";
-const PARTICLE_DEBUG_STEPS = 2;
+const PARTICLE_DEBUG_STEPS = 3;
 
 const DEBUG_STYLES = `
 .particle-debug-control {
   --weight-control-h: 2.85rem;
   --weight-control-frame: 0.28rem;
-  --particle-debug-steps: 2;
+  --particle-debug-steps: 3;
   --particle-debug-thumb-w: 1.45rem;
   position: relative;
   display: block;
@@ -144,13 +145,13 @@ export function mountParticleDebug() {
       id="particle-debug-slider"
       class="particle-debug-control__slider"
       min="1"
-      max="3"
+      max="4"
       step="1"
-      value="3"
+      value="4"
       aria-label="DEBUG профиль частиц для проверки"
       aria-valuemin="1"
-      aria-valuemax="3"
-      aria-valuenow="3"
+      aria-valuemax="4"
+      aria-valuenow="4"
     >
   `;
 
@@ -179,7 +180,7 @@ export function mountParticleDebug() {
     }
 
     if (particleDebugValue) {
-      particleDebugValue.textContent = name;
+      particleDebugValue.textContent = getParticleProfileLabel(name);
     }
 
     syncParticleDebugSliderLayout();
