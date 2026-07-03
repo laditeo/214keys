@@ -1,5 +1,4 @@
 import { getRadicalEmoji } from "./radicalEmoji.js";
-import { appAssetUrl } from "./appBase.js";
 
 /** CC0 — Kenney (kenney.nl), via gamesounds.xyz mirror */
 const KENNEY = "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack";
@@ -218,7 +217,7 @@ export function getRadicalSfxDownload(id) {
 }
 
 export function radicalSfxUrl(id) {
-  return appAssetUrl(`audio/sfx/${padId(id)}.mp3`);
+  return `audio/sfx/${padId(id)}.mp3`;
 }
 
 export function radicalSfxSourceUrl(id) {

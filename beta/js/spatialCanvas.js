@@ -1532,6 +1532,10 @@ function onDocumentTouchMove(event) {
   }
 }
 
+function isSyntheticTouchPointer(event) {
+  return prefersTouchGestures() && event.pointerType === "touch";
+}
+
 function onDocumentTouchEnd(event) {
   if (!documentTouchArmed || !prefersTouchGestures()) return;
 
@@ -1564,9 +1568,9 @@ function onDocumentTouchEnd(event) {
   if (!event.touches.length) {
     touchLassoPending = null;
     disarmDocumentTouch();
+    saveState();
     if (!activeGesture && !panPointer && !rmbZoomPointer && !lassoPointer && !dragPointer) {
       setStageCursor(null);
-      saveState();
     }
   }
 }
@@ -1837,6 +1841,7 @@ function onStageTouchStart(event) {
 }
 
 function onStagePointerMove(event) {
+  if (isSyntheticTouchPointer(event)) return;
   if (activeGesture?.pointerId === event.pointerId) return;
 
   if (dragPointer && event.pointerId === dragPointer.id) {
@@ -1889,6 +1894,7 @@ function onStagePointerMove(event) {
 }
 
 function onStagePointerUp(event) {
+  if (isSyntheticTouchPointer(event)) return;
   if (lassoPointer?.id === event.pointerId) {
     const pt = stagePoint(event.clientX, event.clientY);
     const last = lassoPointer.points[lassoPointer.points.length - 1];

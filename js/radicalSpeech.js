@@ -1,5 +1,4 @@
 import radicals from "./radicals.js";
-import { appAssetUrl } from "./appBase.js";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
 const MAX_VOICES = 8;
@@ -55,7 +54,7 @@ function padId(id) {
 }
 
 export function audioUrl(lang, id) {
-  return appAssetUrl(`audio/${lang}/${padId(id)}.mp3`);
+  return `audio/${lang}/${padId(id)}.mp3`;
 }
 
 function speakKey(lang, id) {
