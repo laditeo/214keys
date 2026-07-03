@@ -1608,12 +1608,6 @@ function isInteractiveTarget(target) {
   );
 }
 
-function touchPointCount(event) {
-  if (event.touches?.length) return event.touches.length;
-  if (event.changedTouches?.length) return event.changedTouches.length;
-  return 0;
-}
-
 function isInteractiveTouchEvent(event) {
   if (isUiChromeTarget(event.target)) return true;
 
@@ -2026,7 +2020,8 @@ export function hideSpatialCanvas() {
   hideClearConfirm();
   applyFullscreen(false);
   rootEl.hidden = true;
-  dragPointer = null;
+  clearPendingCardDrag();
+  cancelCardDrag();
   panPointer = null;
   rmbZoomPointer = null;
   lassoPointer = null;
