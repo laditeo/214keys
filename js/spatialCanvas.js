@@ -82,6 +82,8 @@ let fenceLayout = [];
 let worldWidth = WORLD_MIN_W;
 let worldHeight = WORLD_MIN_H;
 
+/** @type {{ id: number, cardId: number, el: HTMLElement, pointerId: number, startX: number, startY: number } | null} */
+let pendingCardDrag = null;
 /** @type {{ id: number, cardId: number, el: HTMLElement, startX: number, startY: number, moved: boolean, origins: Map<string, { x: number, y: number }> } | null} */
 let dragPointer = null;
 /** @type {{ id: number, lastX: number, lastY: number } | null} */
@@ -1234,7 +1236,45 @@ function createCardElement(item) {
       selectedIds.add(key);
       updateSelectionUi();
     }
+    if (prefersTouchGestures() && event.pointerType === "touch") {
+      clearPendingCardDrag();
+      pendingCardDrag = {
+        id: item.id,
+        el,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+      };
+      return;
+    }
     startCardDrag(event, item.id, el);
+  });
+
+  el.addEventListener("pointermove", (event) => {
+    if (!pendingCardDrag || pendingCardDrag.el !== el || pendingCardDrag.pointerId !== event.pointerId) return;
+    if (touchPointers.size >= 2) {
+      clearPendingCardDrag();
+      return;
+    }
+    const dist = Math.hypot(event.clientX - pendingCardDrag.startX, event.clientY - pendingCardDrag.startY);
+    if (dist <= 6) return;
+    const pending = pendingCardDrag;
+    clearPendingCardDrag();
+    startCardDrag(event, pending.id, el);
+  });
+
+  el.addEventListener("pointerup", (event) => {
+    if (pendingCardDrag?.el === el && pendingCardDrag.pointerId === event.pointerId) {
+      clearPendingCardDrag();
+    }
+    endCardDrag(event);
+  });
+
+  el.addEventListener("pointercancel", (event) => {
+    if (pendingCardDrag?.el === el && pendingCardDrag.pointerId === event.pointerId) {
+      clearPendingCardDrag();
+    }
+    endCardDrag(event);
   });
 
   return el;
@@ -1349,6 +1389,7 @@ function startCardDrag(event, id, el) {
 
 function onCardPointerMove(event) {
   if (!dragPointer || event.pointerId !== dragPointer.id) return;
+  if (prefersTouchGestures() && touchPointers.size >= 2) return;
   const zoom = state.viewport.zoom;
   const dx = (event.clientX - dragPointer.startX) / zoom;
   const dy = (event.clientY - dragPointer.startY) / zoom;
@@ -1395,6 +1436,42 @@ function setStageCursor(mode) {
   stageEl?.classList.toggle("is-lassoing", mode === "lasso");
   stageEl?.classList.toggle("is-fence-move", mode === "fence-move");
   stageEl?.classList.toggle("is-fence-resize", mode === "fence-resize");
+}
+
+function clearPendingCardDrag() {
+  pendingCardDrag = null;
+}
+
+function cancelCardDrag() {
+  clearPendingCardDrag();
+  if (!dragPointer) return;
+  for (const [sid, origin] of dragPointer.origins) {
+    const card = state.cards[sid];
+    if (!card) continue;
+    card.x = origin.x;
+    card.y = origin.y;
+    const node = worldEl?.querySelector(`.spatial-card[data-id="${sid}"]`);
+    if (node) {
+      node.style.left = `${card.x}px`;
+      node.style.top = `${card.y}px`;
+    }
+  }
+  dragPointer.el.classList.remove("spatial-card--dragging");
+  try {
+    dragPointer.el.releasePointerCapture(dragPointer.id);
+  } catch {
+    /* ignore */
+  }
+  dragPointer = null;
+}
+
+function beginPinchGesture() {
+  touchLassoPending = null;
+  cancelLasso();
+  cancelCardDrag();
+  pinchPointerIds = null;
+  beginPinch();
+  applyPinch();
 }
 
 function beginPinch() {
@@ -1515,6 +1592,14 @@ function handleFenceGestureMove(event) {
   return false;
 }
 
+function isUiChromeTarget(target) {
+  return Boolean(
+    target?.closest?.(
+      ".spatial-fence__label, .spatial-fence__resize, .spatial-popup, .spatial-popup *, .modal-canvas__toolbar, .modal-canvas__toolbar *, .spatial-confirm, .spatial-confirm *, .spatial-canvas__spawn, .spatial-canvas__spawn-group",
+    ),
+  );
+}
+
 function isInteractiveTarget(target) {
   return Boolean(
     target?.closest?.(
@@ -1523,13 +1608,32 @@ function isInteractiveTarget(target) {
   );
 }
 
+function touchPointCount(event) {
+  if (event.touches?.length) return event.touches.length;
+  if (event.changedTouches?.length) return event.changedTouches.length;
+  return 0;
+}
+
 function isInteractiveTouchEvent(event) {
-  if (isInteractiveTarget(event.target)) return true;
+  if (isUiChromeTarget(event.target)) return true;
+
+  const multitouch = Boolean(event.touches && event.touches.length >= 2);
   const points = event.touches?.length ? event.touches : event.changedTouches;
+
+  if (!multitouch) {
+    if (isInteractiveTarget(event.target)) return true;
+    if (!points) return false;
+    for (const touch of points) {
+      const el = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (isInteractiveTarget(el)) return true;
+    }
+    return false;
+  }
+
   if (!points) return false;
   for (const touch of points) {
     const el = document.elementFromPoint(touch.clientX, touch.clientY);
-    if (isInteractiveTarget(el)) return true;
+    if (isUiChromeTarget(el)) return true;
   }
   return false;
 }
@@ -1595,8 +1699,7 @@ function onStageTouchStart(event) {
   if (touchPointers.size >= 2) {
     touchLassoPending = null;
     cancelLasso();
-    beginPinch();
-    applyPinch();
+    beginPinchGesture();
     return;
   }
 
@@ -1618,8 +1721,7 @@ function onStageTouchMove(event) {
   if (touchPointers.size >= 2) {
     touchLassoPending = null;
     if (lassoPointer) cancelLasso();
-    beginPinch();
-    applyPinch();
+    beginPinchGesture();
     return;
   }
 
@@ -1924,7 +2026,8 @@ export function hideSpatialCanvas() {
   hideClearConfirm();
   applyFullscreen(false);
   rootEl.hidden = true;
-  dragPointer = null;
+  clearPendingCardDrag();
+  cancelCardDrag();
   panPointer = null;
   rmbZoomPointer = null;
   lassoPointer = null;
