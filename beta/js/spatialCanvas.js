@@ -1508,6 +1508,10 @@ function disarmDocumentTouch() {
   setMultitouchClass();
 }
 
+function touchAsPointerEvent(touch, touches) {
+  return { pointerId: touch.identifier, clientX: touch.clientX, clientY: touch.clientY, touches };
+}
+
 function onDocumentTouchMove(event) {
   if (!documentTouchArmed || !prefersTouchGestures()) return;
   if (!isCanvasTouchList(event.touches)) return;
@@ -1521,11 +1525,28 @@ function onDocumentTouchMove(event) {
     return;
   }
 
-  if (isInteractiveTouchEvent(event)) return;
-  event.preventDefault();
-
   const touch = event.touches[0];
   if (!touch) return;
+
+  if (pendingCardDrag && touch.identifier === pendingCardDrag.pointerId) {
+    event.preventDefault();
+    const dist = Math.hypot(touch.clientX - pendingCardDrag.startX, touch.clientY - pendingCardDrag.startY);
+    if (dist > 6) {
+      const pending = pendingCardDrag;
+      clearPendingCardDrag();
+      startCardDrag(touchAsPointerEvent(touch, event.touches), pending.id, pending.el);
+    }
+    return;
+  }
+
+  if (dragPointer && touch.identifier === dragPointer.id) {
+    event.preventDefault();
+    onCardPointerMove(touchAsPointerEvent(touch, event.touches));
+    return;
+  }
+
+  if (isInteractiveTouchEvent(event)) return;
+  event.preventDefault();
   if (!lassoPointer) maybeStartTouchLasso(touch);
   if (lassoPointer?.id === touch.identifier) {
     appendLassoPoint(touch.clientX, touch.clientY);
@@ -1546,6 +1567,12 @@ function onDocumentTouchEnd(event) {
     }
     if (touchLassoPending?.id === touch.identifier) {
       touchLassoPending = null;
+    }
+    if (dragPointer?.id === touch.identifier) {
+      endCardDrag(touchAsPointerEvent(touch, event.touches));
+    }
+    if (pendingCardDrag?.pointerId === touch.identifier) {
+      clearPendingCardDrag();
     }
   }
 
@@ -1841,7 +1868,8 @@ function onStageTouchStart(event) {
 }
 
 function onStagePointerMove(event) {
-  if (isSyntheticTouchPointer(event)) return;
+  const draggingCard = dragPointer && event.pointerId === dragPointer.id;
+  if (isSyntheticTouchPointer(event) && !draggingCard) return;
   if (activeGesture?.pointerId === event.pointerId) return;
 
   if (dragPointer && event.pointerId === dragPointer.id) {
@@ -1894,7 +1922,8 @@ function onStagePointerMove(event) {
 }
 
 function onStagePointerUp(event) {
-  if (isSyntheticTouchPointer(event)) return;
+  const draggingCard = dragPointer && event.pointerId === dragPointer.id;
+  if (isSyntheticTouchPointer(event) && !draggingCard) return;
   if (lassoPointer?.id === event.pointerId) {
     const pt = stagePoint(event.clientX, event.clientY);
     const last = lassoPointer.points[lassoPointer.points.length - 1];
