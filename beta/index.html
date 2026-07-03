@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=138">
+  <link rel="stylesheet" href="css/style.css?v=139">
   <script>
     (function () {
-      var BUILD = "138";
+      var BUILD = "139";
       document.addEventListener("DOMContentLoaded", function () {
         var buildEl = document.getElementById("header-build");
         if (buildEl) buildEl.textContent = "v" + BUILD;
@@ -116,6 +116,31 @@
             aria-valuenow="1"
           >
         </label>
+
+        <div class="display-toggles" role="group" aria-label="Отображение таблицы">
+          <label class="display-toggle" for="toggle-category-colors">
+            <input
+              type="checkbox"
+              id="toggle-category-colors"
+              class="display-toggle__input"
+            >
+            <span class="display-toggle__track" aria-hidden="true">
+              <span class="display-toggle__thumb"></span>
+            </span>
+            <span class="display-toggle__label">Цвет по категориям</span>
+          </label>
+          <label class="display-toggle" for="toggle-cell-emoji">
+            <input
+              type="checkbox"
+              id="toggle-cell-emoji"
+              class="display-toggle__input"
+            >
+            <span class="display-toggle__track" aria-hidden="true">
+              <span class="display-toggle__thumb"></span>
+            </span>
+            <span class="display-toggle__label">Emoji у знаков</span>
+          </label>
+        </div>
       </div>
     </div>
 
@@ -388,6 +413,6 @@
     }
   }
   </script>
-  <script type="module" src="js/app.js?v=138"></script>
+  <script type="module" src="js/app.js?v=139"></script>
 </body>
 </html>

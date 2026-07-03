@@ -2,6 +2,8 @@ import radicals from "./radicals.js";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
+import { getRadicalCategory, getCategoryMeta } from "./radicalCategories.js";
+import { getRadicalEmoji } from "./radicalEmoji.js";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -882,15 +884,7 @@ function createGridFragment(items, onCellClick) {
     btn.dataset.id = item.id;
     btn.setAttribute("aria-label", `${item.id}. ${item.char} — ${item.jp}, ${item.cn}`);
 
-    const num = document.createElement("span");
-    num.className = "cell__num";
-    num.textContent = item.id;
-
-    const ch = document.createElement("span");
-    ch.className = "cell__char";
-    ch.textContent = item.char;
-
-    btn.append(num, ch);
+    decorateCell(btn, item);
     btn.addEventListener(
       "touchstart",
       () => {
@@ -1214,6 +1208,78 @@ const fontWeightSlider = document.getElementById("font-weight-slider");
 const fontWeightValue = document.getElementById("font-weight-value");
 const graphicsModeSlider = document.getElementById("graphics-mode-slider");
 const graphicsModeValue = document.getElementById("graphics-mode-value");
+const categoryColorsToggle = document.getElementById("toggle-category-colors");
+const cellEmojiToggle = document.getElementById("toggle-cell-emoji");
+
+const CELL_COLORS_KEY = "214keys-cell-colors";
+const CELL_EMOJI_KEY = "214keys-cell-emoji";
+
+let categoryColorsOn = false;
+let cellEmojiOn = false;
+
+function applyCellDisplayFlags() {
+  document.documentElement.dataset.cellColors = categoryColorsOn ? "on" : "";
+  document.documentElement.dataset.cellEmoji = cellEmojiOn ? "on" : "";
+}
+
+function decorateCell(btn, item) {
+  const categoryMeta = getCategoryMeta(getRadicalCategory(item));
+  btn.dataset.category = categoryMeta.id;
+  btn.style.setProperty("--cell-category-color", categoryMeta.color);
+
+  const num = document.createElement("span");
+  num.className = "cell__num";
+  num.textContent = item.id;
+
+  const ch = document.createElement("span");
+  ch.className = "cell__char";
+  ch.textContent = item.char;
+
+  const emoji = document.createElement("span");
+  emoji.className = "cell__emoji";
+  emoji.textContent = getRadicalEmoji(item.id);
+  emoji.setAttribute("aria-hidden", "true");
+
+  btn.append(num, ch, emoji);
+}
+
+function applyCellDisplayToggles({ persist = true } = {}) {
+  applyCellDisplayFlags();
+
+  if (categoryColorsToggle) {
+    categoryColorsToggle.checked = categoryColorsOn;
+  }
+  if (cellEmojiToggle) {
+    cellEmojiToggle.checked = cellEmojiOn;
+  }
+
+  if (persist) {
+    try {
+      localStorage.setItem(CELL_COLORS_KEY, categoryColorsOn ? "1" : "0");
+      localStorage.setItem(CELL_EMOJI_KEY, cellEmojiOn ? "1" : "0");
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+function setCategoryColorsOn(next, options) {
+  categoryColorsOn = Boolean(next);
+  applyCellDisplayToggles(options);
+}
+
+function setCellEmojiOn(next, options) {
+  cellEmojiOn = Boolean(next);
+  applyCellDisplayToggles(options);
+}
+
+function readStoredToggle(key) {
+  try {
+    return localStorage.getItem(key) === "1";
+  } catch {
+    return false;
+  }
+}
 
 function fontWeightCssBounds() {
   return document.documentElement.dataset.font === "linear"
@@ -1367,6 +1433,14 @@ for (const btn of matcapButtons) {
 
 fontWeightSlider?.addEventListener("input", () => applyFontWeight(fontWeightSlider.value));
 
+categoryColorsToggle?.addEventListener("change", () => {
+  setCategoryColorsOn(categoryColorsToggle.checked);
+});
+
+cellEmojiToggle?.addEventListener("change", () => {
+  setCellEmojiOn(cellEmojiToggle.checked);
+});
+
 graphicsModeSlider?.addEventListener("input", () => {
   applyGraphicsMode(graphicsModeSlider.value);
 });
@@ -1399,6 +1473,9 @@ try {
 } catch {
   applyFontWeight(defaultCssWeight());
 }
+
+setCategoryColorsOn(readStoredToggle(CELL_COLORS_KEY), { persist: false });
+setCellEmojiOn(readStoredToggle(CELL_EMOJI_KEY), { persist: false });
 
 applyMatcap(getGlyphMaterialMode());
 populateMatcapPreviews();
