@@ -1224,6 +1224,7 @@ html[data-theme="dark"] .modal-map__viewport {
   min-height: 0;
   overflow: hidden;
   touch-action: none;
+  overscroll-behavior: none;
   cursor: crosshair;
   background:
     linear-gradient(90deg, color-mix(in srgb, var(--border) 35%, transparent) 1px, transparent 1px) 0 0 / 20px 20px,
@@ -1248,6 +1249,7 @@ html[data-theme="dark"] .modal-map__viewport {
   left: 0;
   transform-origin: 0 0;
   will-change: transform;
+  touch-action: none;
 }
 
 .modal-canvas__viewport > .spatial-popup {
@@ -1258,6 +1260,7 @@ html[data-theme="dark"] .modal-map__viewport {
 
 .modal-canvas__world {
   position: relative;
+  touch-action: none;
 }
 
 .spatial-lasso {

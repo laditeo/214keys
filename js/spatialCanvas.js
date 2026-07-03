@@ -90,12 +90,16 @@ let panPointer = null;
 let rmbZoomPointer = null;
 /** @type {Map<number, { x: number, y: number }>} */
 let touchPointers = new Map();
-/** @type {{ startDistance: number, midpoint: { x: number, y: number }, startZoom: number, startPan: { x: number, y: number } } | null} */
+/** @type {{ startDistance: number, midpoint: { x: number, y: number }, startZoom: number, worldAnchor: { x: number, y: number } } | null} */
 let pinchStart = null;
 /** @type {number[] | null} */
 let pinchPointerIds = null;
 /** @type {{ id: number, points: { x: number, y: number }[] } | null} */
 let lassoPointer = null;
+/** @type {{ id: number, clientX: number, clientY: number } | null} */
+let touchLassoPending = null;
+/** @type {boolean} */
+let useTouchGestures = false;
 /** @type {{ kind: "fence-move" | "fence-resize", pointerId: number, strokes: number, startClientX: number, startClientY: number, startOffsetX: number, startOffsetY: number, startScale: number, cardOrigins: Map<string, { x: number, y: number }>, fenceEl: HTMLElement } | null} */
 let activeGesture = null;
 /** @type {{ pointerId: number, startX: number, startY: number, fence: object, fenceEl: HTMLElement, labelEl: HTMLElement } | null} */
@@ -802,18 +806,49 @@ function sortedTouchPointerIds() {
   return [...touchPointers.keys()].sort((a, b) => a - b);
 }
 
-function beginLasso(event) {
-  const pt = stagePoint(event.clientX, event.clientY);
-  lassoPointer = { id: event.pointerId, points: [pt] };
+function prefersTouchGestures() {
+  return useTouchGestures;
+}
+
+function syncTouchPointersFromTouches(touches) {
+  if (!stageEl) return;
+  touchPointers.clear();
+  const rect = stageEl.getBoundingClientRect();
+  for (const touch of touches) {
+    touchPointers.set(touch.identifier, {
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    });
+  }
+}
+
+function beginLassoAt(clientX, clientY, pointerId) {
+  const pt = stagePoint(clientX, clientY);
+  lassoPointer = { id: pointerId, points: [pt] };
   lassoEl?.classList.add("is-active");
   setStageCursor("lasso");
+}
+
+function maybeStartTouchLasso(touch) {
+  if (!touchLassoPending || touchLassoPending.id !== touch.identifier || lassoPointer) return false;
+  const dist = Math.hypot(touch.clientX - touchLassoPending.clientX, touch.clientY - touchLassoPending.clientY);
+  if (dist <= 6) return false;
+  beginLassoAt(touchLassoPending.clientX, touchLassoPending.clientY, touch.identifier);
+  touchLassoPending = null;
+  appendLassoPoint(touch.clientX, touch.clientY);
+  return true;
+}
+
+function beginLasso(event) {
+  beginLassoAt(event.clientX, event.clientY, event.pointerId);
 }
 
 function appendLassoPoint(clientX, clientY) {
   if (!lassoPointer) return;
   const pt = stagePoint(clientX, clientY);
   const last = lassoPointer.points[lassoPointer.points.length - 1];
-  if (!last || Math.hypot(pt.x - last.x, pt.y - last.y) > 3) {
+  const minDist = prefersTouchGestures() ? 2 : 3;
+  if (!last || Math.hypot(pt.x - last.x, pt.y - last.y) > minDist) {
     lassoPointer.points.push(pt);
     updateLassoPathFromPoints(lassoPointer.points);
   }
@@ -826,7 +861,7 @@ function finishLasso() {
   lassoEl?.classList.remove("is-active");
   lassoPointer = null;
 
-  if (pts.length > 4) {
+  if (pts.length > (prefersTouchGestures() ? 2 : 4)) {
     const bounds = pts.reduce(
       (acc, p) => ({
         minX: Math.min(acc.minX, p.x),
@@ -837,7 +872,7 @@ function finishLasso() {
       { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity },
     );
     const span = Math.max(bounds.maxX - bounds.minX, bounds.maxY - bounds.minY);
-    if (span > 8) {
+    if (span > (prefersTouchGestures() ? 6 : 8)) {
       selectedIds.clear();
       for (const [id, card] of Object.entries(state.cards)) {
         const cx = card.x + CARD_SIZE * 0.5;
@@ -1353,12 +1388,17 @@ function beginPinch() {
   const points = pair.map((id) => touchPointers.get(id)).filter(Boolean);
   if (points.length < 2) return;
   const [a, b] = points;
+  const mid = { x: (a.x + b.x) * 0.5, y: (a.y + b.y) * 0.5 };
+  const zoom = state.viewport.zoom;
   pinchPointerIds = pair;
   pinchStart = {
     startDistance: Math.hypot(b.x - a.x, b.y - a.y),
-    midpoint: { x: (a.x + b.x) * 0.5, y: (a.y + b.y) * 0.5 },
-    startZoom: state.viewport.zoom,
-    startPan: { x: state.viewport.x, y: state.viewport.y },
+    midpoint: mid,
+    startZoom: zoom,
+    worldAnchor: {
+      x: (mid.x - state.viewport.x) / zoom,
+      y: (mid.y - state.viewport.y) / zoom,
+    },
   };
   panPointer = null;
   rmbZoomPointer = null;
@@ -1373,26 +1413,15 @@ function applyPinch() {
   const [a, b] = points;
   const midpoint = { x: (a.x + b.x) * 0.5, y: (a.y + b.y) * 0.5 };
   const distance = Math.hypot(b.x - a.x, b.y - a.y);
-  state.viewport.x = pinchStart.startPan.x + (midpoint.x - pinchStart.midpoint.x);
-  state.viewport.y = pinchStart.startPan.y + (midpoint.y - pinchStart.midpoint.y);
   const ratio = distance / Math.max(1, pinchStart.startDistance);
-  if (Math.abs(ratio - 1) > 0.03) {
-    const nextZoom = Math.min(
-      MAX_ZOOM,
-      Math.max(MIN_ZOOM, pinchStart.startZoom * (1 + (ratio - 1) * PINCH_ZOOM_SENS * 6)),
-    );
-    const rect = stageEl.getBoundingClientRect();
-    const sx = rect.left + pinchStart.midpoint.x;
-    const sy = rect.top + pinchStart.midpoint.y;
-    const wx = (sx - rect.left - state.viewport.x) / pinchStart.startZoom;
-    const wy = (sy - rect.top - state.viewport.y) / pinchStart.startZoom;
-    state.viewport.zoom = nextZoom;
-    state.viewport.x = sx - rect.left - wx * nextZoom;
-    state.viewport.y = sy - rect.top - wy * nextZoom;
-    setStageCursor("zoom");
-  } else {
-    setStageCursor("pan");
-  }
+  const nextZoom = Math.min(
+    MAX_ZOOM,
+    Math.max(MIN_ZOOM, pinchStart.startZoom * ratio),
+  );
+  state.viewport.zoom = nextZoom;
+  state.viewport.x = midpoint.x - pinchStart.worldAnchor.x * nextZoom;
+  state.viewport.y = midpoint.y - pinchStart.worldAnchor.y * nextZoom;
+  setStageCursor(Math.abs(ratio - 1) > 0.03 ? "zoom" : "pan");
   applyViewportTransform();
 }
 
@@ -1495,6 +1524,7 @@ function onStagePointerDownCapture(event) {
 function onStagePointerDown(event) {
   if (event.button === 1 || event.button === 2 || event.button === 4) return;
   if (isInteractiveTarget(event.target)) return;
+  if (prefersTouchGestures() && event.pointerType === "touch") return;
 
   if (event.pointerType === "touch") {
     updateTouchPointer(event);
@@ -1528,6 +1558,85 @@ function onStagePointerDown(event) {
   }
 }
 
+function onStageTouchStart(event) {
+  if (!prefersTouchGestures() || isInteractiveTarget(event.target)) return;
+  event.preventDefault();
+  syncTouchPointersFromTouches(event.touches);
+
+  if (touchPointers.size >= 2) {
+    touchLassoPending = null;
+    cancelLasso();
+    beginPinch();
+    applyPinch();
+    return;
+  }
+
+  const touch = event.touches[0];
+  if (!touch) return;
+  touchLassoPending = {
+    id: touch.identifier,
+    clientX: touch.clientX,
+    clientY: touch.clientY,
+  };
+}
+
+function onStageTouchMove(event) {
+  if (!prefersTouchGestures()) return;
+  event.preventDefault();
+  syncTouchPointersFromTouches(event.touches);
+
+  if (touchPointers.size >= 2) {
+    touchLassoPending = null;
+    if (lassoPointer) cancelLasso();
+    beginPinch();
+    applyPinch();
+    return;
+  }
+
+  const touch = event.touches[0];
+  if (!touch) return;
+
+  if (!lassoPointer) {
+    maybeStartTouchLasso(touch);
+  }
+  if (lassoPointer?.id === touch.identifier) {
+    appendLassoPoint(touch.clientX, touch.clientY);
+  }
+}
+
+function onStageTouchEnd(event) {
+  if (!prefersTouchGestures()) return;
+  event.preventDefault();
+
+  for (const touch of event.changedTouches) {
+    if (lassoPointer?.id === touch.identifier) {
+      appendLassoPoint(touch.clientX, touch.clientY);
+      finishLasso();
+    }
+    if (touchLassoPending?.id === touch.identifier) {
+      touchLassoPending = null;
+    }
+  }
+
+  syncTouchPointersFromTouches(event.touches);
+
+  if (touchPointers.size >= 2) {
+    pinchPointerIds = null;
+    beginPinch();
+    applyPinch();
+  } else {
+    endPinchIfNeeded();
+  }
+
+  if (!touchPointers.size) {
+    touchLassoPending = null;
+    if (!activeGesture && !panPointer && !rmbZoomPointer && !lassoPointer && !dragPointer) {
+      setStageCursor(null);
+      saveState();
+    }
+  }
+}
+
 function onStagePointerMove(event) {
   if (activeGesture?.pointerId === event.pointerId) return;
 
@@ -1537,6 +1646,7 @@ function onStagePointerMove(event) {
   }
 
   if (touchPointers.has(event.pointerId)) {
+    if (prefersTouchGestures()) return;
     event.preventDefault();
     updateTouchPointer(event);
 
@@ -1646,6 +1756,10 @@ function onStageWheel(event) {
 
 function bindStage() {
   if (!stageEl) return;
+  useTouchGestures =
+    window.matchMedia("(pointer: coarse)").matches ||
+    window.matchMedia("(hover: none)").matches;
+
   stageEl.addEventListener("pointerdown", onStagePointerDownCapture, true);
   stageEl.addEventListener("pointerdown", onStagePointerDown);
   stageEl.addEventListener("pointermove", onStagePointerMove);
@@ -1653,6 +1767,14 @@ function bindStage() {
   stageEl.addEventListener("pointercancel", onStagePointerUp);
   stageEl.addEventListener("contextmenu", (e) => e.preventDefault());
   stageEl.addEventListener("wheel", onStageWheel, { passive: false });
+
+  if (useTouchGestures) {
+    const touchOpts = { passive: false, capture: true };
+    stageEl.addEventListener("touchstart", onStageTouchStart, touchOpts);
+    stageEl.addEventListener("touchmove", onStageTouchMove, touchOpts);
+    stageEl.addEventListener("touchend", onStageTouchEnd, touchOpts);
+    stageEl.addEventListener("touchcancel", onStageTouchEnd, touchOpts);
+  }
 }
 
 function applyFullscreen(next) {
@@ -1785,6 +1907,7 @@ export function hideSpatialCanvas() {
   touchPointers.clear();
   pinchStart = null;
   pinchPointerIds = null;
+  touchLassoPending = null;
   if (focusAnimFrame) cancelAnimationFrame(focusAnimFrame);
   clearSelection();
 }
