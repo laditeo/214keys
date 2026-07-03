@@ -102,6 +102,8 @@ let lassoPointer = null;
 let touchLassoPending = null;
 /** @type {boolean} */
 let useTouchGestures = false;
+/** @type {boolean} */
+let documentTouchArmed = false;
 /** @type {{ kind: "fence-move" | "fence-resize", pointerId: number, strokes: number, startClientX: number, startClientY: number, startOffsetX: number, startOffsetY: number, startScale: number, cardOrigins: Map<string, { x: number, y: number }>, fenceEl: HTMLElement } | null} */
 let activeGesture = null;
 /** @type {{ pointerId: number, startX: number, startY: number, fence: object, fenceEl: HTMLElement, labelEl: HTMLElement } | null} */
@@ -1252,7 +1254,7 @@ function createCardElement(item) {
 
   el.addEventListener("pointermove", (event) => {
     if (!pendingCardDrag || pendingCardDrag.el !== el || pendingCardDrag.pointerId !== event.pointerId) return;
-    if (touchPointers.size >= 2) {
+    if (touchPointers.size >= 2 || (event.touches?.length ?? 0) >= 2) {
       clearPendingCardDrag();
       return;
     }
@@ -1389,7 +1391,7 @@ function startCardDrag(event, id, el) {
 
 function onCardPointerMove(event) {
   if (!dragPointer || event.pointerId !== dragPointer.id) return;
-  if (prefersTouchGestures() && touchPointers.size >= 2) return;
+  if (prefersTouchGestures() && (touchPointers.size >= 2 || (event.touches?.length ?? 0) >= 2)) return;
   const zoom = state.viewport.zoom;
   const dx = (event.clientX - dragPointer.startX) / zoom;
   const dy = (event.clientY - dragPointer.startY) / zoom;
@@ -1465,14 +1467,108 @@ function cancelCardDrag() {
   dragPointer = null;
 }
 
-function isMultitouchBlockedByUiChrome(event) {
-  const points = event.touches?.length ? event.touches : event.changedTouches;
-  if (!points) return false;
-  for (const touch of points) {
-    const el = document.elementFromPoint(touch.clientX, touch.clientY);
-    if (isUiChromeTarget(el)) return true;
+function stageContainsPoint(clientX, clientY) {
+  if (!stageEl) return false;
+  const rect = stageEl.getBoundingClientRect();
+  return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+}
+
+function elementAtTouch(touch) {
+  return document.elementFromPoint(touch.clientX, touch.clientY);
+}
+
+function isCanvasTouchList(touches) {
+  if (!touches?.length) return false;
+  for (const touch of touches) {
+    if (!stageContainsPoint(touch.clientX, touch.clientY)) continue;
+    if (isUiChromeTarget(elementAtTouch(touch))) continue;
+    return true;
   }
   return false;
+}
+
+function setMultitouchClass() {
+  stageEl?.classList.toggle("is-multitouch", touchPointers.size >= 2);
+}
+
+function armDocumentTouch() {
+  if (documentTouchArmed) return;
+  documentTouchArmed = true;
+  document.addEventListener("touchmove", onDocumentTouchMove, { passive: false, capture: true });
+  document.addEventListener("touchend", onDocumentTouchEnd, { passive: false, capture: true });
+  document.addEventListener("touchcancel", onDocumentTouchEnd, { passive: false, capture: true });
+}
+
+function disarmDocumentTouch() {
+  if (!documentTouchArmed) return;
+  documentTouchArmed = false;
+  document.removeEventListener("touchmove", onDocumentTouchMove, { capture: true });
+  document.removeEventListener("touchend", onDocumentTouchEnd, { capture: true });
+  document.removeEventListener("touchcancel", onDocumentTouchEnd, { capture: true });
+  setMultitouchClass();
+}
+
+function onDocumentTouchMove(event) {
+  if (!documentTouchArmed || !prefersTouchGestures()) return;
+  if (!isCanvasTouchList(event.touches)) return;
+
+  syncTouchPointersFromTouches(event.touches);
+  setMultitouchClass();
+
+  if (touchPointers.size >= 2) {
+    event.preventDefault();
+    onMultitouchUpdate();
+    return;
+  }
+
+  if (isInteractiveTouchEvent(event)) return;
+  event.preventDefault();
+
+  const touch = event.touches[0];
+  if (!touch) return;
+  if (!lassoPointer) maybeStartTouchLasso(touch);
+  if (lassoPointer?.id === touch.identifier) {
+    appendLassoPoint(touch.clientX, touch.clientY);
+  }
+}
+
+function onDocumentTouchEnd(event) {
+  if (!documentTouchArmed || !prefersTouchGestures()) return;
+
+  for (const touch of event.changedTouches) {
+    if (lassoPointer?.id === touch.identifier) {
+      appendLassoPoint(touch.clientX, touch.clientY);
+      finishLasso();
+    }
+    if (touchLassoPending?.id === touch.identifier) {
+      touchLassoPending = null;
+    }
+  }
+
+  syncTouchPointersFromTouches(event.touches);
+  setMultitouchClass();
+
+  if (touchPointers.size >= 2) {
+    if (isCanvasTouchList(event.touches)) {
+      event.preventDefault();
+      onMultitouchUpdate();
+    }
+    return;
+  }
+
+  if (isCanvasTouchList(event.changedTouches)) {
+    event.preventDefault();
+  }
+  endPinchIfNeeded();
+
+  if (!event.touches.length) {
+    touchLassoPending = null;
+    disarmDocumentTouch();
+    if (!activeGesture && !panPointer && !rmbZoomPointer && !lassoPointer && !dragPointer) {
+      setStageCursor(null);
+      saveState();
+    }
+  }
 }
 
 function onMultitouchUpdate() {
@@ -1496,16 +1592,18 @@ function onMultitouchUpdate() {
   applyPinch();
 }
 
-function beginPinchGesture() {
-  onMultitouchUpdate();
-}
-
 function beginPinch() {
-  if (pinchPointerIds?.every((id) => touchPointers.has(id))) return;
-
   const ids = sortedTouchPointerIds();
   if (ids.length < 2) return;
   const pair = ids.slice(0, 2);
+  if (
+    pinchStart &&
+    pinchPointerIds &&
+    pinchPointerIds[0] === pair[0] &&
+    pinchPointerIds[1] === pair[1]
+  ) {
+    return;
+  }
   const points = pair.map((id) => touchPointers.get(id)).filter(Boolean);
   if (points.length < 2) return;
   const [a, b] = points;
@@ -1544,12 +1642,14 @@ function applyPinch() {
   state.viewport.y = midpoint.y - pinchStart.worldAnchor.y * nextZoom;
   setStageCursor(Math.abs(ratio - 1) > 0.03 ? "zoom" : "pan");
   applyViewportTransform();
+  setMultitouchClass();
 }
 
 function endPinchIfNeeded() {
   if (touchPointers.size >= 2) return;
   pinchStart = null;
   pinchPointerIds = null;
+  setMultitouchClass();
 }
 
 function zoomAt(clientX, clientY, factor) {
@@ -1713,17 +1813,19 @@ function onStagePointerDown(event) {
 
 function onStageTouchStart(event) {
   if (!prefersTouchGestures()) return;
+  if (!isCanvasTouchList(event.touches)) return;
+
   syncTouchPointersFromTouches(event.touches);
+  armDocumentTouch();
+  setMultitouchClass();
+  event.preventDefault();
 
   if (touchPointers.size >= 2) {
-    if (isMultitouchBlockedByUiChrome(event)) return;
-    event.preventDefault();
     onMultitouchUpdate();
     return;
   }
 
   if (isInteractiveTouchEvent(event)) return;
-  event.preventDefault();
 
   const touch = event.touches[0];
   if (!touch) return;
@@ -1732,67 +1834,6 @@ function onStageTouchStart(event) {
     clientX: touch.clientX,
     clientY: touch.clientY,
   };
-}
-
-function onStageTouchMove(event) {
-  if (!prefersTouchGestures()) return;
-  syncTouchPointersFromTouches(event.touches);
-
-  if (touchPointers.size >= 2) {
-    if (isMultitouchBlockedByUiChrome(event)) return;
-    event.preventDefault();
-    onMultitouchUpdate();
-    return;
-  }
-
-  if (isInteractiveTouchEvent(event)) return;
-  event.preventDefault();
-
-  const touch = event.touches[0];
-  if (!touch) return;
-
-  if (!lassoPointer) {
-    maybeStartTouchLasso(touch);
-  }
-  if (lassoPointer?.id === touch.identifier) {
-    appendLassoPoint(touch.clientX, touch.clientY);
-  }
-}
-
-function onStageTouchEnd(event) {
-  if (!prefersTouchGestures()) return;
-
-  for (const touch of event.changedTouches) {
-    if (lassoPointer?.id === touch.identifier) {
-      appendLassoPoint(touch.clientX, touch.clientY);
-      finishLasso();
-    }
-    if (touchLassoPending?.id === touch.identifier) {
-      touchLassoPending = null;
-    }
-  }
-
-  syncTouchPointersFromTouches(event.touches);
-
-  if (touchPointers.size >= 2) {
-    if (!isMultitouchBlockedByUiChrome(event)) {
-      event.preventDefault();
-      onMultitouchUpdate();
-    }
-    return;
-  }
-
-  if (isInteractiveTouchEvent(event)) return;
-  event.preventDefault();
-  endPinchIfNeeded();
-
-  if (!touchPointers.size) {
-    touchLassoPending = null;
-    if (!activeGesture && !panPointer && !rmbZoomPointer && !lassoPointer && !dragPointer) {
-      setStageCursor(null);
-      saveState();
-    }
-  }
 }
 
 function onStagePointerMove(event) {
@@ -1915,6 +1956,7 @@ function onStageWheel(event) {
 function bindStage() {
   if (!stageEl) return;
   useTouchGestures =
+    navigator.maxTouchPoints > 0 ||
     window.matchMedia("(pointer: coarse)").matches ||
     window.matchMedia("(hover: none)").matches;
 
@@ -1926,12 +1968,8 @@ function bindStage() {
   stageEl.addEventListener("contextmenu", (e) => e.preventDefault());
   stageEl.addEventListener("wheel", onStageWheel, { passive: false });
 
-  if (useTouchGestures) {
-    const touchOpts = { passive: false, capture: true };
-    stageEl.addEventListener("touchstart", onStageTouchStart, touchOpts);
-    stageEl.addEventListener("touchmove", onStageTouchMove, touchOpts);
-    stageEl.addEventListener("touchend", onStageTouchEnd, touchOpts);
-    stageEl.addEventListener("touchcancel", onStageTouchEnd, touchOpts);
+  if (navigator.maxTouchPoints > 0) {
+    stageEl.addEventListener("touchstart", onStageTouchStart, { passive: false, capture: true });
   }
 }
 
@@ -2053,6 +2091,7 @@ export function hideSpatialCanvas() {
   rootEl.hidden = true;
   clearPendingCardDrag();
   cancelCardDrag();
+  disarmDocumentTouch();
   panPointer = null;
   rmbZoomPointer = null;
   lassoPointer = null;

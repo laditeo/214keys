@@ -1231,6 +1231,10 @@ html[data-theme="dark"] .modal-map__viewport {
     linear-gradient(color-mix(in srgb, var(--border) 35%, transparent) 1px, transparent 1px) 0 0 / 20px 20px;
 }
 
+.modal-canvas__stage.is-multitouch .spatial-card {
+  pointer-events: none;
+}
+
 .modal-canvas__stage.is-panning {
   cursor: grab;
 }
