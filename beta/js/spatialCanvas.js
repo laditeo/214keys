@@ -1239,14 +1239,13 @@ function createCardElement(item) {
       updateSelectionUi();
     }
     if (prefersTouchGestures() && event.pointerType === "touch") {
-      clearPendingCardDrag();
-      pendingCardDrag = {
-        id: item.id,
-        el,
-        pointerId: event.pointerId,
-        startX: event.clientX,
-        startY: event.clientY,
-      };
+      if (!pendingCardDrag || pendingCardDrag.el !== el) {
+        beginPendingCardTouch(
+          { identifier: event.pointerId, clientX: event.clientX, clientY: event.clientY },
+          el,
+          item.id,
+        );
+      }
       return;
     }
     startCardDrag(event, item.id, el);
@@ -1278,6 +1277,29 @@ function createCardElement(item) {
     }
     endCardDrag(event);
   });
+
+  if (navigator.maxTouchPoints > 0) {
+    el.addEventListener(
+      "touchstart",
+      (event) => {
+        if (event.touches.length > 1) return;
+        const touch = event.touches[0];
+        if (!touch) return;
+        event.preventDefault();
+        beginPendingCardTouch(touch, el, item.id);
+      },
+      { passive: false },
+    );
+    el.addEventListener(
+      "touchmove",
+      (event) => {
+        handleCardTouchMove(event, el);
+      },
+      { passive: false },
+    );
+    el.addEventListener("touchend", (event) => handleCardTouchEnd(event, el), { passive: false });
+    el.addEventListener("touchcancel", (event) => handleCardTouchEnd(event, el), { passive: false });
+  }
 
   return el;
 }
@@ -1385,7 +1407,11 @@ function startCardDrag(event, id, el) {
     moved: false,
     origins,
   };
-  el.setPointerCapture(event.pointerId);
+  try {
+    el.setPointerCapture(event.pointerId);
+  } catch {
+    /* touch-only drag may not support pointer capture */
+  }
   el.classList.add("spatial-card--dragging");
 }
 
@@ -1442,6 +1468,82 @@ function setStageCursor(mode) {
 
 function clearPendingCardDrag() {
   pendingCardDrag = null;
+}
+
+function cardElementFromTouch(touch) {
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  return el?.closest?.(".spatial-card") ?? null;
+}
+
+function beginPendingCardTouch(touch, cardEl, id) {
+  if (!cardEl || cardEl.classList.contains("spatial-card--filtered")) return;
+  const key = String(id);
+  if (!selectedIds.has(key)) {
+    clearSelection();
+    selectedIds.add(key);
+    updateSelectionUi();
+  }
+  clearPendingCardDrag();
+  pendingCardDrag = {
+    id,
+    el: cardEl,
+    pointerId: touch.identifier,
+    startX: touch.clientX,
+    startY: touch.clientY,
+  };
+}
+
+function findTouchById(touches, id) {
+  if (!touches?.length) return null;
+  for (const touch of touches) {
+    if (touch.identifier === id) return touch;
+  }
+  return touches[0] ?? null;
+}
+
+function handleCardTouchMove(event, el) {
+  if (!prefersTouchGestures()) return false;
+  if (event.touches.length > 1) {
+    if (pendingCardDrag?.el === el) clearPendingCardDrag();
+    return false;
+  }
+
+  const touch = findTouchById(
+    event.touches,
+    dragPointer?.el === el ? dragPointer.id : pendingCardDrag?.pointerId,
+  );
+  if (!touch) return false;
+
+  if (dragPointer?.el === el && touch.identifier === dragPointer.id) {
+    event.preventDefault();
+    onCardPointerMove(touchAsPointerEvent(touch, event.touches));
+    return true;
+  }
+
+  if (pendingCardDrag?.el === el && touch.identifier === pendingCardDrag.pointerId) {
+    event.preventDefault();
+    const dist = Math.hypot(touch.clientX - pendingCardDrag.startX, touch.clientY - pendingCardDrag.startY);
+    if (dist > 6) {
+      const pending = pendingCardDrag;
+      clearPendingCardDrag();
+      startCardDrag(touchAsPointerEvent(touch, event.touches), pending.id, el);
+    }
+    return true;
+  }
+
+  return false;
+}
+
+function handleCardTouchEnd(event, el) {
+  if (!prefersTouchGestures()) return;
+  for (const touch of event.changedTouches) {
+    if (dragPointer?.el === el && dragPointer.id === touch.identifier) {
+      endCardDrag(touchAsPointerEvent(touch, event.touches));
+    }
+    if (pendingCardDrag?.el === el && pendingCardDrag.pointerId === touch.identifier) {
+      clearPendingCardDrag();
+    }
+  }
 }
 
 function cancelCardDrag() {
@@ -1528,21 +1630,30 @@ function onDocumentTouchMove(event) {
   const touch = event.touches[0];
   if (!touch) return;
 
-  if (pendingCardDrag && touch.identifier === pendingCardDrag.pointerId) {
-    event.preventDefault();
-    const dist = Math.hypot(touch.clientX - pendingCardDrag.startX, touch.clientY - pendingCardDrag.startY);
-    if (dist > 6) {
-      const pending = pendingCardDrag;
-      clearPendingCardDrag();
-      startCardDrag(touchAsPointerEvent(touch, event.touches), pending.id, pending.el);
+  if (pendingCardDrag) {
+    const pendingTouch = findTouchById(event.touches, pendingCardDrag.pointerId);
+    if (pendingTouch) {
+      event.preventDefault();
+      const dist = Math.hypot(
+        pendingTouch.clientX - pendingCardDrag.startX,
+        pendingTouch.clientY - pendingCardDrag.startY,
+      );
+      if (dist > 6) {
+        const pending = pendingCardDrag;
+        clearPendingCardDrag();
+        startCardDrag(touchAsPointerEvent(pendingTouch, event.touches), pending.id, pending.el);
+      }
+      return;
     }
-    return;
   }
 
-  if (dragPointer && touch.identifier === dragPointer.id) {
-    event.preventDefault();
-    onCardPointerMove(touchAsPointerEvent(touch, event.touches));
-    return;
+  if (dragPointer) {
+    const dragTouch = findTouchById(event.touches, dragPointer.id);
+    if (dragTouch) {
+      event.preventDefault();
+      onCardPointerMove(touchAsPointerEvent(dragTouch, event.touches));
+      return;
+    }
   }
 
   if (isInteractiveTouchEvent(event)) return;
@@ -1849,17 +1960,26 @@ function onStageTouchStart(event) {
   syncTouchPointersFromTouches(event.touches);
   armDocumentTouch();
   setMultitouchClass();
-  event.preventDefault();
 
   if (touchPointers.size >= 2) {
+    event.preventDefault();
     onMultitouchUpdate();
+    return;
+  }
+
+  const touch = event.touches[0];
+  if (!touch) return;
+
+  const cardEl = cardElementFromTouch(touch);
+  if (cardEl) {
+    event.preventDefault();
+    beginPendingCardTouch(touch, cardEl, Number(cardEl.dataset.id));
     return;
   }
 
   if (isInteractiveTouchEvent(event)) return;
 
-  const touch = event.touches[0];
-  if (!touch) return;
+  event.preventDefault();
   touchLassoPending = {
     id: touch.identifier,
     clientX: touch.clientX,
