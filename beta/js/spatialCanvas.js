@@ -525,7 +525,7 @@ function selectionBounds() {
 }
 
 function positionSelectionPopup() {
-  if (!popupEl) return;
+  if (!popupEl || !stageEl) return;
   const bounds = selectionBounds();
   if (!bounds || bounds.count < 2) {
     if (!bounds || bounds.count === 0) selectedIds.clear();
@@ -535,8 +535,26 @@ function positionSelectionPopup() {
   showSelectionPopup();
   const anchorX = (bounds.minX + bounds.maxX) * 0.5;
   const anchorY = bounds.minY;
-  popupEl.style.left = `${anchorX}px`;
-  popupEl.style.top = `${anchorY}px`;
+  const { x, y, zoom } = state.viewport;
+  popupEl.style.left = `${anchorX * zoom + x}px`;
+  popupEl.style.top = `${anchorY * zoom + y}px`;
+}
+
+function bindPopupAction(btn, action) {
+  if (!btn) return;
+  let fired = false;
+  const run = (event) => {
+    event.stopPropagation();
+    if (fired) return;
+    fired = true;
+    action();
+    window.setTimeout(() => {
+      fired = false;
+    }, 400);
+  };
+  btn.addEventListener("click", run);
+  btn.addEventListener("touchend", run);
+  btn.addEventListener("pointerup", run);
 }
 
 function updateLassoPathFromPoints(pts) {
@@ -1499,10 +1517,21 @@ function handleFenceGestureMove(event) {
 
 function isInteractiveTarget(target) {
   return Boolean(
-    target.closest(
+    target?.closest?.(
       ".spatial-card, .spatial-fence__label, .spatial-fence__resize, .spatial-popup, .spatial-popup *, .modal-canvas__toolbar, .modal-canvas__toolbar *, .spatial-confirm, .spatial-confirm *, .spatial-canvas__spawn, .spatial-canvas__spawn-group",
     ),
   );
+}
+
+function isInteractiveTouchEvent(event) {
+  if (isInteractiveTarget(event.target)) return true;
+  const points = event.touches?.length ? event.touches : event.changedTouches;
+  if (!points) return false;
+  for (const touch of points) {
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (isInteractiveTarget(el)) return true;
+  }
+  return false;
 }
 
 function onStagePointerDownCapture(event) {
@@ -1559,7 +1588,7 @@ function onStagePointerDown(event) {
 }
 
 function onStageTouchStart(event) {
-  if (!prefersTouchGestures() || isInteractiveTarget(event.target)) return;
+  if (!prefersTouchGestures() || isInteractiveTouchEvent(event)) return;
   event.preventDefault();
   syncTouchPointersFromTouches(event.touches);
 
@@ -1582,6 +1611,7 @@ function onStageTouchStart(event) {
 
 function onStageTouchMove(event) {
   if (!prefersTouchGestures()) return;
+  if (isInteractiveTouchEvent(event)) return;
   event.preventDefault();
   syncTouchPointersFromTouches(event.touches);
 
@@ -1606,6 +1636,7 @@ function onStageTouchMove(event) {
 
 function onStageTouchEnd(event) {
   if (!prefersTouchGestures()) return;
+  if (isInteractiveTouchEvent(event)) return;
   event.preventDefault();
 
   for (const touch of event.changedTouches) {
@@ -1867,14 +1898,10 @@ export function initSpatialCanvas(options) {
   clearConfirmEl?.addEventListener("pointerdown", (event) => event.stopPropagation());
   clearConfirmEl?.addEventListener("click", (event) => event.stopPropagation());
   toolbarEl?.addEventListener("pointerdown", (event) => event.stopPropagation());
-  groupBtn?.addEventListener("click", (event) => {
-    event.stopPropagation();
-    createGroupFromSelection();
-  });
-  deleteBtn?.addEventListener("click", (event) => {
-    event.stopPropagation();
-    deleteSelectedCards();
-  });
+  groupBtn?.addEventListener("pointerdown", (event) => event.stopPropagation());
+  deleteBtn?.addEventListener("pointerdown", (event) => event.stopPropagation());
+  bindPopupAction(groupBtn, createGroupFromSelection);
+  bindPopupAction(deleteBtn, deleteSelectedCards);
   popupEl?.addEventListener("pointerdown", (event) => event.stopPropagation());
   popupEl?.addEventListener("click", (event) => event.stopPropagation());
   window.addEventListener("resize", syncOrientation);

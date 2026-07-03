@@ -1252,10 +1252,10 @@ html[data-theme="dark"] .modal-map__viewport {
   touch-action: none;
 }
 
-.modal-canvas__viewport > .spatial-popup {
-  z-index: 14;
-  transform: translate(-50%, calc(-100% - 8px)) scale(calc(1 / var(--viewport-zoom, 1)));
-  transform-origin: 50% 100%;
+.modal-canvas__stage > .spatial-popup {
+  z-index: 20;
+  transform: translate(-50%, calc(-100% - 8px));
+  touch-action: manipulation;
 }
 
 .modal-canvas__world {
@@ -1303,6 +1303,7 @@ html[data-theme="dark"] .modal-map__viewport {
   letter-spacing: 0.03em;
   text-transform: lowercase;
   cursor: pointer;
+  touch-action: manipulation;
   box-shadow: 0 0.35rem 1rem var(--shadow);
 }
 
@@ -1322,6 +1323,7 @@ html[data-theme="dark"] .modal-map__viewport {
   font-size: 1.05rem;
   line-height: 1;
   cursor: pointer;
+  touch-action: manipulation;
   box-shadow: 0 0.35rem 1rem var(--shadow);
 }
 

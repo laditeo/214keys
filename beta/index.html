@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=130">
+  <link rel="stylesheet" href="css/style.css?v=131">
   <script>
     (function () {
-      var BUILD = "130";
+      var BUILD = "131";
       document.addEventListener("DOMContentLoaded", function () {
         var buildEl = document.getElementById("header-build");
         if (buildEl) buildEl.textContent = "v" + BUILD;
@@ -177,14 +177,14 @@
           <div class="modal-canvas__stage" id="modal-canvas-stage">
             <div class="modal-canvas__viewport" id="modal-canvas-viewport">
               <div class="modal-canvas__world" id="modal-canvas-world"></div>
-              <div class="spatial-popup" id="modal-canvas-popup" hidden>
-                <button type="button" class="spatial-popup__group" id="modal-canvas-group">группа</button>
-                <button type="button" class="spatial-popup__delete" id="modal-canvas-delete" aria-label="Удалить выделенное">×</button>
-              </div>
             </div>
             <svg class="spatial-lasso" id="modal-canvas-lasso" aria-hidden="true">
               <path fill="color-mix(in srgb, var(--speaker-active, #c48a28) 18%, transparent)" stroke="var(--speaker-active, #c48a28)" stroke-width="1.5" stroke-dasharray="4 3"/>
             </svg>
+            <div class="spatial-popup" id="modal-canvas-popup" hidden>
+              <button type="button" class="spatial-popup__group" id="modal-canvas-group">группа</button>
+              <button type="button" class="spatial-popup__delete" id="modal-canvas-delete" aria-label="Удалить выделенное">×</button>
+            </div>
             <div class="modal-canvas__toolbar" id="modal-canvas-toolbar">
               <button type="button" class="modal-canvas__tool" id="modal-canvas-focus" aria-label="Фокус на текущей" title="Фокус на текущей">
                 <svg class="modal-canvas__tool-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -388,6 +388,6 @@
     }
   }
   </script>
-  <script type="module" src="js/app.js?v=130"></script>
+  <script type="module" src="js/app.js?v=131"></script>
 </body>
 </html>
