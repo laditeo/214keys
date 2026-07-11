@@ -95,6 +95,19 @@ body {
   color: var(--text);
   font-family: var(--font-ui);
   line-height: 1.5;
+  /* Отключаем выделение текста и long-press callout во всём приложении. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* В полях ввода выделение и набор текста должны работать как обычно. */
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
 }
 
 .page {
@@ -607,7 +620,7 @@ body.is-modal-open {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  background: var(--border);
+  background: var(--bg-cell);
 }
 
 .section-label {
@@ -867,7 +880,7 @@ html[data-cell-emoji="on"] .cell__emoji {
 
 .modal-map {
   --map-panel-width: 17.5rem;
-  --map-toggle-size: 1.85rem;
+  --map-toggle-size: 2.6rem;
   position: fixed;
   left: 0;
   top: 0;
@@ -932,8 +945,8 @@ html[data-cell-emoji="on"] .cell__emoji {
 }
 
 .modal-map__toggle-icon {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1.35rem;
+  height: 1.35rem;
 }
 
 .modal-map__stage {
@@ -957,7 +970,8 @@ html[data-cell-emoji="on"] .cell__emoji {
 
 .modal-map__grid {
   width: 100%;
-  --grid-columns: 12;
+  /* Как в основной таблице — 9 знаков в ряд. */
+  --grid-columns: 9;
   border: none;
   border-radius: 0;
   background: var(--border);
@@ -1002,7 +1016,9 @@ html[data-theme="dark"] .modal-map__viewport {
 /* —— Spatial canvas (right) —— */
 .modal-canvas {
   --canvas-panel-width: 18.5rem;
-  --canvas-toggle-size: 1.85rem;
+  --canvas-toggle-size: 2.7rem;
+  /* Круглые кнопки на канвасе — примерно по размеру фишек, но адаптивные. */
+  --canvas-btn-size: clamp(2.1rem, 6vw, 2.55rem);
   position: fixed;
   right: 0;
   top: 0;
@@ -1029,9 +1045,9 @@ html[data-theme="dark"] .modal-map__viewport {
   width: var(--canvas-toggle-size);
   height: var(--canvas-toggle-size);
   margin: 0.5rem 0.35rem 0 0;
-  padding: 0.28rem;
+  padding: 0.3rem;
   border: 1px solid var(--border-strong);
-  border-radius: 4px;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1056,11 +1072,12 @@ html[data-theme="dark"] .modal-map__viewport {
 }
 
 .modal-canvas__toggle-icon {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1.4rem;
+  height: 1.4rem;
 }
 
 .modal-canvas__panel {
+  position: relative;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -1072,6 +1089,44 @@ html[data-theme="dark"] .modal-map__viewport {
   background: var(--bg-elevated-solid);
   box-shadow: 0 1rem 2rem var(--shadow);
   overflow: hidden;
+}
+
+/* Ручка изменения ширины боковой панели (тянем за левый край). */
+.modal-canvas__resize {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0.6rem;
+  z-index: 18;
+  cursor: ew-resize;
+  touch-action: none;
+  pointer-events: auto;
+}
+
+.modal-canvas__resize::after {
+  content: "";
+  position: absolute;
+  left: 0.16rem;
+  top: 50%;
+  width: 0.18rem;
+  height: 2.6rem;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: var(--border-strong);
+  opacity: 0.5;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.modal-canvas__resize:hover::after,
+.modal-canvas__resize.is-dragging::after {
+  opacity: 1;
+  background: var(--speaker-active, #c48a28);
+}
+
+.modal-canvas.is-fullscreen .modal-canvas__resize,
+.modal-canvas.is-collapsed .modal-canvas__resize {
+  display: none;
 }
 
 .modal-canvas__filters {
@@ -1113,29 +1168,31 @@ html[data-theme="dark"] .modal-map__viewport {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.65rem;
-  height: 1.65rem;
+  width: var(--canvas-btn-size, 2.4rem);
+  height: var(--canvas-btn-size, 2.4rem);
   padding: 0;
   border: 1px dashed var(--border-strong);
   border-radius: 50%;
-  background: var(--bg-elevated);
+  background: color-mix(in srgb, var(--bg-elevated-solid) 92%, transparent);
   color: var(--text-muted);
   font: inherit;
   cursor: pointer;
   touch-action: none;
+  box-shadow: 0 0.35rem 1rem var(--shadow);
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
 .spatial-canvas__spawn-glyph {
   display: block;
-  font-size: 1.05rem;
+  font-size: 1.5rem;
   line-height: 1;
-  transform: translateY(-0.06em);
+  transform: translateY(-0.04em);
 }
 
 .spatial-canvas__spawn-icon {
   display: block;
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .spatial-canvas__spawn:hover {
@@ -1271,23 +1328,49 @@ html[data-theme="dark"] .modal-map__viewport {
   border-right: none;
 }
 
-.modal-canvas__toolbar {
+.modal-canvas__tools {
   position: absolute;
-  top: 0.45rem;
-  right: 0.45rem;
   z-index: 16;
   display: flex;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+
+.modal-canvas__tools > * {
+  pointer-events: auto;
+}
+
+.modal-canvas__tools--tl {
+  top: 0.5rem;
+  left: 0.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.modal-canvas__tools--tr {
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.modal-canvas__tools--bl {
+  bottom: 0.5rem;
+  left: 0.5rem;
+}
+
+.modal-canvas__tools--br {
+  bottom: 0.5rem;
+  right: 0.5rem;
+  flex-direction: column;
   align-items: center;
-  gap: 0.28rem;
 }
 
 .modal-canvas__tool {
   flex-shrink: 0;
-  width: 1.75rem;
-  height: 1.75rem;
-  padding: 0.28rem;
+  width: var(--canvas-btn-size);
+  height: var(--canvas-btn-size);
+  padding: 0;
   border: 1px solid var(--border-strong);
-  border-radius: 4px;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1296,6 +1379,12 @@ html[data-theme="dark"] .modal-map__viewport {
   cursor: pointer;
   touch-action: manipulation;
   box-shadow: 0 0.35rem 1rem var(--shadow);
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.modal-canvas__tool--fullscreen {
+  width: calc(var(--canvas-btn-size) + 0.35rem);
+  height: calc(var(--canvas-btn-size) + 0.35rem);
 }
 
 .modal-canvas__tool:hover {
@@ -1310,8 +1399,8 @@ html[data-theme="dark"] .modal-map__viewport {
 }
 
 .modal-canvas__tool-icon {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .modal-canvas__fullscreen-icon .modal-canvas__fs-shrink {
@@ -1564,7 +1653,9 @@ html[data-theme="dark"] .modal-map__viewport {
 }
 
 .spatial-card__char {
-  font-family: "Noto Serif SC", "Noto Sans SC", serif;
+  font-family: var(--font-han);
+  font-weight: var(--font-han-weight);
+  font-variation-settings: "wght" var(--font-han-weight);
   font-size: 1.48rem;
   line-height: 1;
   color: var(--text);
@@ -1980,15 +2071,96 @@ html[data-theme="dark"] .modal-map__viewport {
   gap: 0.35rem;
 }
 
-.modal-char-mode {
-  margin-top: 0;
+.modal-char3d-toggle[hidden],
+.modal__footer .matcap-toggle[hidden] {
+  display: none !important;
 }
 
-.modal-char-mode .font-toggle__btn {
-  min-width: 2rem;
-  padding: 0.22rem 0.38rem;
-  font-size: 0.66rem;
-  letter-spacing: 0.04em;
+.modal-char3d-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0.2rem;
+  margin-top: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modal-char3d-toggle:hover {
+  color: var(--text);
+}
+
+.modal-char3d-toggle:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+.modal-char3d-toggle.is-active {
+  color: var(--text);
+  background: var(--bg-active-btn);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+.char3d-toggle__icon {
+  display: block;
+  width: 1.45rem;
+  height: 1.45rem;
+  overflow: visible;
+}
+
+.char3d-toggle__orbit {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.char3d-toggle__orbit ellipse {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  opacity: 0.5;
+}
+
+.char3d-toggle__sat {
+  fill: currentColor;
+}
+
+.char3d-toggle__label {
+  fill: currentColor;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.modal-char3d-toggle:hover .char3d-toggle__orbit,
+.modal-char3d-toggle.is-active .char3d-toggle__orbit {
+  animation: char3dOrbitSpin 3s linear infinite;
+}
+
+.modal-char3d-toggle.is-active .char3d-toggle__orbit ellipse {
+  opacity: 0.8;
+}
+
+@keyframes char3dOrbitSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-char3d-toggle:hover .char3d-toggle__orbit,
+  .modal-char3d-toggle.is-active .char3d-toggle__orbit {
+    animation: none;
+  }
 }
 
 .modal__row dt {
@@ -2231,31 +2403,6 @@ html[data-theme="dark"] .modal-map__viewport {
   letter-spacing: 0.04em;
 }
 
-.modal__card-corner {
-  position: absolute;
-  right: 0.65rem;
-  bottom: 0.6rem;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  pointer-events: auto;
-}
-
-.modal__card-corner .font-toggle--icons {
-  flex: 0 0 auto;
-  margin: 0;
-}
-
-.modal__card-corner .font-toggle--icons .font-toggle__btn {
-  padding: 0.3rem 0.4rem;
-  gap: 0;
-}
-
-.modal__card-corner .modal__strokes-badge {
-  flex-shrink: 0;
-}
-
 .modal__footer {
   flex-shrink: 0;
   display: flex;
@@ -2264,6 +2411,16 @@ html[data-theme="dark"] .modal-map__viewport {
   margin-top: auto;
   padding-top: 1rem;
   border-top: 1px solid var(--border);
+}
+
+.modal__footer .font-toggle--icons {
+  flex: 0 0 auto;
+  margin: 0 0 0 auto;
+}
+
+.modal__footer .font-toggle--icons .font-toggle__btn {
+  padding: 0.3rem 0.4rem;
+  gap: 0;
 }
 
 .modal__strokes-badge {

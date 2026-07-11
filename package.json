@@ -5,7 +5,8 @@
   "scripts": {
     "generate:audio": "node scripts/generate-audio.mjs",
     "generate:sfx": "node scripts/generate-radical-sfx.mjs",
-    "sync:beta": "node scripts/sync-beta.mjs"
+    "sync:beta": "node scripts/sync-beta.mjs",
+    "dev": "npx serve -l 5183 ."
   },
   "devDependencies": {
     "ffmpeg-static": "^5.2.0",

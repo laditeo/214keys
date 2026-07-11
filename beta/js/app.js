@@ -21,6 +21,7 @@ import {
 import {
   initModalChar3d,
   isModalChar3dEnabled,
+  setModalChar3dEnabled,
   refreshModalChar3dMaterial,
   syncModalChar3dForItem,
   syncCharModeButtons,
@@ -38,7 +39,7 @@ import {
   speakRadical,
   unlockSpeech,
 } from "./radicalSpeech.js";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderMatcapPreviewDataUrl } from "./glyphExtrusion3d.js";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
@@ -650,8 +651,10 @@ function updateMinimapViewport() {
   applyMinimapViewportBox(computeMinimapViewportBox());
 }
 
+const MAP_GRID_BASE = 320;
+
 function syncMinimapGridLayout() {
-  modalMapGrid.style.width = "100%";
+  modalMapGrid.style.width = `${MAP_GRID_BASE}px`;
 }
 
 function isPointInViewport(clientX, clientY) {
@@ -702,11 +705,17 @@ function syncMinimapLayout() {
 
   const gridW = modalMapGrid.offsetWidth;
   const gridH = modalMapGrid.offsetHeight;
-  const stageW = modalMapStage.clientWidth;
   const stageH = modalMapStage.clientHeight;
-  if (!gridW || !gridH || !stageW || !stageH) return;
+  if (!gridW || !gridH || !stageH) return;
 
-  minimapBaseScale = Math.min(stageW / gridW, stageH / gridH);
+  // Вписываем всю таблицу по высоте (чтобы влезала целиком), а ширину панели
+  // подгоняем ровно под масштабированную сетку — без полей по бокам.
+  let scale = stageH / gridH;
+  const maxWidth = Math.min(window.innerWidth * 0.5, 340);
+  if (gridW * scale > maxWidth) scale = maxWidth / gridW;
+  minimapBaseScale = scale;
+  modalMap.style.setProperty("--map-panel-width", `${Math.round(gridW * scale)}px`);
+
   applyMinimapTransform();
   updateMinimapCompactLabels();
 
@@ -1391,9 +1400,21 @@ function normalizeMatcapMode(mode) {
 }
 
 function syncMatcapToggleVisibility() {
+  const isUltra = getParticleProfile() === "ultra";
+
   const el = document.querySelector(".modal__footer .matcap-toggle");
-  if (!el) return;
-  el.hidden = getParticleProfile() !== "ultra";
+  if (el) {
+    el.hidden = !isUltra;
+    if (isUltra) maybePopulateMatcapPreviews();
+  }
+
+  for (const btn of document.querySelectorAll("[data-char-mode-toggle]")) {
+    btn.hidden = !isUltra;
+  }
+  if (!isUltra && isModalChar3dEnabled()) {
+    setModalChar3dEnabled(false);
+    syncCharModeButtons();
+  }
 }
 
 function applyMatcap(mode) {
@@ -1407,16 +1428,26 @@ function applyMatcap(mode) {
   refreshModalChar3dMaterial();
 }
 
-function populateMatcapPreviews() {
+let matcapPreviewsRequested = false;
+
+async function populateMatcapPreviews() {
   for (const el of document.querySelectorAll("[data-matcap-preview]")) {
     const mode = el.dataset.matcapPreview;
     if (!mode) continue;
     try {
-      el.style.backgroundImage = `url(${renderMatcapPreviewDataUrl(mode, 72)})`;
+      const url = await renderGlyphMatcapPreviewDataUrl(mode, undefined, 72);
+      el.style.backgroundImage = `url(${url})`;
     } catch {
       /* ignore */
     }
   }
+}
+
+/** Ленивая генерация превью на глифе: только когда переключатель маткапов виден. */
+function maybePopulateMatcapPreviews() {
+  if (matcapPreviewsRequested) return;
+  matcapPreviewsRequested = true;
+  populateMatcapPreviews();
 }
 
 for (const btn of themeButtons) {
@@ -1478,7 +1509,6 @@ setCategoryColorsOn(readStoredToggle(CELL_COLORS_KEY), { persist: false });
 setCellEmojiOn(readStoredToggle(CELL_EMOJI_KEY), { persist: false });
 
 applyMatcap(getGlyphMaterialMode());
-populateMatcapPreviews();
 syncMatcapToggleVisibility();
 applyGraphicsMode(GRAPHICS_MODE_ORDER.indexOf(getGraphicsMode()), { persist: false });
 initModalChar3d();

@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=139">
+  <link rel="stylesheet" href="css/style.css?v=163">
   <script>
     (function () {
-      var BUILD = "139";
+      var BUILD = "163";
       document.addEventListener("DOMContentLoaded", function () {
         var buildEl = document.getElementById("header-build");
         if (buildEl) buildEl.textContent = "v" + BUILD;
@@ -198,6 +198,7 @@
           </svg>
         </button>
         <div class="modal-canvas__panel" id="modal-canvas-panel">
+          <div class="modal-canvas__resize" id="modal-canvas-resize" role="separator" aria-orientation="vertical" aria-label="Изменить ширину панели" title="Потяните, чтобы изменить ширину"></div>
           <div class="modal-canvas__filters" id="modal-canvas-filters" aria-label="Фильтры категорий"></div>
           <div class="modal-canvas__stage" id="modal-canvas-stage">
             <div class="modal-canvas__viewport" id="modal-canvas-viewport">
@@ -210,24 +211,24 @@
               <button type="button" class="spatial-popup__group" id="modal-canvas-group">группа</button>
               <button type="button" class="spatial-popup__delete" id="modal-canvas-delete" aria-label="Удалить выделенное">×</button>
             </div>
-            <div class="modal-canvas__toolbar" id="modal-canvas-toolbar">
+            <div class="modal-canvas__tools modal-canvas__tools--tl" id="modal-canvas-tools-tl">
               <button type="button" class="modal-canvas__tool" id="modal-canvas-focus" aria-label="Фокус на текущей" title="Фокус на текущей">
                 <svg class="modal-canvas__tool-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/>
-                  <path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M4 8.5V5.5A1.5 1.5 0 0 1 5.5 4H8.5M15.5 4h3A1.5 1.5 0 0 1 20 5.5V8.5M20 15.5v3a1.5 1.5 0 0 1-1.5 1.5H15.5M8.5 20H5.5A1.5 1.5 0 0 1 4 18.5V15.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                  <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
                 </svg>
               </button>
               <button type="button" class="modal-canvas__tool" id="modal-canvas-fit" aria-label="Показать всё" title="Показать всё">
                 <svg class="modal-canvas__tool-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M8 4H4v4M20 4h-4v4M8 20H4v-4M20 20h-4v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  <rect x="3.5" y="3.5" width="17" height="17" rx="3.5" stroke="currentColor" stroke-width="1.6"/>
+                  <circle cx="9" cy="9" r="1.55" fill="currentColor"/>
+                  <circle cx="15" cy="9" r="1.55" fill="currentColor"/>
+                  <circle cx="9" cy="15" r="1.55" fill="currentColor"/>
+                  <circle cx="15" cy="15" r="1.55" fill="currentColor"/>
                 </svg>
               </button>
-              <button type="button" class="modal-canvas__tool modal-canvas__tool--danger" id="modal-canvas-clear" aria-label="Удалить всё" title="Удалить всё">
-                <svg class="modal-canvas__tool-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M5 7h14M9 7V5h6v2M8 7l1 12h6l1-12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                </svg>
-              </button>
+            </div>
+            <div class="modal-canvas__tools modal-canvas__tools--tr">
               <button type="button" class="modal-canvas__tool modal-canvas__tool--fullscreen" id="modal-canvas-fullscreen" aria-label="Развернуть на весь экран" aria-pressed="false">
                 <svg class="modal-canvas__tool-icon modal-canvas__fullscreen-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path class="modal-canvas__fs-expand" d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -235,6 +236,15 @@
                 </svg>
               </button>
             </div>
+            <div class="modal-canvas__tools modal-canvas__tools--bl">
+              <button type="button" class="modal-canvas__tool modal-canvas__tool--danger" id="modal-canvas-clear" aria-label="Удалить всё" title="Удалить всё">
+                <svg class="modal-canvas__tool-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 7h14M9 7V5h6v2M8 7l1 12h6l1-12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="modal-canvas__tools modal-canvas__tools--br" id="modal-canvas-spawn" aria-label="Добавить карточки"></div>
             <div class="spatial-confirm" id="modal-canvas-clear-confirm" hidden>
               <div class="spatial-confirm__panel" role="alertdialog" aria-labelledby="modal-canvas-clear-confirm-text">
                 <p class="spatial-confirm__text" id="modal-canvas-clear-confirm-text">Удалить все карточки с канваса?</p>
@@ -332,10 +342,15 @@
             <div class="modal__row modal__row--wide">
               <dt class="modal__row-label">
                 <span class="modal__row-label-text">Ключ</span>
-                <div class="modal-char-mode font-toggle font-toggle--compact" role="group" aria-label="2D или 3D ключ">
-                  <button type="button" class="font-toggle__btn is-active" data-char-mode="2d" aria-pressed="true">2D</button>
-                  <button type="button" class="font-toggle__btn" data-char-mode="3d" aria-pressed="false">3D</button>
-                </div>
+                <button type="button" class="modal-char3d-toggle" data-char-mode-toggle aria-pressed="false" aria-label="3D-режим ключа" title="Покрутить ключ в 3D">
+                  <svg class="char3d-toggle__icon" viewBox="0 0 32 32" aria-hidden="true">
+                    <g class="char3d-toggle__orbit">
+                      <ellipse cx="16" cy="16" rx="14.5" ry="6" transform="rotate(-26 16 16)"/>
+                      <circle class="char3d-toggle__sat" cx="30.5" cy="16" r="2.1" transform="rotate(-26 16 16)"/>
+                    </g>
+                    <text class="char3d-toggle__label" x="16" y="16" text-anchor="middle" dominant-baseline="central">3D</text>
+                  </svg>
+                </button>
               </dt>
               <dd class="modal__ru-fit">
                 <div class="modal__ru-scale" id="modal-ru"></div>
@@ -373,18 +388,16 @@
                 <span class="matcap-toggle__preview" data-matcap-preview="badge" aria-hidden="true"></span>
               </button>
             </div>
+            <div class="font-toggle font-toggle--compact font-toggle--icons" role="group" aria-label="Шрифт иероглифов в карточке">
+              <button type="button" class="font-toggle__btn is-active" data-font="serif" aria-pressed="true" title="Классика">
+                <span class="font-toggle__sample font-toggle__sample--serif" aria-hidden="true">水</span>
+              </button>
+              <button type="button" class="font-toggle__btn" data-font="linear" aria-pressed="false" title="Монолиния">
+                <span class="font-toggle__sample font-toggle__sample--linear" aria-hidden="true">水</span>
+              </button>
+            </div>
+            <span class="modal__strokes-badge" id="modal-strokes"></span>
           </div>
-        </div>
-        <div class="modal__card-corner">
-          <div class="font-toggle font-toggle--compact font-toggle--icons" role="group" aria-label="Шрифт иероглифов в карточке">
-            <button type="button" class="font-toggle__btn is-active" data-font="serif" aria-pressed="true" title="Классика">
-              <span class="font-toggle__sample font-toggle__sample--serif" aria-hidden="true">水</span>
-            </button>
-            <button type="button" class="font-toggle__btn" data-font="linear" aria-pressed="false" title="Монолиния">
-              <span class="font-toggle__sample font-toggle__sample--linear" aria-hidden="true">水</span>
-            </button>
-          </div>
-          <span class="modal__strokes-badge" id="modal-strokes"></span>
         </div>
         </div>
 
@@ -413,6 +426,6 @@
     }
   }
   </script>
-  <script type="module" src="js/app.js?v=139"></script>
+  <script type="module" src="js/app.js?v=163"></script>
 </body>
 </html>

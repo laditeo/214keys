@@ -9,10 +9,24 @@ import {
   burstHeroGlyphWhisper,
   burstSpeakerParticles,
   clearSpeakerParticles,
+  getGraphicsMode,
+  getParticleProfile,
+  GRAPHICS_MODE_ORDER,
   initSpeakerParticles,
+  preloadHeroGlyph3d,
   resetSpeakerParticlePalette,
+  setGraphicsMode,
   stopHeroPlaybackEmojis,
 } from "./speakerParticles.js";
+import {
+  initModalChar3d,
+  isModalChar3dEnabled,
+  setModalChar3dEnabled,
+  refreshModalChar3dMaterial,
+  syncModalChar3dForItem,
+  syncCharModeButtons,
+  teardownModalChar3d,
+} from "./modalChar3d.js";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -25,6 +39,14 @@ import {
   speakRadical,
   unlockSpeech,
 } from "./radicalSpeech.js";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js";
+import {
+  hideSpatialCanvas,
+  initSpatialCanvas,
+  revealSpatialCard,
+  setSpatialCanvasActive,
+  showSpatialCanvas,
+} from "./spatialCanvas.js";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -147,6 +169,10 @@ const strokeLabels = {
 
 function strokeCountLabel(n) {
   return strokeLabels[n] || `${n} черт`;
+}
+
+function strokeCompactLabel(n) {
+  return `${n}画`;
 }
 
 function strokeSectionLabel(n) {
@@ -422,7 +448,8 @@ function fillModal(item) {
   fields.jp.textContent = item.jp;
   fields.cn.textContent = item.cn;
   fields.ru.textContent = item.ru;
-  fields.strokes.textContent = strokeSectionLabel(item.strokes);
+  fields.strokes.textContent = strokeCompactLabel(item.strokes);
+  syncModalChar3dForItem(item.char);
 
   updateModalNav();
   syncModalReadingWaves(item);
@@ -443,12 +470,11 @@ function setActiveCell(item) {
   activeCellEl = updateActiveCellEl(grid, item, activeCellEl);
   if (modal.open && !modalMap.hidden) {
     activeMinimapCellEl = updateActiveCellEl(modalMapGrid, item, activeMinimapCellEl);
-  } else {
-    if (activeMinimapCellEl) {
-      activeMinimapCellEl.classList.remove("cell--active");
-      activeMinimapCellEl = null;
-    }
+  } else if (activeMinimapCellEl) {
+    activeMinimapCellEl.classList.remove("cell--active");
+    activeMinimapCellEl = null;
   }
+  if (modal.open) setSpatialCanvasActive(item);
 }
 
 function getGridDocumentMetrics() {
@@ -511,7 +537,8 @@ function suppressMapClickBriefly() {
   mapSuppressClickUntil = performance.now() + 400;
 }
 
-function getTopLeftItemInViewport() {
+function getTopLeftItemInMinimapViewport() {
+  const viewportRect = modalMapViewport.hidden ? null : modalMapViewport.getBoundingClientRect();
   let best = null;
   let bestTop = Infinity;
   let bestLeft = Infinity;
@@ -521,8 +548,20 @@ function getTopLeftItemInViewport() {
     if (!cell) continue;
 
     const rect = cell.getBoundingClientRect();
-    if (rect.bottom <= 0 || rect.top >= window.innerHeight) continue;
-    if (rect.right <= 0 || rect.left >= window.innerWidth) continue;
+    if (viewportRect) {
+      const centerX = (rect.left + rect.right) * 0.5;
+      const centerY = (rect.top + rect.bottom) * 0.5;
+      if (
+        centerX < viewportRect.left
+        || centerX > viewportRect.right
+        || centerY < viewportRect.top
+        || centerY > viewportRect.bottom
+      ) {
+        continue;
+      }
+    } else if (rect.bottom <= 0 || rect.top >= window.innerHeight || rect.right <= 0 || rect.left >= window.innerWidth) {
+      continue;
+    }
 
     if (rect.top < bestTop - 0.5 || (Math.abs(rect.top - bestTop) <= 0.5 && rect.left < bestLeft)) {
       best = item;
@@ -534,12 +573,24 @@ function getTopLeftItemInViewport() {
   return best;
 }
 
-function syncViewportSelection() {
-  const item = getTopLeftItemInViewport();
-  if (!item || item.id === activeItem?.id) return;
+let minimapScrollSyncTimer = 0;
 
-  fillModal(item);
-  setActiveCell(item);
+function scheduleMinimapScrollSelection() {
+  if (minimapScrollSyncTimer) clearTimeout(minimapScrollSyncTimer);
+  minimapScrollSyncTimer = setTimeout(() => {
+    minimapScrollSyncTimer = 0;
+    syncMinimapScrollSelection();
+  }, 160);
+}
+
+function syncMinimapScrollSelection() {
+  const item = getTopLeftItemInMinimapViewport();
+  if (!item || item.id === activeItem?.id) return;
+  selectRadical(item);
+}
+
+function syncViewportSelection() {
+  syncMinimapScrollSelection();
 }
 
 function docYToMinimapRatio(docY) {
@@ -600,8 +651,10 @@ function updateMinimapViewport() {
   applyMinimapViewportBox(computeMinimapViewportBox());
 }
 
+const MAP_GRID_BASE = 320;
+
 function syncMinimapGridLayout() {
-  modalMapGrid.style.width = "100%";
+  modalMapGrid.style.width = `${MAP_GRID_BASE}px`;
 }
 
 function isPointInViewport(clientX, clientY) {
@@ -652,11 +705,17 @@ function syncMinimapLayout() {
 
   const gridW = modalMapGrid.offsetWidth;
   const gridH = modalMapGrid.offsetHeight;
-  const stageW = modalMapStage.clientWidth;
   const stageH = modalMapStage.clientHeight;
-  if (!gridW || !gridH || !stageW || !stageH) return;
+  if (!gridW || !gridH || !stageH) return;
 
-  minimapBaseScale = Math.min(stageW / gridW, stageH / gridH);
+  // Вписываем всю таблицу по высоте (чтобы влезала целиком), а ширину панели
+  // подгоняем ровно под масштабированную сетку — без полей по бокам.
+  let scale = stageH / gridH;
+  const maxWidth = Math.min(window.innerWidth * 0.5, 340);
+  if (gridW * scale > maxWidth) scale = maxWidth / gridW;
+  minimapBaseScale = scale;
+  modalMap.style.setProperty("--map-panel-width", `${Math.round(gridW * scale)}px`);
+
   applyMinimapTransform();
   updateMinimapCompactLabels();
 
@@ -737,6 +796,7 @@ function selectRadical(item) {
   prefetchItemAudio(item);
   fillModal(item);
   setActiveCell(item);
+  revealSpatialCard(item);
   requestAnimationFrame(() => {
     scrollActiveCellIntoView();
     syncMinimapLayout();
@@ -746,6 +806,7 @@ function selectRadical(item) {
 function openModal(item) {
   unlockSpeech();
   prefetchItemAudio(item);
+  preloadHeroGlyph3d(item?.char);
   visibleItems = getVisibleItems();
   fillModal(item);
 
@@ -755,6 +816,8 @@ function openModal(item) {
   }
 
   modalMap.hidden = false;
+  showSpatialCanvas();
+  revealSpatialCard(item);
   mapLayoutLandscape = isLandscapeViewport();
   applyMapCollapsed(!mapLayoutLandscape);
   renderMinimap(visibleItems);
@@ -775,8 +838,11 @@ function navigateModal(delta) {
 }
 
 function closeModal() {
+  if (minimapScrollSyncTimer) clearTimeout(minimapScrollSyncTimer);
+  minimapScrollSyncTimer = 0;
   if (modal.open) modal.close();
   modalMap.hidden = true;
+  hideSpatialCanvas();
   mapPointer = null;
   mapLayoutLandscape = null;
   setActiveCell(null);
@@ -785,6 +851,7 @@ function closeModal() {
   resetSpeakers();
   resetReadingWaves();
   clearSpeakerParticles();
+  teardownModalChar3d();
   resetSpeakerParticlePalette();
   fields.charWrap?.classList.remove("modal__char-wrap--salute");
   resetCopyButton();
@@ -967,7 +1034,7 @@ function onMapPointerUp(e) {
   if (moved) {
     e.preventDefault();
     suppressMapClickBriefly();
-    syncViewportSelection();
+    scheduleMinimapScrollSelection();
     return;
   }
 
@@ -982,7 +1049,7 @@ function onMapPointerUp(e) {
     const fitRect = modalMapFit.getBoundingClientRect();
     if (fitRect.height) {
       jumpScrollToMinimapRatio((e.clientY - fitRect.top) / fitRect.height);
-      syncViewportSelection();
+      scheduleMinimapScrollSelection();
     }
   }
 }
@@ -1009,7 +1076,7 @@ modalMapStage.addEventListener(
     e.preventDefault();
     e.stopPropagation();
     setPageScrollY(savedScrollY + e.deltaY);
-    syncViewportSelection();
+    scheduleMinimapScrollSelection();
   },
   { passive: false },
 );
@@ -1048,11 +1115,7 @@ function triggerHeroCharSalute() {
   pulseHeroCharSpring();
   unlockSpeech();
   playRadicalSfx(activeItem.id);
-  try {
-    burstHeroCharSalute(fields.charWrap, activeItem);
-  } catch {
-    /* particles are optional */
-  }
+  void burstHeroCharSalute(fields.charWrap, activeItem).catch(() => {});
 }
 
 function wireCopyButton() {
@@ -1120,6 +1183,11 @@ function wireHeroChar() {
 
   fields.charWrap.addEventListener("click", (e) => {
     e.stopPropagation();
+    if (fields.charWrap.dataset.char3dDragged === "1") {
+      delete fields.charWrap.dataset.char3dDragged;
+      return;
+    }
+    if (isModalChar3dEnabled()) return;
     triggerHeroCharSalute();
   });
 
@@ -1143,9 +1211,12 @@ const THEME_KEY = "214keys-theme";
 const FONT_KEY = "214keys-font";
 const FONT_WEIGHT_KEY = "214keys-font-weight";
 const themeButtons = document.querySelectorAll(".theme-toggle__btn");
-const fontButtons = document.querySelectorAll(".font-toggle__btn");
+const fontButtons = document.querySelectorAll("[data-font]");
+const matcapButtons = document.querySelectorAll("[data-matcap]");
 const fontWeightSlider = document.getElementById("font-weight-slider");
 const fontWeightValue = document.getElementById("font-weight-value");
+const graphicsModeSlider = document.getElementById("graphics-mode-slider");
+const graphicsModeValue = document.getElementById("graphics-mode-value");
 const categoryColorsToggle = document.getElementById("toggle-category-colors");
 const cellEmojiToggle = document.getElementById("toggle-cell-emoji");
 
@@ -1173,15 +1244,12 @@ function decorateCell(btn, item) {
   ch.className = "cell__char";
   ch.textContent = item.char;
 
-  const parts = [num, ch];
-
   const emoji = document.createElement("span");
   emoji.className = "cell__emoji";
   emoji.textContent = getRadicalEmoji(item.id);
   emoji.setAttribute("aria-hidden", "true");
-  parts.push(emoji);
 
-  btn.append(...parts);
+  btn.append(num, ch, emoji);
 }
 
 function applyCellDisplayToggles({ persist = true } = {}) {
@@ -1260,18 +1328,17 @@ function applyFontWeight(rawWeight, { persist = true } = {}) {
 
   document.documentElement.style.setProperty("--font-han-weight", String(cssWeight));
 
-  if (fontWeightSlider) {
-    fontWeightSlider.min = String(min);
-    fontWeightSlider.max = String(max);
-    fontWeightSlider.value = String(cssWeight);
-    fontWeightSlider.setAttribute("aria-valuemin", String(min));
-    fontWeightSlider.setAttribute("aria-valuemax", String(max));
-    fontWeightSlider.setAttribute("aria-valuenow", String(cssWeight));
+  for (const slider of [fontWeightSlider]) {
+    if (!slider) continue;
+    slider.min = String(min);
+    slider.max = String(max);
+    slider.value = String(cssWeight);
+    slider.setAttribute("aria-valuemin", String(min));
+    slider.setAttribute("aria-valuemax", String(max));
+    slider.setAttribute("aria-valuenow", String(cssWeight));
   }
 
-  if (fontWeightValue) {
-    fontWeightValue.textContent = String(cssWeight);
-  }
+  if (fontWeightValue) fontWeightValue.textContent = String(cssWeight);
 
   if (persist) {
     try {
@@ -1311,6 +1378,76 @@ function applyFont(mode) {
     /* ignore */
   }
   applyFontWeight(fontWeightSlider?.value ?? defaultCssWeight(), { persist: false });
+  refreshModalChar3dMaterial();
+}
+
+function applyGraphicsMode(mode, { persist = true } = {}) {
+  const index = Math.min(GRAPHICS_MODE_ORDER.length - 1, Math.max(0, Math.round(Number(mode))));
+  const next = GRAPHICS_MODE_ORDER[index] ?? "2d";
+  if (persist) setGraphicsMode(next);
+  if (graphicsModeSlider) {
+    graphicsModeSlider.value = String(index);
+    graphicsModeSlider.setAttribute("aria-valuenow", String(index));
+  }
+  if (graphicsModeValue) graphicsModeValue.textContent = next;
+  syncMatcapToggleVisibility();
+}
+
+function normalizeMatcapMode(mode) {
+  if (mode === "gold") return "light";
+  if (mode === "light" || mode === "depth" || mode === "badge") return mode;
+  return "normal";
+}
+
+function syncMatcapToggleVisibility() {
+  const isUltra = getParticleProfile() === "ultra";
+
+  const el = document.querySelector(".modal__footer .matcap-toggle");
+  if (el) {
+    el.hidden = !isUltra;
+    if (isUltra) maybePopulateMatcapPreviews();
+  }
+
+  for (const btn of document.querySelectorAll("[data-char-mode-toggle]")) {
+    btn.hidden = !isUltra;
+  }
+  if (!isUltra && isModalChar3dEnabled()) {
+    setModalChar3dEnabled(false);
+    syncCharModeButtons();
+  }
+}
+
+function applyMatcap(mode) {
+  const next = normalizeMatcapMode(mode);
+  setGlyphMaterialMode(next);
+  for (const btn of matcapButtons) {
+    const active = normalizeMatcapMode(btn.dataset.matcap) === next;
+    btn.classList.toggle("is-active", active);
+    btn.setAttribute("aria-pressed", String(active));
+  }
+  refreshModalChar3dMaterial();
+}
+
+let matcapPreviewsRequested = false;
+
+async function populateMatcapPreviews() {
+  for (const el of document.querySelectorAll("[data-matcap-preview]")) {
+    const mode = el.dataset.matcapPreview;
+    if (!mode) continue;
+    try {
+      const url = await renderGlyphMatcapPreviewDataUrl(mode, undefined, 72);
+      el.style.backgroundImage = `url(${url})`;
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+/** Ленивая генерация превью на глифе: только когда переключатель маткапов виден. */
+function maybePopulateMatcapPreviews() {
+  if (matcapPreviewsRequested) return;
+  matcapPreviewsRequested = true;
+  populateMatcapPreviews();
 }
 
 for (const btn of themeButtons) {
@@ -1321,9 +1458,11 @@ for (const btn of fontButtons) {
   btn.addEventListener("click", () => applyFont(btn.dataset.font));
 }
 
-fontWeightSlider?.addEventListener("input", () => {
-  applyFontWeight(fontWeightSlider.value);
-});
+for (const btn of matcapButtons) {
+  btn.addEventListener("click", () => applyMatcap(btn.dataset.matcap));
+}
+
+fontWeightSlider?.addEventListener("input", () => applyFontWeight(fontWeightSlider.value));
 
 categoryColorsToggle?.addEventListener("change", () => {
   setCategoryColorsOn(categoryColorsToggle.checked);
@@ -1331,6 +1470,19 @@ categoryColorsToggle?.addEventListener("change", () => {
 
 cellEmojiToggle?.addEventListener("change", () => {
   setCellEmojiOn(cellEmojiToggle.checked);
+});
+
+graphicsModeSlider?.addEventListener("input", () => {
+  applyGraphicsMode(graphicsModeSlider.value);
+});
+
+document.addEventListener("particle-profile:change", () => {
+  syncMatcapToggleVisibility();
+  if (graphicsModeSlider) {
+    const mode = getGraphicsMode();
+    const index = GRAPHICS_MODE_ORDER.indexOf(mode);
+    applyGraphicsMode(index >= 0 ? index : 1, { persist: false });
+  }
 });
 
 try {
@@ -1355,6 +1507,13 @@ try {
 
 setCategoryColorsOn(readStoredToggle(CELL_COLORS_KEY), { persist: false });
 setCellEmojiOn(readStoredToggle(CELL_EMOJI_KEY), { persist: false });
+
+applyMatcap(getGlyphMaterialMode());
+syncMatcapToggleVisibility();
+applyGraphicsMode(GRAPHICS_MODE_ORDER.indexOf(getGraphicsMode()), { persist: false });
+initModalChar3d();
+
+initSpatialCanvas({ onSelectRadical: selectRadical });
 
 modalPrev.disabled = true;
 modalNext.disabled = true;

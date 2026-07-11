@@ -1,4 +1,3 @@
-import { isBetaChannel } from "./appBase.js";
 import { mountHeroEaseDebug } from "./heroEaseDebug.js";
 
 async function mountHeroEaseDebugToggleFromLocal() {
@@ -17,8 +16,25 @@ async function mountHeroEaseDebugToggleFromLocal() {
   }
 }
 
+function isLocalhost() {
+  try {
+    const { hostname } = window.location;
+    return (
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "[::1]" ||
+      hostname === "" ||
+      hostname.endsWith(".local")
+    );
+  } catch {
+    return false;
+  }
+}
+
 export async function mountLocalDebug() {
-  if (isBetaChannel()) return;
+  // Дебаг-панель показываем только на localhost (в т.ч. на локальной бете).
+  // На любом задеплоенном канале (прод-корень и бета) — скрываем.
+  if (!isLocalhost()) return;
 
   mountHeroEaseDebug();
   void mountHeroEaseDebugToggleFromLocal();

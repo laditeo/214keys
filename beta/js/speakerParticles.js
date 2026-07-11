@@ -839,12 +839,12 @@ function particleScaleMin(p) {
 
 export const HERO_MOTION_DEFAULT = {
   flight: 91,
-  emojiFlight: 91,
+  emojiFlight: 72,
   rotation: 70,
   scale: 23,
   initialScale: 179,
   systemScale: 72,
-  axisSpin: 15,
+  axisSpin: 0,
 };
 
 const HERO_AXIS_SPIN_MAX_TURNS = 3;
