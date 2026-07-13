@@ -2156,12 +2156,9 @@ html[data-theme="dark"] .modal-map__viewport {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .modal-char3d-toggle:hover .char3d-toggle__orbit,
-  .modal-char3d-toggle.is-active .char3d-toggle__orbit {
-    animation: none;
-  }
-}
+/* Орбита — маленькая декоративная фишка, которую держим включённой даже при
+   системном «уменьшении движения» (иначе на Windows с отключёнными анимациями
+   она бы не крутилась). */
 
 .modal__row dt {
   margin: 0;
