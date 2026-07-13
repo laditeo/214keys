@@ -24,6 +24,7 @@ const MIN_ZOOM = 0.35;
 const MAX_ZOOM = 2.8;
 const PINCH_ZOOM_SENS = 0.14;
 const RMB_ZOOM_SENS = 0.0045;
+const WHEEL_ZOOM_SENS = 0.005;
 const FOCUS_ANIM_MS = 520;
 const SPAWN_STREAK_MS = 150;
 const SPIRAL_ORIGIN_X = WORLD_MIN_W / 2;
@@ -2179,7 +2180,14 @@ function onStagePointerUp(event) {
 function onStageWheel(event) {
   if (event.ctrlKey || event.metaKey) {
     event.preventDefault();
-    const factor = event.deltaY < 0 ? 1.08 : 1 / 1.08;
+    // Пинч на трекпаде (в т.ч. Windows) приходит как wheel+ctrlKey потоком
+    // мелких событий. Масштабируем экспоненциально пропорционально величине
+    // жеста — так зум плавный, а не ступенчатый фиксированным шагом.
+    let delta = event.deltaY;
+    if (event.deltaMode === 1) delta *= 16; // строки → пиксели
+    else if (event.deltaMode === 2) delta *= stageEl.clientHeight; // страницы
+    delta = Math.max(-40, Math.min(40, delta));
+    const factor = Math.exp(-delta * WHEEL_ZOOM_SENS);
     zoomAt(event.clientX, event.clientY, factor);
     return;
   }
