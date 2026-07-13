@@ -2141,24 +2141,13 @@ html[data-theme="dark"] .modal-map__viewport {
   letter-spacing: 0.02em;
 }
 
-.modal-char3d-toggle:hover .char3d-toggle__orbit,
-.modal-char3d-toggle.is-active .char3d-toggle__orbit {
-  animation: char3dOrbitSpin 3s linear infinite;
-}
-
 .modal-char3d-toggle.is-active .char3d-toggle__orbit ellipse {
   opacity: 0.8;
 }
 
-@keyframes char3dOrbitSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Орбита — маленькая декоративная фишка, которую держим включённой даже при
-   системном «уменьшении движения» (иначе на Windows с отключёнными анимациями
-   она бы не крутилась). */
+/* Вращение орбиты и плавный возврат к исходной позиции ведёт JS
+   (js/char3dOrbit.js) — возврат через lerp без рывка, работает даже при
+   системном «уменьшении движения». */
 
 .modal__row dt {
   margin: 0;

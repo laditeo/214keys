@@ -4,6 +4,7 @@ import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
 import { getRadicalCategory, getCategoryMeta } from "./radicalCategories.js";
 import { getRadicalEmoji } from "./radicalEmoji.js";
+import "./char3dOrbit.js";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
