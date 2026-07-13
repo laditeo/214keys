@@ -6,13 +6,6 @@
 const SPIN_SPEED = 120; // градусов в секунду (эквивалент старых 360° за 3s)
 const RETURN_TAU = 0.12; // постоянная времени плавного возврата, сек
 
-function normalizeSigned(deg) {
-  // Приводим к диапазону (-180, 180], чтобы возвращаться кратчайшим путём.
-  let a = ((deg % 360) + 360) % 360;
-  if (a > 180) a -= 360;
-  return a;
-}
-
 function bindOrbit(button) {
   const orbit = button.querySelector(".char3d-toggle__orbit");
   if (!orbit) return;
@@ -38,11 +31,12 @@ function bindOrbit(button) {
       return;
     }
 
-    // Плавный возврат к 0 (экспоненциальное сглаживание, кратчайший путь).
-    const signed = normalizeSigned(angle);
+    // Плавный докрут вперёд (по часовой) к исходной позиции: тянемся к
+    // следующей границе 360°, а не назад к нулю кратчайшим путём.
+    const residual = ((angle % 360) + 360) % 360;
     const k = 1 - Math.exp(-dt / RETURN_TAU);
-    const next = signed * (1 - k);
-    if (Math.abs(next) < 0.15) {
+    const next = residual + (360 - residual) * k;
+    if (360 - next < 0.15) {
       angle = 0;
       apply();
       rafId = 0;
