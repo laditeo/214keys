@@ -2,6 +2,7 @@ import { createWriteStream, existsSync, mkdirSync, writeFileSync } from "node:fs
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
+import { resampleToIosMp3 } from "./ios-mp3.mjs";
 import basicItems from "../js/basicItems.js";
 
 const VOICES = {
@@ -114,6 +115,7 @@ async function main() {
 
     try {
       await synthesize(ttsByLang[lang], spoken, path);
+      resampleToIosMp3(path);
       created++;
       console.log(`[${i + 1}/${tasks.length}] ok ${lang}/${padId(item.id)} ${item.char} (${spoken})`);
     } catch (err) {

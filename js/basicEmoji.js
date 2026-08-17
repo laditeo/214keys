@@ -31,10 +31,10 @@ export const basicEmoji = {
   29: "💙",
   30: "🥇",
   31: "🥈",
-  32: "➡️",
-  33: "⬅️",
-  34: "⬇️",
-  35: "⬆️",
+  32: "🌅",
+  33: "🌇",
+  34: "🌴",
+  35: "🧊",
   36: "🔝",
   37: "🔽",
   38: "◀️",
@@ -78,4 +78,35 @@ export const basicEmoji = {
 
 export function getBasicEmoji(id) {
   return basicEmoji[id] || "🔹";
+}
+
+/** Ink color for the kanji itself when "свои цвета" is on. */
+export const basicInkColors = {
+  18: "#e23b3b",
+  19: "#e8872a",
+  20: "#e2c12a",
+  21: "#3aa35c",
+  22: "#3b7ed4",
+  23: "#8a4ec8",
+  24: "#f7f3eb",
+  25: "#1a1815",
+  26: "#8a8278",
+  27: "#8b5724",
+  28: "#e889ab",
+  29: "#3a4ea3",
+  30: "#d4a017",
+  31: "#b7b7c0",
+};
+
+const PALE_INK_IDS = new Set([20, 24, 30, 31]);
+const DARK_INK_IDS = new Set([25]);
+
+export function getBasicInkColor(id) {
+  return basicInkColors[id] || "";
+}
+
+export function getBasicInkContrast(id) {
+  if (PALE_INK_IDS.has(id)) return "pale";
+  if (DARK_INK_IDS.has(id)) return "dark";
+  return "";
 }

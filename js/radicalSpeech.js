@@ -1,4 +1,4 @@
-import radicals, { hasSpeechAudio, hasSfxAudio, speechAudioDir } from "./catalog.js";
+import radicals, { hasSpeechAudio, hasSfxAudio, speechAudioDir } from "./catalog.js?v=181";
 import { appAssetUrl } from "./appBase.js";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
@@ -111,7 +111,7 @@ function syncUnlockAudio() {
   const { ctx, gain } = graph;
 
   if (ctx.state === "suspended") {
-    void ctx.resume();
+    void ctx.resume().catch(() => {});
   }
 
   if (!audioUnlocked) {
@@ -214,6 +214,29 @@ export function playPop() {
   osc.stop(t0 + 0.12);
 }
 
+function playHtmlSfx(src, id) {
+  const audio = new Audio(src);
+  audio.preload = "auto";
+  audio.volume = 0.85;
+  const maxMs = Math.round(getHeroSfxMaxSec(id) * 1000);
+  if (maxMs > 0) {
+    audio.addEventListener(
+      "playing",
+      () => {
+        window.setTimeout(() => {
+          try {
+            audio.pause();
+          } catch {
+            /* ignore */
+          }
+        }, maxMs);
+      },
+      { once: true },
+    );
+  }
+  void audio.play().catch(() => {});
+}
+
 export function playRadicalSfx(id) {
   syncUnlockAudio();
   const url = radicalSfxUrl(id);
@@ -226,6 +249,12 @@ export function playRadicalSfx(id) {
   const cached = bufferCache.get(key);
   if (cached) {
     playBufferNow(cached, id);
+    return;
+  }
+
+  if (isIOSAudio) {
+    playHtmlSfx(getPlayableUrl(key, url), id);
+    void fetchAndDecode(url);
     return;
   }
 
@@ -647,6 +676,21 @@ export function speakRadical(item, lang, options = {}) {
     return;
   }
 
+  if (isIOSAudio) {
+    options.onLoadStart?.();
+    playHtmlSample(
+      getPlayableUrl(resolved, url),
+      randomPitchRate(),
+      session,
+      lang,
+      onStart,
+      onEnd,
+      options.onProgress,
+    );
+    void decodeBuffer(url);
+    return;
+  }
+
   options.onLoadStart?.();
 
   void decodeBuffer(url).then((buffer) => {
@@ -656,18 +700,6 @@ export function speakRadical(item, lang, options = {}) {
     }
     if (buffer) {
       playSample(buffer, session, lang, onStart, onEnd, options.onProgress);
-      return;
-    }
-    if (isIOSAudio && bytesCache.has(resolved)) {
-      playHtmlSample(
-        getPlayableUrl(resolved, url),
-        randomPitchRate(),
-        session,
-        lang,
-        onStart,
-        onEnd,
-        options.onProgress,
-      );
       return;
     }
     onEnd();

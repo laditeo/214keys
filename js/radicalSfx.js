@@ -1,4 +1,4 @@
-import { getRadicalEmoji, hasSfxAudio, sfxAudioDir } from "./catalog.js";
+import { getRadicalEmoji, hasSfxAudio, sfxAudioDir } from "./catalog.js?v=181";
 import { appAssetUrl } from "./appBase.js";
 
 /** CC0 — Kenney (kenney.nl), via gamesounds.xyz mirror */
@@ -135,6 +135,8 @@ export const emojiSfxPools = {
   "🩸": [["Impact Sounds", "impactSoft_heavy_002.ogg"], ["Foley Sounds/Water", "drip3.ogg"]],
   "👕": [["RPG Audio", "cloth3.ogg"], ["RPG Audio", "cloth4.ogg"]],
   "🌅": [["Interface Sounds", "confirmation_004.ogg"], ["Digital Audio", "powerUp2.ogg"]],
+  "🌇": [["Digital Audio", "phaserDown1.ogg"], ["Foley Sounds/Woosh", "woosh3.ogg"]],
+  "🌴": [["Interface Sounds", "confirmation_002.ogg"], ["Impact Sounds", "footstep_grass_001.ogg"]],
   "🦌": [["Impact Sounds", "footstep_grass_002.ogg"], ["Impact Sounds", "footstep_snow_000.ogg"]],
   "🏞️": [["Foley Sounds/Water", "sinkWater4.ogg"], ["Impact Sounds", "footstep_grass_001.ogg"]],
   "🫘": [["Impact Sounds", "impactSoft_light_001.ogg"], ["Interface Sounds", "drop_004.ogg"]],

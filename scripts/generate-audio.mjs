@@ -2,6 +2,7 @@ import { createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync }
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
+import { resampleToIosMp3 } from "./ios-mp3.mjs";
 
 const VOICES = {
   jp: "ja-JP-NanamiNeural",
@@ -81,6 +82,7 @@ async function main() {
 
     const { audioStream } = ttsByLang[lang].toStream(spoken);
     await streamToFile(audioStream, path);
+    resampleToIosMp3(path);
     created++;
     console.log(`[${i + 1}/${tasks.length}] ok ${lang}/${padId(item.id)} (${spoken})`);
 

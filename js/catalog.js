@@ -11,7 +11,7 @@ import {
   getBasicCategory,
 } from "./basicCategories.js";
 import { getRadicalEmoji as getKangxiEmoji } from "./radicalEmoji.js";
-import { getBasicEmoji } from "./basicEmoji.js";
+import { getBasicEmoji, getBasicInkColor, getBasicInkContrast } from "./basicEmoji.js?v=181";
 
 export function getCatalogId() {
   try {
@@ -50,6 +50,14 @@ export function getCategoryMeta(id) {
 
 export function getItemEmoji(id) {
   return isBasicCatalog ? getBasicEmoji(id) : getKangxiEmoji(id);
+}
+
+export function getItemInkColor(id) {
+  return isBasicCatalog ? getBasicInkColor(id) : "";
+}
+
+export function getItemInkContrast(id) {
+  return isBasicCatalog ? getBasicInkContrast(id) : "";
 }
 
 export function itemGroupKey(item) {

@@ -2,7 +2,7 @@
 
 Интерактивный справочник по всем **214 радикалам Канси** — с японскими и китайскими чтениями, озвучкой и объяснениями на русском.
 
-**Демо:** [laditeo.github.io/214keys](https://laditeo.github.io/214keys/)
+**Сайт:** [spatilabs.co/214keys](https://spatilabs.co/214keys/) · [basic](https://spatilabs.co/214keys/basic/)
 
 ---
 
@@ -123,4 +123,6 @@ UI: [@laditeo](https://t.me/laditeo)
 
 ## Деплой
 
-Репозиторий публикуется на **GitHub Pages** из ветки `main` — достаточно push в ремote.
+Боевая версия — **https://spatilabs.co/214keys/** (VPS). GitHub хранит исходники и историю.
+
+GitHub Pages (`laditeo.github.io/214keys`) больше не основной канал. Workflow **Deploy GitHub Pages** запускается вручную, если зеркало на Pages всё же нужно.

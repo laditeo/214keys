@@ -2,15 +2,18 @@ import radicals, {
   getRadicalCategory,
   getCategoryMeta,
   getRadicalEmoji,
+  getItemInkColor,
+  getItemInkContrast,
+  isBasicCatalog,
   itemGroupKey,
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js";
+} from "./catalog.js?v=181";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=174";
+import "./char3dOrbit.js?v=181";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -103,6 +106,7 @@ let copyBtnTimer = 0;
 
 let activeItem = null;
 let visibleItems = radicals;
+let colorInkOn = false;
 let savedScrollY = 0;
 let activeCellEl = null;
 let activeMinimapCellEl = null;
@@ -304,11 +308,7 @@ function triggerReadingPlayback(lang) {
     });
   };
 
-  if (needsWait) {
-    requestAnimationFrame(runSpeak);
-  } else {
-    runSpeak();
-  }
+  runSpeak();
 }
 
 function wireSpeaker(btn, lang) {
@@ -885,7 +885,28 @@ function updateSearchMeta(count, query) {
   searchMeta.textContent = `Найдено: ${count} ${searchHitWord(count)}`;
 }
 
-function createGridFragment(items, onCellClick) {
+function createColorInkToggle() {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "color-ink-toggle";
+  btn.setAttribute("aria-pressed", colorInkOn ? "true" : "false");
+  btn.title = "Покрасить иероглифы в свой цвет и спрятать emoji";
+  btn.textContent = "цвет знаков";
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setColorInkOn(!colorInkOn);
+  });
+  return btn;
+}
+
+function syncColorInkToggle() {
+  document.querySelectorAll(".color-ink-toggle").forEach((btn) => {
+    btn.setAttribute("aria-pressed", colorInkOn ? "true" : "false");
+  });
+}
+
+function createGridFragment(items, onCellClick, { sectionActions = false } = {}) {
   const frag = document.createDocumentFragment();
   let currentGroup = null;
 
@@ -895,7 +916,17 @@ function createGridFragment(items, onCellClick) {
       currentGroup = groupKey;
       const label = document.createElement("div");
       label.className = "section-label";
-      label.textContent = itemGroupLabel(item) || strokeSectionLabel(item.strokes);
+      const title = itemGroupLabel(item) || strokeSectionLabel(item.strokes);
+
+      if (sectionActions && isBasicCatalog && groupKey === "color") {
+        label.classList.add("section-label--with-action");
+        const name = document.createElement("span");
+        name.textContent = title;
+        label.append(name, createColorInkToggle());
+      } else {
+        label.textContent = title;
+      }
+
       frag.appendChild(label);
     }
 
@@ -940,7 +971,7 @@ function renderMinimap(items) {
 }
 
 function render(items, query = "") {
-  grid.replaceChildren(createGridFragment(items, openModal));
+  grid.replaceChildren(createGridFragment(items, openModal, { sectionActions: true }));
   emptyState.hidden = items.length > 0;
   grid.hidden = items.length === 0;
   updateSearchMeta(items.length, query);
@@ -1234,6 +1265,7 @@ const cellEmojiToggle = document.getElementById("toggle-cell-emoji");
 
 const CELL_COLORS_KEY = "214keys-cell-colors";
 const CELL_EMOJI_KEY = "214keys-cell-emoji";
+const COLOR_INK_KEY = "214keys-basic-color-ink";
 
 let categoryColorsOn = false;
 let cellEmojiOn = false;
@@ -1241,6 +1273,8 @@ let cellEmojiOn = false;
 function applyCellDisplayFlags() {
   document.documentElement.dataset.cellColors = categoryColorsOn ? "on" : "";
   document.documentElement.dataset.cellEmoji = cellEmojiOn ? "on" : "";
+  document.documentElement.dataset.colorInk = colorInkOn ? "on" : "";
+  syncColorInkToggle();
 }
 
 function decorateCell(btn, item) {
@@ -1248,9 +1282,12 @@ function decorateCell(btn, item) {
   btn.dataset.category = categoryMeta.id;
   btn.style.setProperty("--cell-category-color", categoryMeta.color);
 
-  const num = document.createElement("span");
-  num.className = "cell__num";
-  num.textContent = item.id;
+  const ink = getItemInkColor(item.id);
+  if (ink) {
+    btn.style.setProperty("--cell-ink-color", ink);
+    const contrast = getItemInkContrast(item.id);
+    if (contrast) btn.dataset.ink = contrast;
+  }
 
   const ch = document.createElement("span");
   ch.className = "cell__char";
@@ -1261,6 +1298,14 @@ function decorateCell(btn, item) {
   emoji.textContent = getRadicalEmoji(item.id);
   emoji.setAttribute("aria-hidden", "true");
 
+  if (isBasicCatalog) {
+    btn.append(ch, emoji);
+    return;
+  }
+
+  const num = document.createElement("span");
+  num.className = "cell__num";
+  num.textContent = item.id;
   btn.append(num, ch, emoji);
 }
 
@@ -1278,6 +1323,7 @@ function applyCellDisplayToggles({ persist = true } = {}) {
     try {
       localStorage.setItem(CELL_COLORS_KEY, categoryColorsOn ? "1" : "0");
       localStorage.setItem(CELL_EMOJI_KEY, cellEmojiOn ? "1" : "0");
+      localStorage.setItem(COLOR_INK_KEY, colorInkOn ? "1" : "0");
     } catch {
       /* ignore */
     }
@@ -1291,6 +1337,11 @@ function setCategoryColorsOn(next, options) {
 
 function setCellEmojiOn(next, options) {
   cellEmojiOn = Boolean(next);
+  applyCellDisplayToggles(options);
+}
+
+function setColorInkOn(next, options) {
+  colorInkOn = Boolean(next);
   applyCellDisplayToggles(options);
 }
 
@@ -1519,6 +1570,7 @@ try {
 
 setCategoryColorsOn(readStoredToggle(CELL_COLORS_KEY), { persist: false });
 setCellEmojiOn(readStoredToggle(CELL_EMOJI_KEY), { persist: false });
+if (isBasicCatalog) setColorInkOn(readStoredToggle(COLOR_INK_KEY), { persist: false });
 
 applyMatcap(getGlyphMaterialMode());
 syncMatcapToggleVisibility();
