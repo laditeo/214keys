@@ -1,4 +1,4 @@
-import { getRadicalEmoji } from "./radicalEmoji.js";
+import { getRadicalEmoji, hasSfxAudio, sfxAudioDir } from "./catalog.js";
 import { appAssetUrl } from "./appBase.js";
 
 /** CC0 — Kenney (kenney.nl), via gamesounds.xyz mirror */
@@ -61,7 +61,7 @@ export const emojiSfxPools = {
   "🩼": [["Impact Sounds", "impactWood_medium_000.ogg"], ["Impact Sounds", "impactWood_medium_001.ogg"]],
   "💀": [["Impact Sounds", "impactBell_heavy_000.ogg"], ["Impact Sounds", "impactBell_heavy_001.ogg"]],
   "🌱": [["Impact Sounds", "footstep_grass_004.ogg"], ["Foley Sounds/Water", "drip1.ogg"]],
-  "🌊": [["Foley Sounds/Water", "sinkWater1.ogg"], ["Foley Sounds/Water", "sinkDrain1.ogg"]],
+  "🌊": [["Foley Sounds/Water", "sinkWater3.ogg"], ["Foley Sounds/Water", "sinkWater4.ogg"]],
   "🔧": [["RPG Audio", "metalClick.ogg"], ["Impact Sounds", "impactMetal_light_000.ogg"]],
   "🪞": [["Interface Sounds", "glass_003.ogg"], ["Interface Sounds", "glass_004.ogg"]],
   "🧣": [["RPG Audio", "cloth3.ogg"], ["RPG Audio", "cloth4.ogg"]],
@@ -177,6 +177,54 @@ export const emojiSfxPools = {
   "🐢": [["Impact Sounds", "impactPlate_medium_002.ogg"], ["Sci-Fi Sounds", "slime_000.ogg"]],
   "🎵": [["Interface Sounds", "bong_001.ogg"], ["Digital Audio", "pepSound1.ogg"]],
   "✨": [["Interface Sounds", "pluck_001.ogg"], ["Interface Sounds", "confirmation_001.ogg"]],
+  "⭕": [["Interface Sounds", "glass_001.ogg"], ["Interface Sounds", "tick_004.ogg"]],
+  "0️⃣": [["Interface Sounds", "tick_001.ogg"], ["Interface Sounds", "minimize_001.ogg"]],
+  "3️⃣": [["Interface Sounds", "tick_001.ogg"], ["Interface Sounds", "select_002.ogg"]],
+  "4️⃣": [["Interface Sounds", "tick_004.ogg"], ["Interface Sounds", "select_003.ogg"]],
+  "5️⃣": [["Interface Sounds", "select_001.ogg"], ["Interface Sounds", "select_005.ogg"]],
+  "6️⃣": [["Interface Sounds", "select_003.ogg"], ["Interface Sounds", "tick_002.ogg"]],
+  "7️⃣": [["Interface Sounds", "select_004.ogg"], ["Interface Sounds", "confirmation_001.ogg"]],
+  "9️⃣": [["Interface Sounds", "select_005.ogg"], ["Interface Sounds", "confirmation_002.ogg"]],
+  "💯": [["Interface Sounds", "confirmation_003.ogg"], ["Interface Sounds", "confirmation_004.ogg"]],
+  "🔢": [["Interface Sounds", "select_006.ogg"], ["Interface Sounds", "scroll_001.ogg"]],
+  "🏦": [["RPG Audio", "handleCoins.ogg"], ["RPG Audio", "handleCoins2.ogg"]],
+  "🌗": [["Interface Sounds", "toggle_001.ogg"], ["Interface Sounds", "switch_003.ogg"]],
+  "🧡": [["Interface Sounds", "bong_001.ogg"], ["Interface Sounds", "pluck_001.ogg"]],
+  "💛": [["Interface Sounds", "pluck_002.ogg"], ["Interface Sounds", "bong_001.ogg"]],
+  "💙": [["Interface Sounds", "pluck_001.ogg"], ["Interface Sounds", "confirmation_002.ogg"]],
+  "💜": [["Interface Sounds", "pluck_002.ogg"], ["Interface Sounds", "confirmation_003.ogg"]],
+  "🤍": [["Interface Sounds", "glass_005.ogg"], ["Interface Sounds", "pluck_001.ogg"]],
+  "🖤": [["Interface Sounds", "click_005.ogg"], ["Sci-Fi Sounds", "forceField_000.ogg"]],
+  "🤎": [["Interface Sounds", "pluck_002.ogg"], ["RPG Audio", "bookPlace1.ogg"]],
+  "💗": [["Interface Sounds", "bong_001.ogg"], ["Interface Sounds", "confirmation_001.ogg"]],
+  "🌫️": [["Foley Sounds/Woosh", "woosh3.ogg"], ["Foley Sounds/Woosh", "woosh5.ogg"]],
+  "🥇": [["Interface Sounds", "confirmation_004.ogg"], ["Digital Audio", "powerUp1.ogg"]],
+  "🥈": [["Interface Sounds", "confirmation_003.ogg"], ["Digital Audio", "powerUp2.ogg"]],
+  "⬅️": [["Interface Sounds", "back_001.ogg"], ["Interface Sounds", "scroll_001.ogg"]],
+  "⬇️": [["Interface Sounds", "minimize_001.ogg"], ["Interface Sounds", "drop_001.ogg"]],
+  "⬆️": [["Interface Sounds", "maximize_001.ogg"], ["Interface Sounds", "back_002.ogg"]],
+  "🔝": [["Interface Sounds", "maximize_001.ogg"], ["Interface Sounds", "confirmation_001.ogg"]],
+  "🔽": [["Interface Sounds", "minimize_002.ogg"], ["Interface Sounds", "drop_002.ogg"]],
+  "◀️": [["Interface Sounds", "back_002.ogg"], ["Interface Sounds", "tick_001.ogg"]],
+  "▶️": [["Interface Sounds", "select_001.ogg"], ["Interface Sounds", "confirmation_002.ogg"]],
+  "⏩": [["Interface Sounds", "scroll_001.ogg"], ["Digital Audio", "highUp.ogg"]],
+  "⏪": [["Interface Sounds", "back_001.ogg"], ["Digital Audio", "phaserDown1.ogg"]],
+  "📤": [["Interface Sounds", "drop_003.ogg"], ["Foley Sounds/Woosh", "woosh2.ogg"]],
+  "📅": [["RPG Audio", "bookFlip1.ogg"], ["RPG Audio", "bookPlace2.ogg"]],
+  "📆": [["RPG Audio", "bookFlip2.ogg"], ["RPG Audio", "bookFlip3.ogg"]],
+  "⏰": [["Interface Sounds", "tick_002.ogg"], ["Impact Sounds", "impactBell_heavy_003.ogg"]],
+  "⏱️": [["Interface Sounds", "tick_004.ogg"], ["Interface Sounds", "click_001.ogg"]],
+  "✂️": [["RPG Audio", "drawKnife1.ogg"], ["RPG Audio", "chop.ogg"]],
+  "🐘": [["Impact Sounds", "impactSoft_heavy_000.ogg"], ["Impact Sounds", "impactSoft_heavy_002.ogg"]],
+  "📚": [["RPG Audio", "bookOpen.ogg"], ["RPG Audio", "bookFlip1.ogg"]],
+  "📌": [["Interface Sounds", "click_002.ogg"], ["Interface Sounds", "click_004.ogg"]],
+  "🏔️": [["Foley Sounds/Rocks", "rockHit1.ogg"], ["Foley Sounds/Rocks", "stoneHit1.ogg"]],
+  "📉": [["Interface Sounds", "minimize_003.ogg"], ["Digital Audio", "phaserDown1.ogg"]],
+  "🌌": [["Sci-Fi Sounds", "forceField_002.ogg"], ["Sci-Fi Sounds", "laserRetro_000.ogg"]],
+  "☁️": [["Foley Sounds/Woosh", "woosh4.ogg"], ["Foley Sounds/Woosh", "woosh5.ogg"]],
+  "🌸": [["Interface Sounds", "pluck_001.ogg"], ["Interface Sounds", "confirmation_004.ogg"]],
+  "🌬️": [["Foley Sounds/Woosh", "woosh1.ogg"], ["Foley Sounds/Woosh", "woosh3.ogg"]],
+  "❄️": [["Impact Sounds", "impactGlass_light_000.ogg"], ["Impact Sounds", "footstep_snow_000.ogg"]],
 };
 
 const DEFAULT_POOL = [
@@ -203,11 +251,14 @@ function padId(id) {
   return String(id).padStart(3, "0");
 }
 
-export function getRadicalSfxRef(id) {
-  const emoji = getRadicalEmoji(id);
+export function getSfxRefForEmoji(emoji, id) {
   const pool = emojiSfxPools[emoji] ?? DEFAULT_POOL;
   const pick = pool[(id - 1) % pool.length];
   return { pack: pick[0], file: pick[1] };
+}
+
+export function getRadicalSfxRef(id) {
+  return getSfxRefForEmoji(getRadicalEmoji(id), id);
 }
 
 export function getRadicalSfxDownload(id) {
@@ -218,7 +269,8 @@ export function getRadicalSfxDownload(id) {
 }
 
 export function radicalSfxUrl(id) {
-  return appAssetUrl(`audio/sfx/${padId(id)}.mp3`);
+  if (!hasSfxAudio) return "";
+  return appAssetUrl(`${sfxAudioDir}/${padId(id)}.mp3`);
 }
 
 export function radicalSfxSourceUrl(id) {

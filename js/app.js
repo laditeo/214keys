@@ -1,10 +1,16 @@
-import radicals from "./radicals.js";
+import radicals, {
+  getRadicalCategory,
+  getCategoryMeta,
+  getRadicalEmoji,
+  itemGroupKey,
+  itemGroupLabel,
+  searchHitWord,
+  modalIndexLabel,
+} from "./catalog.js";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import { getRadicalCategory, getCategoryMeta } from "./radicalCategories.js";
-import { getRadicalEmoji } from "./radicalEmoji.js";
-import "./char3dOrbit.js?v=167";
+import "./char3dOrbit.js?v=174";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -355,9 +361,15 @@ function getStrokeGroups() {
   let last = null;
 
   for (const item of visibleItems) {
-    if (item.strokes !== last) {
-      groups.push({ strokes: item.strokes, firstItem: item });
-      last = item.strokes;
+    const key = itemGroupKey(item);
+    if (key !== last) {
+      groups.push({
+        key,
+        strokes: item.strokes,
+        firstItem: item,
+        label: itemGroupLabel(item) || strokeCountLabel(item.strokes),
+      });
+      last = key;
     }
   }
 
@@ -368,20 +380,20 @@ function updateStrokeGroupNav() {
   if (!activeItem) return;
 
   const groups = getStrokeGroups();
-  const index = groups.findIndex((group) => group.strokes === activeItem.strokes);
+  const index = groups.findIndex((group) => group.key === itemGroupKey(activeItem));
   const prevGroup = index > 0 ? groups[index - 1] : null;
   const nextGroup = index >= 0 && index < groups.length - 1 ? groups[index + 1] : null;
 
   modalGroupPrev.disabled = !prevGroup;
   modalGroupNext.disabled = !nextGroup;
-  modalGroupPrevLabel.textContent = prevGroup ? strokeCountLabel(prevGroup.strokes) : "";
-  modalGroupNextLabel.textContent = nextGroup ? strokeCountLabel(nextGroup.strokes) : "";
+  modalGroupPrevLabel.textContent = prevGroup ? prevGroup.label : "";
+  modalGroupNextLabel.textContent = nextGroup ? nextGroup.label : "";
 }
 
 function navigateStrokeGroup(delta) {
   if (!activeItem) return;
   const groups = getStrokeGroups();
-  const index = groups.findIndex((group) => group.strokes === activeItem.strokes);
+  const index = groups.findIndex((group) => group.key === itemGroupKey(activeItem));
   const target = groups[index + delta];
   if (!target) return;
   selectRadical(target.firstItem);
@@ -440,9 +452,9 @@ function fillModal(item) {
   resetSpeakers();
   resetCopyButton();
 
-  fields.num.textContent = `#${item.id} · 部首 ${item.id}`;
+  fields.num.textContent = modalIndexLabel(item);
   fields.char.textContent = item.char;
-  fields.charWrap?.setAttribute("aria-label", `Нажать на ключ ${item.char}`);
+  fields.charWrap?.setAttribute("aria-label", `Нажать на ${item.char}`);
   fields.variants.textContent = item.variants
     ? `варианты: ${item.variants.split(/\s+/).join(" · ")}`
     : "";
@@ -870,21 +882,20 @@ function updateSearchMeta(count, query) {
     return;
   }
 
-  const word =
-    count === 1 ? "ключ" : count >= 2 && count <= 4 ? "ключа" : "ключей";
-  searchMeta.textContent = `Найдено: ${count} ${word}`;
+  searchMeta.textContent = `Найдено: ${count} ${searchHitWord(count)}`;
 }
 
 function createGridFragment(items, onCellClick) {
   const frag = document.createDocumentFragment();
-  let currentStrokes = null;
+  let currentGroup = null;
 
   for (const item of items) {
-    if (item.strokes !== currentStrokes) {
-      currentStrokes = item.strokes;
+    const groupKey = itemGroupKey(item);
+    if (groupKey !== currentGroup) {
+      currentGroup = groupKey;
       const label = document.createElement("div");
       label.className = "section-label";
-      label.textContent = strokeSectionLabel(currentStrokes);
+      label.textContent = itemGroupLabel(item) || strokeSectionLabel(item.strokes);
       frag.appendChild(label);
     }
 

@@ -1,4 +1,4 @@
-import radicals from "./radicals.js";
+import radicals, { hasSpeechAudio, hasSfxAudio, speechAudioDir } from "./catalog.js";
 import { appAssetUrl } from "./appBase.js";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
@@ -55,7 +55,8 @@ function padId(id) {
 }
 
 export function audioUrl(lang, id) {
-  return appAssetUrl(`audio/${lang}/${padId(id)}.mp3`);
+  if (!hasSpeechAudio) return "";
+  return appAssetUrl(`${speechAudioDir}/${lang}/${padId(id)}.mp3`);
 }
 
 function speakKey(lang, id) {
@@ -216,6 +217,10 @@ export function playPop() {
 export function playRadicalSfx(id) {
   syncUnlockAudio();
   const url = radicalSfxUrl(id);
+  if (!url) {
+    playPop();
+    return;
+  }
   const key = resolveUrl(url);
 
   const cached = bufferCache.get(key);
@@ -422,6 +427,7 @@ async function decodeBuffer(url) {
 }
 
 async function fetchAndDecode(url) {
+  if (!url) return;
   const key = resolveUrl(url);
   if (bufferCache.has(key)) return;
   const bytes = await fetchBytes(url);
@@ -514,8 +520,8 @@ export function preloadAllSpeechSamples() {
 
 export function initAudioPreload() {
   installGlobalAudioUnlock();
-  void preloadAllRadicalSfx();
-  void preloadAllSpeechSamples();
+  if (hasSfxAudio) void preloadAllRadicalSfx();
+  if (hasSpeechAudio) void preloadAllSpeechSamples();
 }
 
 function outputLatencySec(ctx) {
@@ -629,6 +635,10 @@ export function speakRadical(item, lang, options = {}) {
 
   syncUnlockAudio();
   const url = audioUrl(lang, item.id);
+  if (!url) {
+    onEnd();
+    return;
+  }
   const resolved = resolveUrl(url);
 
   const cached = bufferCache.get(resolved);
@@ -665,7 +675,9 @@ export function speakRadical(item, lang, options = {}) {
 }
 
 export function getSamplePeaks(lang, id, bars = 140) {
-  const key = resolveUrl(audioUrl(lang, id));
+  const url = audioUrl(lang, id);
+  if (!url) return null;
+  const key = resolveUrl(url);
   const buffer = bufferCache.get(key);
   if (!buffer) return null;
 
@@ -679,7 +691,9 @@ export function getSamplePeaks(lang, id, bars = 140) {
 }
 
 export async function loadSamplePeaks(lang, id, bars = 140) {
-  const buffer = await decodeBuffer(audioUrl(lang, id));
+  const url = audioUrl(lang, id);
+  if (!url) return null;
+  const buffer = await decodeBuffer(url);
   if (!buffer) return null;
   return getSamplePeaks(lang, id, bars);
 }
@@ -690,7 +704,8 @@ export function isSampleReady(lang, id) {
 }
 
 export function prefetchItemAudio(item) {
-  void fetchAndDecode(radicalSfxUrl(item.id));
+  if (hasSfxAudio) void fetchAndDecode(radicalSfxUrl(item.id));
+  if (!hasSpeechAudio) return;
   void fetchAndDecode(audioUrl("jp", item.id));
   void fetchAndDecode(audioUrl("cn", item.id));
 }

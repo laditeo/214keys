@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ru" data-catalog="basic">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <title>basic — кандзи / 汉字</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="../css/style.css?v=174">
+  <script>
+    (function () {
+      var BUILD = "174";
+      document.addEventListener("DOMContentLoaded", function () {
+        var buildEl = document.getElementById("header-build");
+        if (buildEl) buildEl.textContent = "v" + BUILD;
+      });
+      try {
+        var buildKey = "214keys-basic-build";
+        var savedBuild = localStorage.getItem(buildKey);
+        var hasBust = /(?:^|[?&])214b=/.test(location.search);
+        if (savedBuild !== BUILD) {
+          localStorage.setItem(buildKey, BUILD);
+          if (!hasBust) {
+            var sep = location.search ? "&" : "?";
+            location.replace(location.pathname + location.search + sep + "214b=" + BUILD + location.hash);
+            return;
+          }
+        }
+        var saved = localStorage.getItem("214keys-theme");
+        var theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        if (theme === "dark") document.documentElement.dataset.theme = "dark";
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <div class="page">
+    <p class="credit">designed by <a class="credit__link" href="https://t.me/laditeo" target="_blank" rel="noopener noreferrer">@laditeo</a></p>
+
+    <header class="header">
+      <nav class="site-nav" aria-label="Разделы">
+        <a class="site-nav__link" href="../">ключи</a>
+        <a class="site-nav__link is-current" href="./">basic</a>
+      </nav>
+      <p class="header__eyebrow">汉字 · 漢字 · first signs</p>
+      <h1 class="header__title"><span class="header__title-inner">basic<sup class="header__build" id="header-build" aria-hidden="true"></sup></span></h1>
+      <p class="header__subtitle">Цифры, цвета, стороны, время, размер и природа — кликни на знак</p>
+    </header>
+
+    <div class="search">
+      <label class="search__label" for="search-input">Поиск</label>
+      <input
+        id="search-input"
+        class="search__input"
+        type="search"
+        placeholder="иероглиф, чтение, pinyin, объяснение…"
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <p class="search__meta" id="search-meta" aria-live="polite"></p>
+
+      <div class="theme-toggle" role="group" aria-label="Тема оформления">
+        <button type="button" class="theme-toggle__btn is-active" data-theme="light" aria-pressed="true">
+          <span class="theme-toggle__icon" aria-hidden="true">☀</span>
+          Светлая
+        </button>
+        <button type="button" class="theme-toggle__btn" data-theme="dark" aria-pressed="false">
+          <span class="theme-toggle__icon" aria-hidden="true">☽</span>
+          Тёмная
+        </button>
+      </div>
+
+      <div class="font-settings">
+        <div class="font-toggle" role="group" aria-label="Шрифт иероглифов">
+          <button type="button" class="font-toggle__btn is-active" data-font="serif" aria-pressed="true">
+            <span class="font-toggle__sample font-toggle__sample--serif" aria-hidden="true">水</span>
+            Классика
+          </button>
+          <button type="button" class="font-toggle__btn" data-font="linear" aria-pressed="false">
+            <span class="font-toggle__sample font-toggle__sample--linear" aria-hidden="true">水</span>
+            Монолиния
+          </button>
+        </div>
+
+        <label class="font-weight-control" for="font-weight-slider">
+          <span class="font-weight-control__title" aria-hidden="true">Толщина</span>
+          <span class="font-weight-control__value" id="font-weight-value">343</span>
+          <input
+            type="range"
+            id="font-weight-slider"
+            class="font-weight-control__slider"
+            min="200"
+            max="700"
+            step="1"
+            value="343"
+            aria-label="Толщина шрифта"
+            aria-valuemin="200"
+            aria-valuemax="700"
+            aria-valuenow="343"
+          >
+        </label>
+
+        <label class="graphics-control" for="graphics-mode-slider">
+          <span class="graphics-control__title" aria-hidden="true">Графика</span>
+          <span class="graphics-control__value" id="graphics-mode-value">2d</span>
+          <input
+            type="range"
+            id="graphics-mode-slider"
+            class="graphics-control__slider"
+            min="0"
+            max="2"
+            step="1"
+            value="1"
+            aria-label="Режим графики"
+            aria-valuemin="0"
+            aria-valuemax="2"
+            aria-valuenow="1"
+          >
+        </label>
+
+        <div class="display-toggles" role="group" aria-label="Отображение таблицы">
+          <label class="display-toggle" for="toggle-category-colors">
+            <input
+              type="checkbox"
+              id="toggle-category-colors"
+              class="display-toggle__input"
+            >
+            <span class="display-toggle__track" aria-hidden="true">
+              <span class="display-toggle__thumb"></span>
+            </span>
+            <span class="display-toggle__label">Цвет по категориям</span>
+          </label>
+          <label class="display-toggle" for="toggle-cell-emoji">
+            <input
+              type="checkbox"
+              id="toggle-cell-emoji"
+              class="display-toggle__input"
+            >
+            <span class="display-toggle__track" aria-hidden="true">
+              <span class="display-toggle__thumb"></span>
+            </span>
+            <span class="display-toggle__label">Emoji у знаков</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <p class="empty" id="empty" hidden>Ничего не найдено</p>
+
+    <main id="grid" class="grid" aria-label="Таблица базовых знаков"></main>
+  </div>
+
+  <dialog id="modal" class="modal" aria-labelledby="modal-char">
+    <aside class="modal-map" id="modal-map" hidden aria-label="Мини-карта знаков">
+      <div class="modal-map__dock">
+        <div class="modal-map__panel" id="modal-map-panel">
+          <div class="modal-map__stage" id="modal-map-stage">
+            <div class="modal-map__zoom" id="modal-map-zoom">
+              <div class="modal-map__fit" id="modal-map-fit">
+                <div class="modal-map__grid grid" id="modal-map-grid"></div>
+                <div class="modal-map__viewport" id="modal-map-viewport" hidden aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="modal-map__toggle"
+          id="modal-map-toggle"
+          aria-label="Свернуть мини-карту"
+          aria-expanded="true"
+          aria-controls="modal-map-panel"
+        >
+          <svg class="modal-map__toggle-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="4" y="4" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.4"/>
+            <rect x="13" y="4" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.4"/>
+            <rect x="4" y="13" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.4"/>
+            <rect x="13" y="13" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.4"/>
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <aside class="modal-canvas" id="modal-canvas" hidden aria-label="Канвас знаков">
+      <div class="modal-canvas__dock">
+        <button
+          type="button"
+          class="modal-canvas__toggle"
+          id="modal-canvas-toggle"
+          aria-label="Свернуть канвас"
+          aria-expanded="true"
+          aria-controls="modal-canvas-panel"
+        >
+          <svg class="modal-canvas__toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="8" cy="8" r="3.25" fill="#8b9cb8"/>
+            <circle cx="16" cy="8" r="3.25" fill="#e8b45c"/>
+            <circle cx="8" cy="16" r="3.25" fill="#c07bd4"/>
+            <circle cx="16" cy="16" r="3.25" fill="#5ec98a"/>
+          </svg>
+        </button>
+        <div class="modal-canvas__panel" id="modal-canvas-panel">
+          <div class="modal-canvas__resize" id="modal-canvas-resize" role="separator" aria-orientation="vertical" aria-label="Изменить ширину панели" title="Потяните, чтобы изменить ширину"></div>
+          <div class="modal-canvas__filters" id="modal-canvas-filters" aria-label="Фильтры категорий"></div>
+          <div class="modal-canvas__stage" id="modal-canvas-stage">
+            <div class="modal-canvas__viewport" id="modal-canvas-viewport">
+              <div class="modal-canvas__world" id="modal-canvas-world"></div>
+            </div>
+            <svg class="spatial-lasso" id="modal-canvas-lasso" aria-hidden="true">
+              <path fill="color-mix(in srgb, var(--speaker-active, #c48a28) 18%, transparent)" stroke="var(--speaker-active, #c48a28)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            </svg>
+            <div class="spatial-popup" id="modal-canvas-popup" hidden>
+              <button type="button" class="spatial-popup__group" id="modal-canvas-group">группа</button>
+              <button type="button" class="spatial-popup__delete" id="modal-canvas-delete" aria-label="Удалить выделенное">×</button>
+            </div>
+            <div class="modal-canvas__tools modal-canvas__tools--tl" id="modal-canvas-tools-tl">
+              <button type="button" class="modal-canvas__tool" id="modal-canvas-focus" aria-label="Фокус на текущей" title="Фокус на текущей">
+                <svg class="modal-canvas__tool-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 8.5V5.5A1.5 1.5 0 0 1 5.5 4H8.5M15.5 4h3A1.5 1.5 0 0 1 20 5.5V8.5M20 15.5v3a1.5 1.5 0 0 1-1.5 1.5H15.5M8.5 20H5.5A1.5 1.5 0 0 1 4 18.5V15.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                  <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+                </svg>
+              </button>
+              <button type="button" class="modal-canvas__tool" id="modal-canvas-fit" aria-label="Показать всё" title="Показать всё">
+                <svg class="modal-canvas__tool-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="3.5" y="3.5" width="17" height="17" rx="3.5" stroke="currentColor" stroke-width="1.6"/>
+                  <circle cx="9" cy="9" r="1.55" fill="currentColor"/>
+                  <circle cx="15" cy="9" r="1.55" fill="currentColor"/>
+                  <circle cx="9" cy="15" r="1.55" fill="currentColor"/>
+                  <circle cx="15" cy="15" r="1.55" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+            <div class="modal-canvas__tools modal-canvas__tools--tr">
+              <button type="button" class="modal-canvas__tool modal-canvas__tool--fullscreen" id="modal-canvas-fullscreen" aria-label="Развернуть на весь экран" aria-pressed="false">
+                <svg class="modal-canvas__tool-icon modal-canvas__fullscreen-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path class="modal-canvas__fs-expand" d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  <path class="modal-canvas__fs-shrink" d="M9 15H5v4M15 15h4v4M9 9H5V5M15 9h4V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="modal-canvas__tools modal-canvas__tools--bl">
+              <button type="button" class="modal-canvas__tool modal-canvas__tool--danger" id="modal-canvas-clear" aria-label="Удалить всё" title="Удалить всё">
+                <svg class="modal-canvas__tool-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 7h14M9 7V5h6v2M8 7l1 12h6l1-12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="modal-canvas__tools modal-canvas__tools--br" id="modal-canvas-spawn" aria-label="Добавить карточки"></div>
+            <div class="spatial-confirm" id="modal-canvas-clear-confirm" hidden>
+              <div class="spatial-confirm__panel" role="alertdialog" aria-labelledby="modal-canvas-clear-confirm-text">
+                <p class="spatial-confirm__text" id="modal-canvas-clear-confirm-text">Удалить все карточки с канваса?</p>
+                <div class="spatial-confirm__actions">
+                  <button type="button" class="spatial-confirm__btn" id="modal-canvas-clear-cancel">Отмена</button>
+                  <button type="button" class="spatial-confirm__btn spatial-confirm__btn--danger" id="modal-canvas-clear-ok">Удалить</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="modal__frame">
+      <button type="button" class="modal-nav modal-nav--prev" id="modal-prev" aria-label="Предыдущий знак">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 6 9 12l6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <div class="modal__stack">
+        <button type="button" class="modal-group-nav modal-group-nav--prev" id="modal-group-prev" aria-label="Предыдущая группа" disabled>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 15 12 9l6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="modal-group-nav__label" id="modal-group-prev-label"></span>
+        </button>
+
+        <div class="modal__card">
+        <div class="modal__inner">
+          <button type="button" class="modal__close" aria-label="Закрыть">&times;</button>
+
+          <div class="modal__hero">
+            <span class="modal__num" id="modal-num"></span>
+            <button type="button" class="modal__char-wrap" id="modal-char-wrap" aria-label="Нажать на знак">
+              <span class="modal__char" id="modal-char"></span>
+            </button>
+            <span class="modal__variants" id="modal-variants"></span>
+          </div>
+
+          <dl class="modal__readings">
+            <div class="modal__row">
+              <dt>日本語</dt>
+              <dd class="modal__reading">
+                <span id="modal-jp" class="modal__reading-text"></span>
+                <div class="modal__reading-controls">
+                  <div class="speaker-slot">
+                    <button type="button" class="speaker" id="speaker-jp" aria-label="Произнести по-японски" title="Произнести">
+                      <svg class="speaker__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                        <path class="speaker__wave speaker__wave--single" d="M15.5 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                        <path class="speaker__wave speaker__wave--double" d="M15.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
+                        <path class="speaker__wave speaker__wave--double" d="M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
+                      </svg>
+                    </button>
+                    <span class="speaker-wait" id="speaker-wait-jp" aria-hidden="true">
+                      <svg class="speaker-wait__spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="16 38"/>
+                      </svg>
+                    </span>
+                  </div>
+                  <div class="audio-wave" id="audio-wave-jp" hidden title="Произнести">
+                    <canvas class="audio-wave__canvas" aria-hidden="true"></canvas>
+                  </div>
+                </div>
+              </dd>
+            </div>
+            <div class="modal__row">
+              <dt>中文</dt>
+              <dd class="modal__reading">
+                <span id="modal-cn" class="modal__reading-text"></span>
+                <div class="modal__reading-controls">
+                  <div class="speaker-slot">
+                    <button type="button" class="speaker" id="speaker-cn" aria-label="Произнести по-китайски" title="Произнести">
+                      <svg class="speaker__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                        <path class="speaker__wave speaker__wave--single" d="M15.5 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                        <path class="speaker__wave speaker__wave--double" d="M15.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
+                        <path class="speaker__wave speaker__wave--double" d="M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
+                      </svg>
+                    </button>
+                    <span class="speaker-wait" id="speaker-wait-cn" aria-hidden="true">
+                      <svg class="speaker-wait__spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="16 38"/>
+                      </svg>
+                    </span>
+                  </div>
+                  <div class="audio-wave" id="audio-wave-cn" hidden title="Произнести">
+                    <canvas class="audio-wave__canvas" aria-hidden="true"></canvas>
+                  </div>
+                </div>
+              </dd>
+            </div>
+            <div class="modal__row modal__row--wide">
+              <dt class="modal__row-label">
+                <span class="modal__row-label-text">Знак</span>
+                <button type="button" class="modal-char3d-toggle" data-char-mode-toggle aria-pressed="false" aria-label="3D-режим знака" title="Покрутить знак в 3D">
+                  <svg class="char3d-toggle__icon" viewBox="0 0 32 32" aria-hidden="true">
+                    <g class="char3d-toggle__orbit">
+                      <ellipse cx="16" cy="16" rx="14.5" ry="6" transform="rotate(-26 16 16)"/>
+                      <circle class="char3d-toggle__sat" cx="30.5" cy="16" r="2.1" transform="rotate(-26 16 16)"/>
+                    </g>
+                    <text class="char3d-toggle__label" x="16" y="16" text-anchor="middle" dominant-baseline="central">3D</text>
+                  </svg>
+                </button>
+              </dt>
+              <dd class="modal__ru-fit">
+                <div class="modal__ru-scale" id="modal-ru"></div>
+              </dd>
+            </div>
+          </dl>
+
+          <div class="modal__footer">
+            <button
+              type="button"
+              class="modal__copy-btn"
+              id="modal-copy-btn"
+              title="копировать в clipboard"
+              aria-label="Копировать в буфер обмена"
+            >
+              <svg class="modal__copy-btn-icon modal__copy-btn-icon--copy" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="8" y="8" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M6 16V5a1.5 1.5 0 0 1 1.5-1.5H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <svg class="modal__copy-btn-icon modal__copy-btn-icon--done" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 12.5 10 16.5 18 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="matcap-toggle font-toggle font-toggle--compact" role="group" aria-label="Материал 3D-салюта">
+              <button type="button" class="font-toggle__btn" data-matcap="light" aria-pressed="false" title="Светлый">
+                <span class="matcap-toggle__preview" data-matcap-preview="light" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="font-toggle__btn" data-matcap="depth" aria-pressed="false" title="Z-depth">
+                <span class="matcap-toggle__preview" data-matcap-preview="depth" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="font-toggle__btn is-active" data-matcap="normal" aria-pressed="true" title="Нормаль">
+                <span class="matcap-toggle__preview" data-matcap-preview="normal" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="font-toggle__btn" data-matcap="badge" aria-pressed="false" title="Бронза">
+                <span class="matcap-toggle__preview" data-matcap-preview="badge" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div class="font-toggle font-toggle--compact font-toggle--icons" role="group" aria-label="Шрифт иероглифов в карточке">
+              <button type="button" class="font-toggle__btn is-active" data-font="serif" aria-pressed="true" title="Классика">
+                <span class="font-toggle__sample font-toggle__sample--serif" aria-hidden="true">水</span>
+              </button>
+              <button type="button" class="font-toggle__btn" data-font="linear" aria-pressed="false" title="Монолиния">
+                <span class="font-toggle__sample font-toggle__sample--linear" aria-hidden="true">水</span>
+              </button>
+            </div>
+            <span class="modal__strokes-badge" id="modal-strokes"></span>
+          </div>
+        </div>
+        </div>
+
+        <button type="button" class="modal-group-nav modal-group-nav--next" id="modal-group-next" aria-label="Следующая группа" disabled>
+          <span class="modal-group-nav__label" id="modal-group-next-label"></span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <button type="button" class="modal-nav modal-nav--next" id="modal-next" aria-label="Следующий знак">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </dialog>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.171.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.171.0/examples/jsm/",
+      "opentype.js": "https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.module.js"
+    }
+  }
+  </script>
+  <script type="module" src="../js/app.js?v=174"></script>
+</body>
+</html>

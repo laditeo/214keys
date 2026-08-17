@@ -1,20 +1,26 @@
-import radicals from "./radicals.js";
-import { RADICAL_CATEGORIES, getCategoryMeta, getRadicalCategory } from "./radicalCategories.js";
+import radicals, {
+  RADICAL_CATEGORIES_FOR_UI as RADICAL_CATEGORIES,
+  getCategoryMeta,
+  getRadicalCategory,
+  canvasStorageKey,
+} from "./catalog.js";
 
-const STORAGE_KEY = "214keys-spatial-canvas-v12";
-const LEGACY_STORAGE_KEYS = [
-  "214keys-spatial-canvas-v11",
-  "214keys-spatial-canvas-v10",
-  "214keys-spatial-canvas-v9",
-  "214keys-spatial-canvas-v8",
-  "214keys-spatial-canvas-v7",
-  "214keys-spatial-canvas-v6",
-  "214keys-spatial-canvas-v5",
-  "214keys-spatial-canvas-v4",
-  "214keys-spatial-canvas-v3",
-  "214keys-spatial-canvas-v2",
-  "214keys-spatial-canvas-v1",
-];
+const STORAGE_KEY = canvasStorageKey;
+const LEGACY_STORAGE_KEYS = STORAGE_KEY === "214keys-spatial-canvas-v12"
+  ? [
+      "214keys-spatial-canvas-v11",
+      "214keys-spatial-canvas-v10",
+      "214keys-spatial-canvas-v9",
+      "214keys-spatial-canvas-v8",
+      "214keys-spatial-canvas-v7",
+      "214keys-spatial-canvas-v6",
+      "214keys-spatial-canvas-v5",
+      "214keys-spatial-canvas-v4",
+      "214keys-spatial-canvas-v3",
+      "214keys-spatial-canvas-v2",
+      "214keys-spatial-canvas-v1",
+    ]
+  : [];
 const CARD_SIZE = 36;
 const FENCE_PAD = 12;
 const FENCE_LABEL_H = 22;

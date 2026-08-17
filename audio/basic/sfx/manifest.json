@@ -1,0 +1,668 @@
+[
+  {
+    "id": 1,
+    "char": "〇",
+    "emoji": "⭕",
+    "file": "001.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "glass_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/glass_001.ogg"
+  },
+  {
+    "id": 2,
+    "char": "零",
+    "emoji": "0️⃣",
+    "file": "002.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "minimize_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/minimize_001.ogg"
+  },
+  {
+    "id": 3,
+    "char": "一",
+    "emoji": "1️⃣",
+    "file": "003.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "tick_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/tick_001.ogg"
+  },
+  {
+    "id": 4,
+    "char": "二",
+    "emoji": "2️⃣",
+    "file": "004.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "select_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/select_001.ogg"
+  },
+  {
+    "id": 5,
+    "char": "三",
+    "emoji": "3️⃣",
+    "file": "005.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "tick_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/tick_001.ogg"
+  },
+  {
+    "id": 6,
+    "char": "四",
+    "emoji": "4️⃣",
+    "file": "006.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "select_003.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/select_003.ogg"
+  },
+  {
+    "id": 7,
+    "char": "五",
+    "emoji": "5️⃣",
+    "file": "007.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "select_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/select_001.ogg"
+  },
+  {
+    "id": 8,
+    "char": "六",
+    "emoji": "6️⃣",
+    "file": "008.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "tick_002.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/tick_002.ogg"
+  },
+  {
+    "id": 9,
+    "char": "七",
+    "emoji": "7️⃣",
+    "file": "009.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "select_004.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/select_004.ogg"
+  },
+  {
+    "id": 10,
+    "char": "八",
+    "emoji": "8️⃣",
+    "file": "010.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "select_004.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/select_004.ogg"
+  },
+  {
+    "id": 11,
+    "char": "九",
+    "emoji": "9️⃣",
+    "file": "011.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "select_005.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/select_005.ogg"
+  },
+  {
+    "id": 12,
+    "char": "十",
+    "emoji": "🔟",
+    "file": "012.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "confirmation_002.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/confirmation_002.ogg"
+  },
+  {
+    "id": 13,
+    "char": "百",
+    "emoji": "💯",
+    "file": "013.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "confirmation_003.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/confirmation_003.ogg"
+  },
+  {
+    "id": 14,
+    "char": "千",
+    "emoji": "🔢",
+    "file": "014.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "scroll_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/scroll_001.ogg"
+  },
+  {
+    "id": 15,
+    "char": "万",
+    "emoji": "🔟",
+    "file": "015.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "confirmation_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/confirmation_001.ogg"
+  },
+  {
+    "id": 16,
+    "char": "億",
+    "emoji": "🏦",
+    "file": "016.mp3",
+    "pack": "RPG Audio",
+    "kenneyFile": "handleCoins2.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/RPG%20Audio/handleCoins2.ogg"
+  },
+  {
+    "id": 17,
+    "char": "半",
+    "emoji": "🌗",
+    "file": "017.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "toggle_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/toggle_001.ogg"
+  },
+  {
+    "id": 18,
+    "char": "赤",
+    "emoji": "❤️",
+    "file": "018.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "pluck_002.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/pluck_002.ogg"
+  },
+  {
+    "id": 19,
+    "char": "橙",
+    "emoji": "🧡",
+    "file": "019.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "bong_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/bong_001.ogg"
+  },
+  {
+    "id": 20,
+    "char": "黄",
+    "emoji": "💛",
+    "file": "020.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "bong_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/bong_001.ogg"
+  },
+  {
+    "id": 21,
+    "char": "緑",
+    "emoji": "💚",
+    "file": "021.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "confirmation_002.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/confirmation_002.ogg"
+  },
+  {
+    "id": 22,
+    "char": "青",
+    "emoji": "💙",
+    "file": "022.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "confirmation_002.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/confirmation_002.ogg"
+  },
+  {
+    "id": 23,
+    "char": "紫",
+    "emoji": "💜",
+    "file": "023.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "pluck_002.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/pluck_002.ogg"
+  },
+  {
+    "id": 24,
+    "char": "白",
+    "emoji": "🤍",
+    "file": "024.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "pluck_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/pluck_001.ogg"
+  },
+  {
+    "id": 25,
+    "char": "黒",
+    "emoji": "🖤",
+    "file": "025.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "click_005.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/click_005.ogg"
+  },
+  {
+    "id": 26,
+    "char": "灰",
+    "emoji": "🌫️",
+    "file": "026.mp3",
+    "pack": "Foley Sounds/Woosh",
+    "kenneyFile": "woosh5.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Woosh/woosh5.ogg"
+  },
+  {
+    "id": 27,
+    "char": "茶",
+    "emoji": "🤎",
+    "file": "027.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "pluck_002.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/pluck_002.ogg"
+  },
+  {
+    "id": 28,
+    "char": "桃",
+    "emoji": "💗",
+    "file": "028.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "confirmation_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/confirmation_001.ogg"
+  },
+  {
+    "id": 29,
+    "char": "藍",
+    "emoji": "💙",
+    "file": "029.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "pluck_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/pluck_001.ogg"
+  },
+  {
+    "id": 30,
+    "char": "金",
+    "emoji": "🥇",
+    "file": "030.mp3",
+    "pack": "Digital Audio",
+    "kenneyFile": "powerUp1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Digital%20Audio/powerUp1.ogg"
+  },
+  {
+    "id": 31,
+    "char": "銀",
+    "emoji": "🥈",
+    "file": "031.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "confirmation_003.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/confirmation_003.ogg"
+  },
+  {
+    "id": 32,
+    "char": "東",
+    "emoji": "➡️",
+    "file": "032.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "back_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/back_001.ogg"
+  },
+  {
+    "id": 33,
+    "char": "西",
+    "emoji": "⬅️",
+    "file": "033.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "back_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/back_001.ogg"
+  },
+  {
+    "id": 34,
+    "char": "南",
+    "emoji": "⬇️",
+    "file": "034.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "drop_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/drop_001.ogg"
+  },
+  {
+    "id": 35,
+    "char": "北",
+    "emoji": "⬆️",
+    "file": "035.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "maximize_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/maximize_001.ogg"
+  },
+  {
+    "id": 36,
+    "char": "上",
+    "emoji": "🔝",
+    "file": "036.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "confirmation_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/confirmation_001.ogg"
+  },
+  {
+    "id": 37,
+    "char": "下",
+    "emoji": "🔽",
+    "file": "037.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "minimize_002.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/minimize_002.ogg"
+  },
+  {
+    "id": 38,
+    "char": "左",
+    "emoji": "◀️",
+    "file": "038.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "tick_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/tick_001.ogg"
+  },
+  {
+    "id": 39,
+    "char": "右",
+    "emoji": "▶️",
+    "file": "039.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "select_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/select_001.ogg"
+  },
+  {
+    "id": 40,
+    "char": "中",
+    "emoji": "🎯",
+    "file": "040.mp3",
+    "pack": "Foley Sounds/Swords",
+    "kenneyFile": "hitHelmet1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Swords/hitHelmet1.ogg"
+  },
+  {
+    "id": 41,
+    "char": "前",
+    "emoji": "⏩",
+    "file": "041.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "scroll_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/scroll_001.ogg"
+  },
+  {
+    "id": 42,
+    "char": "後",
+    "emoji": "⏪",
+    "file": "042.mp3",
+    "pack": "Digital Audio",
+    "kenneyFile": "phaserDown1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Digital%20Audio/phaserDown1.ogg"
+  },
+  {
+    "id": 43,
+    "char": "内",
+    "emoji": "📥",
+    "file": "043.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "drop_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/drop_001.ogg"
+  },
+  {
+    "id": 44,
+    "char": "外",
+    "emoji": "📤",
+    "file": "044.mp3",
+    "pack": "Foley Sounds/Woosh",
+    "kenneyFile": "woosh2.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Woosh/woosh2.ogg"
+  },
+  {
+    "id": 45,
+    "char": "年",
+    "emoji": "📅",
+    "file": "045.mp3",
+    "pack": "RPG Audio",
+    "kenneyFile": "bookFlip1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/RPG%20Audio/bookFlip1.ogg"
+  },
+  {
+    "id": 46,
+    "char": "月",
+    "emoji": "🌙",
+    "file": "046.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "bong_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/bong_001.ogg"
+  },
+  {
+    "id": 47,
+    "char": "日",
+    "emoji": "☀️",
+    "file": "047.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "confirmation_002.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/confirmation_002.ogg"
+  },
+  {
+    "id": 48,
+    "char": "時",
+    "emoji": "⏰",
+    "file": "048.mp3",
+    "pack": "Impact Sounds",
+    "kenneyFile": "impactBell_heavy_003.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Impact%20Sounds/impactBell_heavy_003.ogg"
+  },
+  {
+    "id": 49,
+    "char": "分",
+    "emoji": "✂️",
+    "file": "049.mp3",
+    "pack": "RPG Audio",
+    "kenneyFile": "drawKnife1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/RPG%20Audio/drawKnife1.ogg"
+  },
+  {
+    "id": 50,
+    "char": "秒",
+    "emoji": "⏱️",
+    "file": "050.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "click_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/click_001.ogg"
+  },
+  {
+    "id": 51,
+    "char": "今",
+    "emoji": "✨",
+    "file": "051.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "pluck_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/pluck_001.ogg"
+  },
+  {
+    "id": 52,
+    "char": "週",
+    "emoji": "📆",
+    "file": "052.mp3",
+    "pack": "RPG Audio",
+    "kenneyFile": "bookFlip3.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/RPG%20Audio/bookFlip3.ogg"
+  },
+  {
+    "id": 53,
+    "char": "大",
+    "emoji": "🐘",
+    "file": "053.mp3",
+    "pack": "Impact Sounds",
+    "kenneyFile": "impactSoft_heavy_000.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Impact%20Sounds/impactSoft_heavy_000.ogg"
+  },
+  {
+    "id": 54,
+    "char": "小",
+    "emoji": "🐭",
+    "file": "054.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "click_003.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/click_003.ogg"
+  },
+  {
+    "id": 55,
+    "char": "多",
+    "emoji": "📚",
+    "file": "055.mp3",
+    "pack": "RPG Audio",
+    "kenneyFile": "bookOpen.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/RPG%20Audio/bookOpen.ogg"
+  },
+  {
+    "id": 56,
+    "char": "少",
+    "emoji": "🌱",
+    "file": "056.mp3",
+    "pack": "Foley Sounds/Water",
+    "kenneyFile": "drip1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Water/drip1.ogg"
+  },
+  {
+    "id": 57,
+    "char": "長",
+    "emoji": "📏",
+    "file": "057.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "select_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/select_001.ogg"
+  },
+  {
+    "id": 58,
+    "char": "短",
+    "emoji": "📌",
+    "file": "058.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "click_004.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/click_004.ogg"
+  },
+  {
+    "id": 59,
+    "char": "高",
+    "emoji": "🏔️",
+    "file": "059.mp3",
+    "pack": "Foley Sounds/Rocks",
+    "kenneyFile": "rockHit1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Rocks/rockHit1.ogg"
+  },
+  {
+    "id": 60,
+    "char": "低",
+    "emoji": "📉",
+    "file": "060.mp3",
+    "pack": "Digital Audio",
+    "kenneyFile": "phaserDown1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Digital%20Audio/phaserDown1.ogg"
+  },
+  {
+    "id": 61,
+    "char": "人",
+    "emoji": "🧑",
+    "file": "061.mp3",
+    "pack": "Impact Sounds",
+    "kenneyFile": "impactSoft_medium_000.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Impact%20Sounds/impactSoft_medium_000.ogg"
+  },
+  {
+    "id": 62,
+    "char": "山",
+    "emoji": "⛰️",
+    "file": "062.mp3",
+    "pack": "Foley Sounds/Rocks",
+    "kenneyFile": "stoneHit1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Rocks/stoneHit1.ogg"
+  },
+  {
+    "id": 63,
+    "char": "川",
+    "emoji": "〰️",
+    "file": "063.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "toggle_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/toggle_001.ogg"
+  },
+  {
+    "id": 64,
+    "char": "天",
+    "emoji": "🌌",
+    "file": "064.mp3",
+    "pack": "Sci-Fi Sounds",
+    "kenneyFile": "laserRetro_000.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Sci-Fi%20Sounds/laserRetro_000.ogg"
+  },
+  {
+    "id": 65,
+    "char": "空",
+    "emoji": "☁️",
+    "file": "065.mp3",
+    "pack": "Foley Sounds/Woosh",
+    "kenneyFile": "woosh4.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Woosh/woosh4.ogg"
+  },
+  {
+    "id": 66,
+    "char": "海",
+    "emoji": "🌊",
+    "file": "066.mp3",
+    "pack": "Foley Sounds/Water",
+    "kenneyFile": "sinkDrain1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Water/sinkDrain1.ogg"
+  },
+  {
+    "id": 67,
+    "char": "花",
+    "emoji": "🌸",
+    "file": "067.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "pluck_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/pluck_001.ogg"
+  },
+  {
+    "id": 68,
+    "char": "雨",
+    "emoji": "🌧️",
+    "file": "068.mp3",
+    "pack": "Foley Sounds/Water",
+    "kenneyFile": "sinkDrain1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Water/sinkDrain1.ogg"
+  },
+  {
+    "id": 69,
+    "char": "風",
+    "emoji": "🌬️",
+    "file": "069.mp3",
+    "pack": "Foley Sounds/Woosh",
+    "kenneyFile": "woosh1.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Woosh/woosh1.ogg"
+  },
+  {
+    "id": 70,
+    "char": "雪",
+    "emoji": "❄️",
+    "file": "070.mp3",
+    "pack": "Impact Sounds",
+    "kenneyFile": "footstep_snow_000.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Impact%20Sounds/footstep_snow_000.ogg"
+  },
+  {
+    "id": 71,
+    "char": "火",
+    "emoji": "🔥",
+    "file": "071.mp3",
+    "pack": "Interface Sounds",
+    "kenneyFile": "glitch_003.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Interface%20Sounds/glitch_003.ogg"
+  },
+  {
+    "id": 72,
+    "char": "水",
+    "emoji": "💧",
+    "file": "072.mp3",
+    "pack": "Foley Sounds/Water",
+    "kenneyFile": "sinkWater4.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Foley%20Sounds/Water/sinkWater4.ogg"
+  },
+  {
+    "id": 73,
+    "char": "木",
+    "emoji": "🌳",
+    "file": "073.mp3",
+    "pack": "Impact Sounds",
+    "kenneyFile": "impactWood_heavy_000.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Impact%20Sounds/impactWood_heavy_000.ogg"
+  },
+  {
+    "id": 74,
+    "char": "土",
+    "emoji": "🌍",
+    "file": "074.mp3",
+    "pack": "Impact Sounds",
+    "kenneyFile": "impactGeneric_light_001.ogg",
+    "source": "https://gamesounds.xyz/Kenney%27s%20Sound%20Pack/Impact%20Sounds/impactGeneric_light_001.ogg"
+  }
+]

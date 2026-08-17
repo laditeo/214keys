@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=167">
+  <link rel="stylesheet" href="css/style.css?v=174">
   <script>
     (function () {
-      var BUILD = "167";
+      var BUILD = "174";
       document.addEventListener("DOMContentLoaded", function () {
         var buildEl = document.getElementById("header-build");
         if (buildEl) buildEl.textContent = "v" + BUILD;
@@ -41,6 +41,10 @@
     <p class="credit">designed by <a class="credit__link" href="https://t.me/laditeo" target="_blank" rel="noopener noreferrer">@laditeo</a></p>
 
     <header class="header">
+      <nav class="site-nav" aria-label="Разделы">
+        <a class="site-nav__link is-current" href="./">ключи</a>
+        <a class="site-nav__link" href="basic/">basic</a>
+      </nav>
       <p class="header__eyebrow">康熙部首 · 214 radicals</p>
       <h1 class="header__title"><span class="header__title-inner">214 ключей<sup class="header__build" id="header-build" aria-hidden="true"></sup></span></h1>
       <p class="header__subtitle">Кликни на иероглиф — откроется чтение и объяснение ключа</p>
@@ -426,6 +430,6 @@
     }
   }
   </script>
-  <script type="module" src="js/app.js?v=167"></script>
+  <script type="module" src="js/app.js?v=174"></script>
 </body>
 </html>

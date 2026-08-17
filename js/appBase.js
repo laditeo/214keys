@@ -1,9 +1,10 @@
 export function getAppBase() {
   try {
-    const { pathname } = window.location;
-    if (isBetaChannel(pathname)) {
-      return "../";
-    }
+    const path = window.location.pathname.replace(/\/index\.html$/i, "");
+    const up = [];
+    if (isBetaChannel(path)) up.push("..");
+    if (isBasicChannel(path)) up.push("..");
+    return up.length ? `${up.join("/")}/` : "";
   } catch {
     /* ignore */
   }
@@ -11,7 +12,13 @@ export function getAppBase() {
 }
 
 export function isBetaChannel(pathname = window.location.pathname) {
-  return pathname.includes("/beta/") || /\/beta\/?$/.test(pathname.replace(/\/index\.html$/i, ""));
+  const path = pathname.replace(/\/index\.html$/i, "");
+  return path.includes("/beta/") || /\/beta\/?$/.test(path);
+}
+
+export function isBasicChannel(pathname = window.location.pathname) {
+  const path = pathname.replace(/\/index\.html$/i, "");
+  return path.includes("/basic/") || /\/basic\/?$/.test(path);
 }
 
 export function appAssetUrl(relativePath) {

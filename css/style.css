@@ -154,6 +154,32 @@ body.is-modal-open {
   color: var(--text-muted);
 }
 
+.site-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 0 0 0.85rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+}
+
+.site-nav__link {
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.18em 0.55em;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.site-nav__link:hover {
+  color: var(--text);
+}
+
+.site-nav__link.is-current {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--text-muted) 35%, transparent);
+}
+
 .header__title {
   margin: 0;
   font-size: clamp(1.6rem, 4vw, 2.2rem);
@@ -764,6 +790,7 @@ html[data-cell-colors="on"] .cell__char {
   position: absolute;
   right: 0.06cqi;
   bottom: 0.04cqi;
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
   font-size: clamp(0.58rem, 28cqi, 1.15rem);
   line-height: 1;
   pointer-events: none;

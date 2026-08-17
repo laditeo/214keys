@@ -15,4 +15,9 @@ for (const name of COPY) {
   cpSync(src, join(betaRoot, name), { recursive: true });
 }
 
+const basicSrc = join(root, "basic");
+if (existsSync(basicSrc)) {
+  cpSync(basicSrc, join(betaRoot, "basic"), { recursive: true });
+}
+
 console.log("Synced beta/{css,js,data} from main (audio stays at /214keys/audio/)");
