@@ -16,9 +16,9 @@ STRETCH = 1.55
 GAIN = 1.35
 
 # Pitch multiplier on the *voiced* part (0 = vowel onset, 1 = end):
-# a steep fall over the first half, a hold, then the modulation ends and the
-# original recording (with its natural rise) plays untouched.
-CONTOUR = ((0.0, 1.0), (0.08, 0.88), (0.25, 0.62), (0.45, 0.62), (0.55, 1.0), (1.0, 1.0))
+# a gentle fall (shallow, to keep timbre close to the original voice), a hold,
+# then the modulation ends and the original recording plays untouched.
+CONTOUR = ((0.0, 1.0), (0.10, 0.9), (0.25, 0.8), (0.45, 0.8), (0.55, 1.0), (1.0, 1.0))
 
 
 def _decode(path):
@@ -138,7 +138,7 @@ def emphasize(path):
 
         center = float(centers[index])
         period = float(periods[index])
-        half = max(8, int(period * SR))
+        half = max(8, int(4 * period * SR))
         start = int(center * SR) - half
         if start < 0 or start + 2 * half > len(x):
             out_pos += period
