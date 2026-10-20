@@ -11,11 +11,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=199";
+} from "./catalog.js?v=200";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=199";
+import "./char3dOrbit.js?v=200";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -49,8 +49,10 @@ import {
   playPop,
   prefetchItemAudio,
   speakRadical,
+  setPinyinGender,
+  getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=199";
+} from "./radicalSpeech.js?v=200";
 import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js";
 import {
   hideSpatialCanvas,
@@ -1513,6 +1515,29 @@ wireCopyButton();
 initSpeakerParticles();
 mountLocalDebug();
 initAudioPreload();
+
+// Переключатель женского/мужского голоса для пиньиня.
+function syncVoiceToggle() {
+  if (!isPinyinCatalog) return;
+  const gender = getPinyinGender();
+  document.querySelectorAll(".voice-toggle__btn").forEach((btn) => {
+    const active = btn.dataset.voice === gender;
+    btn.classList.toggle("is-active", active);
+    btn.setAttribute("aria-pressed", String(active));
+  });
+}
+
+if (isPinyinCatalog) {
+  document.querySelectorAll(".voice-toggle__btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setPinyinGender(btn.dataset.voice);
+      syncVoiceToggle();
+      if (activeItem) syncToneWaves(activeItem);
+    });
+  });
+  syncVoiceToggle();
+}
 
 const THEME_KEY = "214keys-theme";
 const FONT_KEY = "214keys-font";

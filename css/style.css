@@ -995,9 +995,35 @@ html[data-vowel-colors="on"] .pinyin-table__corner {
   color: var(--text);
 }
 
-.modal__tone-text {
-  flex: 0 0 auto;
-  letter-spacing: 0.02em;
+.voice-toggle {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin-top: 0.35rem;
+}
+
+.voice-toggle__btn {
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.voice-toggle__btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.voice-toggle__btn.is-active {
+  color: var(--text);
+  background: var(--bg-active);
+  border-color: var(--cell-active-border-static);
 }
 
 .modal__tone-wave {

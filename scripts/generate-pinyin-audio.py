@@ -131,11 +131,9 @@ async def main():
         default="",
         help="comma separated tone numbers to regenerate, e.g. 3",
     )
-    parser.add_argument(
-        "--ids",
-        default="",
-        help="comma separated syllable ids to regenerate, e.g. 130,360",
-    )
+    parser.add_argument("--voice", default="", help="Edge TTS voice name")
+    parser.add_argument("--out-dir", default="", help="output subdirectory under audio/pinyin")
+    parser.add_argument("--ids", default="", help="comma separated syllable ids")
     parser.add_argument(
         "--finalize-only",
         action="store_true",
@@ -143,6 +141,11 @@ async def main():
     )
     args = parser.parse_args()
 
+    global OUT_DIR, VOICE
+    if args.voice:
+        VOICE = args.voice
+    if args.out_dir:
+        OUT_DIR = ROOT / "audio" / "pinyin" / args.out_dir
     items = load_items()
     if args.ids:
         wanted = {int(part) for part in args.ids.split(",") if part.strip()}

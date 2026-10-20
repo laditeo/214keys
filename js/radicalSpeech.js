@@ -3,7 +3,7 @@ import radicals, {
   hasSfxAudio,
   isPinyinCatalog,
   speechAudioDir,
-} from "./catalog.js?v=199";
+} from "./catalog.js?v=200";
 import { appAssetUrl } from "./appBase.js";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
@@ -61,12 +61,39 @@ function padId(id) {
 
 /** Bump when the pinyin recordings are regenerated (busts the browser cache). */
 const PINYIN_AUDIO_REV = "7";
+const PINYIN_GENDER_KEY = "214keys-pinyin-voice";
 
-export function audioUrl(lang, id, tone = 1) {
+let pinyinGender = "female";
+try {
+  const saved = localStorage.getItem(PINYIN_GENDER_KEY);
+  if (saved === "male" || saved === "female") pinyinGender = saved;
+} catch {
+  /* ignore */
+}
+
+const PINYIN_GENDER_KEY = "214keys-pinyin-voice";
+
+export function getPinyinGender() {
+  return pinyinGender;
+}
+
+export function setPinyinGender(next) {
+  pinyinGender = next === "male" ? "male" : "female";
+  try {
+    localStorage.setItem(PINYIN_GENDER_KEY, pinyinGender);
+  } catch {
+    /* ignore */
+  }
+}
+
+export function audioUrl(lang, id, tone = 1, gender = pinyinGender) {
   if (!hasSpeechAudio) return "";
   const suffix = isPinyinCatalog ? `-${tone}` : "";
+  const folder = isPinyinCatalog
+    ? (gender === "male" ? "male" : "cn")
+    : lang;
   const rev = isPinyinCatalog ? `?a=${PINYIN_AUDIO_REV}` : "";
-  return appAssetUrl(`${speechAudioDir}/${lang}/${padId(id)}${suffix}.mp3${rev}`);
+  return appAssetUrl(`${speechAudioDir}/${folder}/${padId(id)}${suffix}.mp3${rev}`);
 }
 
 function speakKey(lang, id, tone = 1) {
