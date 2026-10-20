@@ -1002,9 +1002,15 @@ html[data-vowel-colors="on"] .pinyin-table__corner {
   margin-top: 0.35rem;
 }
 
+.voice-toggle__letter {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
 .voice-toggle__btn {
   width: 2rem;
-  height: 2.6rem;
   padding: 0.15rem 0;
   border: 1px solid var(--border);
   border-radius: 4px;

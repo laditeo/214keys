@@ -4,7 +4,7 @@ import radicals, {
   getRadicalCategory,
   canvasStorageKey,
   isPinyinCatalog,
-} from "./catalog.js?v=204";
+} from "./catalog.js?v=205";
 
 const STORAGE_KEY = canvasStorageKey;
 const LEGACY_STORAGE_KEYS = STORAGE_KEY === "214keys-spatial-canvas-v12"

@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="../css/style.css?v=204">
+  <link rel="stylesheet" href="../css/style.css?v=205">
   <script>
     (function () {
-      var BUILD = "204";
+      var BUILD = "205";
       document.addEventListener("DOMContentLoaded", function () {
         var buildEl = document.getElementById("header-build");
         if (buildEl) buildEl.textContent = "v" + BUILD;
@@ -314,8 +314,8 @@
               <dt class="modal__row-label">
                 <span class="modal__row-label-text">Тоны</span>
                 <div class="voice-toggle" role="group" aria-label="Голос">
-                  <button type="button" class="voice-toggle__btn is-active" data-voice="female" aria-pressed="true" title="Женский голос">👩🏻<br>女</button>
-                  <button type="button" class="voice-toggle__btn" data-voice="male" aria-pressed="false" title="Мужской голос">👨🏻<br>男</button>
+                  <button type="button" class="voice-toggle__btn is-active" data-voice="female" aria-pressed="true" title="Женский голос"><span class="voice-toggle__letter">ж</span><br>女</button>
+                  <button type="button" class="voice-toggle__btn" data-voice="male" aria-pressed="false" title="Мужской голос"><span class="voice-toggle__letter">м</span><br>男</button>
                 </div>
               </dt>
               <dd class="modal__tones" id="modal-tones"></dd>
@@ -390,6 +390,6 @@
     }
   }
   </script>
-  <script type="module" src="../js/app.js?v=204"></script>
+  <script type="module" src="../js/app.js?v=205"></script>
 </body>
 </html>
