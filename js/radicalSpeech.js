@@ -3,7 +3,7 @@ import radicals, {
   hasSfxAudio,
   isPinyinCatalog,
   speechAudioDir,
-} from "./catalog.js?v=189";
+} from "./catalog.js?v=195";
 import { appAssetUrl } from "./appBase.js";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
@@ -59,13 +59,19 @@ function padId(id) {
   return String(id).padStart(3, "0");
 }
 
-export function audioUrl(lang, id) {
+export function audioUrl(lang, id, tone = 1) {
   if (!hasSpeechAudio) return "";
-  return appAssetUrl(`${speechAudioDir}/${lang}/${padId(id)}.mp3`);
+  const suffix = isPinyinCatalog ? `-${tone}` : "";
+  return appAssetUrl(`${speechAudioDir}/${lang}/${padId(id)}${suffix}.mp3`);
 }
 
-function speakKey(lang, id) {
-  return `${lang}:${id}`;
+function speakKey(lang, id, tone = 1) {
+  return `${lang}:${id}${isPinyinCatalog ? `:${tone}` : ""}`;
+}
+
+function speechRate() {
+  // Pinyin syllables are recorded per tone, so the pitch must stay untouched.
+  return isPinyinCatalog ? 1 : randomPitchRate();
 }
 
 function randomPitchRate() {
@@ -577,7 +583,7 @@ function playSample(buffer, session, lang, onStart, onEnd, onProgress) {
   const { ctx, gain } = graph;
   const source = ctx.createBufferSource();
   source.buffer = buffer;
-  const rate = randomPitchRate();
+  const rate = speechRate();
   source.playbackRate.value = rate;
   source.connect(gain);
 
@@ -643,7 +649,8 @@ function playSample(buffer, session, lang, onStart, onEnd, onProgress) {
 }
 
 export function speakRadical(item, lang, options = {}) {
-  const key = speakKey(lang, item.id);
+  const tone = options.tone || 1;
+  const key = speakKey(lang, item.id, tone);
   const same = lastSpeakKeyByLang.get(lang) === key;
 
   if (!same) {
@@ -669,7 +676,7 @@ export function speakRadical(item, lang, options = {}) {
   };
 
   syncUnlockAudio();
-  const url = audioUrl(lang, item.id);
+  const url = audioUrl(lang, item.id, tone);
   if (!url) {
     onEnd();
     return;
@@ -686,7 +693,7 @@ export function speakRadical(item, lang, options = {}) {
     options.onLoadStart?.();
     playHtmlSample(
       getPlayableUrl(resolved, url),
-      randomPitchRate(),
+      speechRate(),
       session,
       lang,
       onStart,
@@ -712,8 +719,8 @@ export function speakRadical(item, lang, options = {}) {
   });
 }
 
-export function getSamplePeaks(lang, id, bars = 140) {
-  const url = audioUrl(lang, id);
+export function getSamplePeaks(lang, id, bars = 140, tone = 1) {
+  const url = audioUrl(lang, id, tone);
   if (!url) return null;
   const key = resolveUrl(url);
   const buffer = bufferCache.get(key);
@@ -728,27 +735,33 @@ export function getSamplePeaks(lang, id, bars = 140) {
   return peaks;
 }
 
-export async function loadSamplePeaks(lang, id, bars = 140) {
-  const url = audioUrl(lang, id);
+export async function loadSamplePeaks(lang, id, bars = 140, tone = 1) {
+  const url = audioUrl(lang, id, tone);
   if (!url) return null;
   const buffer = await decodeBuffer(url);
   if (!buffer) return null;
-  return getSamplePeaks(lang, id, bars);
+  return getSamplePeaks(lang, id, bars, tone);
 }
 
-export function isSampleReady(lang, id) {
-  const key = resolveUrl(audioUrl(lang, id));
+export function isSampleReady(lang, id, tone = 1) {
+  const key = resolveUrl(audioUrl(lang, id, tone));
   return bufferCache.has(key);
 }
 
 export function prefetchItemAudio(item) {
   if (hasSfxAudio) void fetchAndDecode(radicalSfxUrl(item.id));
   if (!hasSpeechAudio) return;
-  if (!isPinyinCatalog) void fetchAndDecode(audioUrl("jp", item.id));
+  if (isPinyinCatalog) {
+    for (let tone = 1; tone <= 4; tone += 1) {
+      void fetchAndDecode(audioUrl("cn", item.id, tone));
+    }
+    return;
+  }
+  void fetchAndDecode(audioUrl("jp", item.id));
   void fetchAndDecode(audioUrl("cn", item.id));
 }
 
-export function isSampleLoading(lang, id) {
-  const key = resolveUrl(audioUrl(lang, id));
+export function isSampleLoading(lang, id, tone = 1) {
+  const key = resolveUrl(audioUrl(lang, id, tone));
   return decodeFlights.has(key) || bytesFetchFlights.has(key);
 }

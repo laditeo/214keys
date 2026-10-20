@@ -35,6 +35,8 @@
   --wave-base: rgba(138, 128, 116, 0.22);
   --wave-progress: rgba(138, 128, 116, 0.5);
   --wave-active: #8a6f4a;
+  --vowel-ink: #b4452f;
+  --consonant-ink: #2f6b8f;
   --font-han-serif: "Noto Serif SC", "Noto Sans JP", "Yu Mincho", "SimSun", serif;
   --font-han-linear: "Zen Kaku Gothic New", "Noto Sans SC", "Noto Sans JP", sans-serif;
   --font-han: var(--font-han-serif);
@@ -76,6 +78,8 @@ html[data-theme="dark"] {
   --wave-base: rgba(154, 146, 134, 0.24);
   --wave-progress: rgba(196, 188, 176, 0.55);
   --wave-active: #c9ad7a;
+  --vowel-ink: #e08068;
+  --consonant-ink: #7fb2cf;
   color-scheme: dark;
 }
 
@@ -803,8 +807,122 @@ html[data-catalog="pinyin"] .cell {
   padding: 1rem 0.5rem;
 }
 
+/* Таблица пиньиня: строки — финали, столбцы — инициали. */
+html[data-catalog="pinyin"] .grid {
+  grid-template-columns: minmax(2.2rem, max-content) repeat(22, minmax(2.1rem, 1fr));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+html[data-catalog="pinyin"] .grid > .cell {
+  aspect-ratio: auto;
+  min-height: 2.7rem;
+  padding: 0.3rem 0.15rem;
+  gap: 0.05rem;
+}
+
+html[data-catalog="pinyin"] .grid > .cell__char {
+  line-height: 1.05;
+}
+
+.pinyin-table__th {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.34rem 0.1rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pinyin-table__corner {
+  background: var(--bg-panel);
+}
+
+.pinyin-table__row-label {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  padding: 0 0.55rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.pinyin-table__blank {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+  opacity: 0.55;
+}
+
+html[data-catalog="pinyin"] .modal-map__grid.grid {
+  grid-template-columns: minmax(0, 1.3rem) repeat(22, minmax(0, 1fr));
+  overflow: hidden;
+}
+
+html[data-catalog="pinyin"] .modal-map__grid > .cell {
+  min-height: 0.95rem;
+  padding: 0.1rem 0;
+}
+
+html[data-catalog="pinyin"] .modal-map__grid .cell__pinyin {
+  display: none;
+}
+
+html[data-catalog="pinyin"] .modal-map__grid .pinyin-table__th,
+html[data-catalog="pinyin"] .modal-map__grid .pinyin-table__row-label {
+  padding: 0.1rem;
+  font-size: 0.3rem;
+}
+
+html[data-catalog="pinyin"] .modal-map__grid .section-label {
+  padding: 0.12rem 0.2rem;
+  font-size: 0.3rem;
+}
+
 html[data-catalog="pinyin"] .cell__char {
   font-size: clamp(0.8rem, 54cqi, 2.1rem);
+}
+
+html[data-catalog="pinyin"] .grid > .cell .cell__pinyin {
+  font-size: clamp(0.62rem, 32cqi, 1.02rem);
+  font-weight: 500;
+  line-height: 1.05;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+html[data-catalog="pinyin"] .grid > .cell .cell__char {
+  font-size: clamp(0.46rem, 19cqi, 0.66rem);
+  color: var(--text-muted);
+}
+
+/* Режим «гласные / согласные»: гласные — красным, согласные — синим. */
+html[data-vowel-colors="on"] .grid > .cell .cell__pinyin .syl-vowel,
+html[data-vowel-colors="on"] .pinyin-table__row-label {
+  color: var(--vowel-ink);
+}
+
+html[data-vowel-colors="on"] .grid > .cell .cell__pinyin .syl-consonant,
+html[data-vowel-colors="on"] .pinyin-table__th {
+  color: var(--consonant-ink);
+}
+
+html[data-vowel-colors="on"] .pinyin-table__th[data-initial="none"],
+html[data-vowel-colors="on"] .pinyin-table__corner {
+  color: var(--text-muted);
 }
 
 .cell__pinyin {
@@ -821,25 +939,55 @@ html[data-catalog="pinyin"] .cell__char {
 }
 
 .modal__tones {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.3rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
   margin: 0;
-  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  font-size: clamp(0.9rem, 1.7vw, 1.1rem);
   letter-spacing: 0.02em;
 }
 
 .modal__tone {
-  display: inline-flex;
+  display: flex;
   align-items: baseline;
-  gap: 0.3rem;
+  gap: 0.55rem;
+  width: 100%;
+  margin: 0;
+  padding: 0.12rem 0.45rem;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
   color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.modal__tone:hover,
+.modal__tone:focus-visible {
+  background: var(--bg-cell-hover);
+  outline: none;
+}
+
+.modal__tone--active {
+  background: var(--bg-active);
+  border-color: var(--cell-active-border-static);
 }
 
 .modal__tone-num {
-  font-size: 0.62em;
+  min-width: 1rem;
+  font-size: 0.6em;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
+}
+
+.modal__tone--active .modal__tone-num {
+  color: var(--text);
+}
+
+.modal__tone-text {
+  letter-spacing: 0.02em;
 }
 
 @container (max-width: 4.25rem) {
@@ -2690,4 +2838,30 @@ html[data-theme="dark"] .modal-map__viewport {
     grid-template-columns: 1fr;
     gap: 0.2rem;
   }
+}
+
+/* Pinyin card: four tones need a taller card. */
+@media (min-height: 700px) {
+  html[data-catalog="pinyin"] .modal__card {
+    --modal-card-height: min(calc(100dvh - 9rem), 36rem);
+  }
+}
+
+@media (min-height: 700px) and (max-width: 480px) {
+  html[data-catalog="pinyin"] .modal__card {
+    --modal-card-height: min(calc(100dvh - 7rem), 36rem);
+  }
+}
+
+/* Side panels must not intercept taps on the card arrows. */
+.modal-map__dock,
+.modal-canvas__dock {
+  pointer-events: none;
+}
+
+.modal-map__panel,
+.modal-map__toggle,
+.modal-canvas__panel,
+.modal-canvas__toggle {
+  pointer-events: auto;
 }

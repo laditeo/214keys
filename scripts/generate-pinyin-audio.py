@@ -2,9 +2,9 @@
 """Generate MP3 audio for every pinyin syllable of the pynpinyin catalog.
 
 Voice: Microsoft Edge neural TTS (same Azure neural voices, no API key).
-The syllable is fed as pinyin text, so every card is read in a consistent
-first tone instead of inheriting the tone of the example character.
-If a syllable produces no usable audio, the example hanzi is used instead.
+Each syllable is synthesized four times, once per tone, from its tone-marked
+pinyin form ("zhuāng", "zhuáng", "zhuǎng", "zhuàng"), so the recording always
+has the right contour. Files: ``audio/pinyin/cn/<id>-<tone>.mp3``.
 
 Usage:
     python scripts/generate-pinyin-audio.py            # only missing files
@@ -21,15 +21,18 @@ from pathlib import Path
 
 import edge_tts
 
+from tone3_emphasis import emphasize
+
 ROOT = Path(__file__).resolve().parent.parent
 ITEMS_PATH = ROOT / "js" / "pinyinItems.js"
 OUT_DIR = ROOT / "audio" / "pinyin" / "cn"
 FFMPEG = ROOT / "node_modules" / "ffmpeg-static" / "ffmpeg.exe"
 
 VOICE = "zh-CN-XiaoxiaoNeural"
-CONCURRENCY = 4
+CONCURRENCY = 6
 RETRIES = 3
 MIN_SECONDS = 0.12
+TONES = (1, 2, 3, 4)
 
 
 def load_items():
@@ -37,6 +40,13 @@ def load_items():
     start = raw.index("[")
     end = raw.rindex("]") + 1
     return json.loads(raw[start:end])
+
+
+def tone_text(item, tone):
+    tones = item.get("tones") or []
+    if len(tones) >= tone and tones[tone - 1]:
+        return tones[tone - 1]
+    return item["cn"]
 
 
 def audio_seconds(path):
@@ -89,35 +99,32 @@ async def synthesize(text, path):
     await communicate.save(str(path))
 
 
-async def make_one(item, force, semaphore, report):
-    target = OUT_DIR / f"{item['id']:03d}.mp3"
+async def make_one(item, tone, force, semaphore, report):
+    target = OUT_DIR / f"{item['id']:03d}-{tone}.mp3"
     if target.exists() and target.stat().st_size > 0 and not force:
         return "skip"
 
     async with semaphore:
         for attempt in range(1, RETRIES + 1):
-            text = item["cn"]
+            text = tone_text(item, tone)
             try:
                 await synthesize(text, target)
                 seconds = audio_seconds(target)
                 if seconds is None or seconds >= MIN_SECONDS:
                     finalize(target)
-                    report.append(f"ok {item['id']:03d} {item['cn']} via pinyin")
-                    return "ok"
-
-                # Fall back to the example character (rare syllables / "ê").
-                await synthesize(item["char"], target)
-                seconds = audio_seconds(target)
-                if seconds is None or seconds >= MIN_SECONDS:
-                    finalize(target)
-                    report.append(f"ok {item['id']:03d} {item['cn']} via hanzi {item['char']}")
+                    if tone == 3:
+                        try:
+                            emphasize(target)
+                        except Exception as err:  # noqa: BLE001 - keep the raw clip
+                            report.append(f"warn {item['id']:03d}-3 tone3 emphasis: {err}")
+                    report.append(f"ok {item['id']:03d}-{tone} {text}")
                     return "ok"
             except Exception as err:  # noqa: BLE001 - report and retry
                 if attempt == RETRIES:
-                    report.append(f"FAIL {item['id']:03d} {item['cn']}: {err}")
+                    report.append(f"FAIL {item['id']:03d}-{tone} {text}: {err}")
                     return "fail"
                 await asyncio.sleep(0.6 * attempt)
-        report.append(f"FAIL {item['id']:03d} {item['cn']}: silent audio")
+        report.append(f"FAIL {item['id']:03d}-{tone} {text}: silent audio")
         return "fail"
 
 
@@ -144,9 +151,12 @@ async def main():
     semaphore = asyncio.Semaphore(CONCURRENCY)
     report = []
 
-    results = await asyncio.gather(
-        *(make_one(item, args.force, semaphore, report) for item in items)
-    )
+    tasks = [
+        make_one(item, tone, args.force, semaphore, report)
+        for item in items
+        for tone in TONES
+    ]
+    results = await asyncio.gather(*tasks)
 
     ok = results.count("ok")
     skipped = results.count("skip")

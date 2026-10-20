@@ -11,11 +11,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=189";
+} from "./catalog.js?v=195";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=189";
+import "./char3dOrbit.js?v=195";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -50,7 +50,7 @@ import {
   prefetchItemAudio,
   speakRadical,
   unlockSpeech,
-} from "./radicalSpeech.js?v=189";
+} from "./radicalSpeech.js?v=195";
 import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js";
 import {
   hideSpatialCanvas,
@@ -108,6 +108,7 @@ const fields = {
 let copyBtnTimer = 0;
 
 let activeItem = null;
+let activeTone = 1;
 let visibleItems = items;
 let colorInkOn = false;
 let savedScrollY = 0;
@@ -242,9 +243,9 @@ function resetReadingWaves() {
   }
 }
 
-function syncReadingWave(item, lang) {
+function syncReadingWave(item, lang, tone = 1) {
   const wave = readingWaves[lang];
-  const peaks = getSamplePeaks(lang, item.id);
+  const peaks = getSamplePeaks(lang, item.id, 140, tone);
   if (peaks) {
     wave.setPeaks(peaks);
     wave.reset();
@@ -253,7 +254,7 @@ function syncReadingWave(item, lang) {
   }
 
   wave.hide();
-  void loadSamplePeaks(lang, item.id).then((loaded) => {
+  void loadSamplePeaks(lang, item.id, 140, tone).then((loaded) => {
     if (!activeItem || activeItem.id !== item.id) return;
     if (!loaded) return;
     wave.setPeaks(loaded);
@@ -264,17 +265,19 @@ function syncReadingWave(item, lang) {
 
 function syncModalReadingWaves(item) {
   if (!isPinyinCatalog) syncReadingWave(item, "jp");
-  syncReadingWave(item, "cn");
+  syncReadingWave(item, "cn", isPinyinCatalog ? activeTone : 1);
 }
 
-function triggerReadingPlayback(lang) {
+function triggerReadingPlayback(lang, tone) {
   const btn = lang === "jp" ? speakerJp : speakerCn;
   const wave = readingWaves[lang];
   if (!btn || !wave || !activeItem || btn.disabled) return;
 
+  const spokenTone = isPinyinCatalog && lang === "cn" ? (tone || activeTone) : 1;
   unlockSpeech();
   const item = activeItem;
-  const needsWait = !isSampleReady(lang, item.id) || isSampleLoading(lang, item.id);
+  const needsWait =
+    !isSampleReady(lang, item.id, spokenTone) || isSampleLoading(lang, item.id, spokenTone);
 
   if (needsWait) {
     setSpeakerLoading(lang, true);
@@ -288,13 +291,14 @@ function triggerReadingPlayback(lang) {
     }
 
     speakRadical(item, lang, {
+      tone: spokenTone,
       onLoadStart: () => setSpeakerLoading(lang, true),
       onStart: (rate) => {
         setSpeakerLoading(lang, false);
         applyPitchTint(pitchTintTargets(lang), rate);
         setSpeakerState(lang, true);
         wave.setPlaying(true);
-        const peaks = getSamplePeaks(lang, item.id);
+        const peaks = getSamplePeaks(lang, item.id, 140, spokenTone);
         if (peaks) {
           wave.setPeaks(peaks);
           wave.resize();
@@ -482,17 +486,52 @@ function fillModal(item) {
 
 function fillTones(tones) {
   if (!fields.tones) return;
+  activeTone = 1;
   fields.tones.replaceChildren(
     ...(tones || []).map((tone, index) => {
-      const chip = document.createElement("span");
+      const number = index + 1;
+      const chip = document.createElement("button");
+      chip.type = "button";
       chip.className = "modal__tone";
+      chip.dataset.tone = String(number);
+      chip.title = `Произнести ${number}-м тоном (клавиша ${number})`;
       const num = document.createElement("span");
       num.className = "modal__tone-num";
-      num.textContent = String(index + 1);
-      chip.append(num, document.createTextNode(tone));
+      num.textContent = String(number);
+      const text = document.createElement("span");
+      text.className = "modal__tone-text";
+      text.textContent = tone;
+      chip.append(num, text);
+      chip.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        playTone(number);
+      });
       return chip;
     }),
   );
+  syncActiveTone();
+}
+
+function syncActiveTone() {
+  if (!fields.tones) return;
+  for (const chip of fields.tones.querySelectorAll(".modal__tone")) {
+    chip.classList.toggle("modal__tone--active", Number(chip.dataset.tone) === activeTone);
+    chip.setAttribute("aria-pressed", String(Number(chip.dataset.tone) === activeTone));
+  }
+}
+
+function setActiveTone(tone) {
+  if (!isPinyinCatalog) return;
+  activeTone = Math.min(4, Math.max(1, tone));
+  syncActiveTone();
+  if (activeItem) syncReadingWave(activeItem, "cn", activeTone);
+}
+
+function playTone(tone) {
+  if (!isPinyinCatalog) return;
+  setActiveTone(tone);
+  triggerReadingPlayback("cn", activeTone);
 }
 
 function updateActiveCellEl(container, item, prevEl) {
@@ -933,6 +972,36 @@ function syncColorInkToggle() {
   });
 }
 
+function createCellButton(item, onCellClick) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "cell";
+  btn.dataset.id = item.id;
+  btn.setAttribute(
+    "aria-label",
+    isPinyinCatalog
+      ? `${item.char} — слог ${item.cn}`
+      : `${item.id}. ${item.char} — ${item.jp}, ${item.cn}`,
+  );
+
+  decorateCell(btn, item);
+  btn.addEventListener(
+    "touchstart",
+    () => {
+      unlockSpeech();
+    },
+    { passive: true },
+  );
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    unlockSpeech();
+    if (shouldSuppressMapClick()) return;
+    onCellClick(item);
+  });
+  return btn;
+}
+
 function createGridFragment(items, onCellClick, { sectionActions = false } = {}) {
   const frag = document.createDocumentFragment();
   let currentGroup = null;
@@ -957,41 +1026,121 @@ function createGridFragment(items, onCellClick, { sectionActions = false } = {})
       frag.appendChild(label);
     }
 
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "cell";
-    btn.dataset.id = item.id;
-    btn.setAttribute(
-      "aria-label",
-      isPinyinCatalog
-        ? `${item.char} — слог ${item.cn}`
-        : `${item.id}. ${item.char} — ${item.jp}, ${item.cn}`,
-    );
-
-    decorateCell(btn, item);
-    btn.addEventListener(
-      "touchstart",
-      () => {
-        unlockSpeech();
-      },
-      { passive: true },
-    );
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      unlockSpeech();
-      if (shouldSuppressMapClick()) return;
-      onCellClick(item);
-    });
-    frag.appendChild(btn);
+    frag.appendChild(createCellButton(item, onCellClick));
   }
 
   return frag;
 }
 
+/* —— Таблица пиньиня: строки — финали, столбцы — инициали —— */
+
+const PINYIN_TABLE_INITIALS = [
+  "", "b", "p", "m", "f", "d", "t", "n", "l", "g", "k", "h",
+  "j", "q", "x", "zh", "ch", "sh", "r", "z", "c", "s",
+];
+
+const PINYIN_TABLE_SECTIONS = { a: "A", i: "I", u: "U", "ü": "Ü" };
+
+const PINYIN_VOWELS = new Set(["a", "e", "i", "o", "u", "ü", "v"]);
+
+/* Слог по буквам: гласные и согласные можно раскрасить отдельно. */
+function createPinyinSyllable(text) {
+  const span = document.createElement("span");
+  span.className = "cell__pinyin";
+  for (const letter of String(text || "")) {
+    const part = document.createElement("span");
+    part.className = PINYIN_VOWELS.has(letter.toLowerCase())
+      ? "syl-vowel"
+      : "syl-consonant";
+    part.textContent = letter;
+    span.appendChild(part);
+  }
+  return span;
+}
+
+function pinyinColumnOf(syllable) {
+  const s = String(syllable || "").toLowerCase();
+  if (s.startsWith("zh") || s.startsWith("ch") || s.startsWith("sh")) return s.slice(0, 2);
+  const first = s.slice(0, 1);
+  return PINYIN_TABLE_INITIALS.includes(first) ? first : "";
+}
+
+function buildPinyinRows(list) {
+  const rows = [];
+  const byFinal = new Map();
+
+  for (const item of list) {
+    const final = (item.group || "").split(":")[1] || item.cn;
+    let row = byFinal.get(final);
+    if (!row) {
+      row = { final, category: item.category, cells: new Map() };
+      byFinal.set(final, row);
+      rows.push(row);
+    }
+    const column = pinyinColumnOf(item.cn);
+    if (!row.cells.has(column)) row.cells.set(column, item);
+  }
+
+  return rows;
+}
+
+function createPinyinTableFragment(list, onCellClick) {
+  const frag = document.createDocumentFragment();
+
+  const corner = document.createElement("div");
+  corner.className = "pinyin-table__th pinyin-table__corner";
+  corner.setAttribute("aria-hidden", "true");
+  frag.appendChild(corner);
+
+  for (const initial of PINYIN_TABLE_INITIALS) {
+    const th = document.createElement("div");
+    th.className = "pinyin-table__th";
+    th.dataset.initial = initial || "none";
+    th.textContent = initial || "∅";
+    if (!initial) th.title = "без инициали";
+    frag.appendChild(th);
+  }
+
+  let currentCategory = null;
+  for (const row of buildPinyinRows(list)) {
+    if (row.category !== currentCategory) {
+      currentCategory = row.category;
+      const label = document.createElement("div");
+      label.className = "section-label";
+      label.textContent = PINYIN_TABLE_SECTIONS[row.category] || row.category;
+      frag.appendChild(label);
+    }
+
+    const rowLabel = document.createElement("div");
+    rowLabel.className = "pinyin-table__row-label";
+    rowLabel.textContent = row.final;
+    frag.appendChild(rowLabel);
+
+    for (const initial of PINYIN_TABLE_INITIALS) {
+      const item = row.cells.get(initial);
+      if (!item) {
+        const blank = document.createElement("div");
+        blank.className = "pinyin-table__blank";
+        blank.setAttribute("aria-hidden", "true");
+        frag.appendChild(blank);
+        continue;
+      }
+      frag.appendChild(createCellButton(item, onCellClick));
+    }
+  }
+
+  return frag;
+}
+
+function createItemsFragment(list, onCellClick, options) {
+  return isPinyinCatalog
+    ? createPinyinTableFragment(list, onCellClick)
+    : createGridFragment(list, onCellClick, options);
+}
+
 function renderMinimap(items) {
   modalMapGrid.replaceChildren(
-    createGridFragment(items, (item) => {
+    createItemsFragment(items, (item) => {
       if (activeItem?.id === item.id) return;
       selectRadical(item);
     }),
@@ -1003,7 +1152,7 @@ function renderMinimap(items) {
 }
 
 function render(items, query = "") {
-  grid.replaceChildren(createGridFragment(items, openModal, { sectionActions: true }));
+  grid.replaceChildren(createItemsFragment(items, openModal, { sectionActions: true }));
   emptyState.hidden = items.length > 0;
   grid.hidden = items.length === 0;
   updateSearchMeta(items.length, query);
@@ -1224,10 +1373,14 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
     navigateStrokeGroup(1);
   }
+  if (isPinyinCatalog && (e.key === "1" || e.key === "2" || e.key === "3" || e.key === "4")) {
+    e.preventDefault();
+    playTone(Number(e.key));
+    return;
+  }
   if (e.key === "1") {
     e.preventDefault();
-    if (isPinyinCatalog) speakerCn.click();
-    else if (speakerJp) speakerJp.click();
+    if (speakerJp) speakerJp.click();
   }
   if (e.key === "2") {
     e.preventDefault();
@@ -1295,18 +1448,22 @@ const graphicsModeSlider = document.getElementById("graphics-mode-slider");
 const graphicsModeValue = document.getElementById("graphics-mode-value");
 const categoryColorsToggle = document.getElementById("toggle-category-colors");
 const cellEmojiToggle = document.getElementById("toggle-cell-emoji");
+const vowelColorsToggle = document.getElementById("toggle-vowel-colors");
 
 const CELL_COLORS_KEY = "214keys-cell-colors";
 const CELL_EMOJI_KEY = "214keys-cell-emoji";
 const COLOR_INK_KEY = "214keys-basic-color-ink";
+const VOWEL_COLORS_KEY = "214keys-pinyin-vowel-colors";
 
 let categoryColorsOn = false;
 let cellEmojiOn = false;
+let vowelColorsOn = false;
 
 function applyCellDisplayFlags() {
   document.documentElement.dataset.cellColors = categoryColorsOn ? "on" : "";
   document.documentElement.dataset.cellEmoji = cellEmojiOn ? "on" : "";
   document.documentElement.dataset.colorInk = colorInkOn ? "on" : "";
+  document.documentElement.dataset.vowelColors = vowelColorsOn ? "on" : "";
   syncColorInkToggle();
 }
 
@@ -1337,10 +1494,7 @@ function decorateCell(btn, item) {
   }
 
   if (isPinyinCatalog) {
-    const pinyin = document.createElement("span");
-    pinyin.className = "cell__pinyin";
-    pinyin.textContent = item.cn;
-    btn.append(ch, pinyin);
+    btn.append(createPinyinSyllable(item.cn), ch);
     return;
   }
 
@@ -1359,12 +1513,16 @@ function applyCellDisplayToggles({ persist = true } = {}) {
   if (cellEmojiToggle) {
     cellEmojiToggle.checked = cellEmojiOn;
   }
+  if (vowelColorsToggle) {
+    vowelColorsToggle.checked = vowelColorsOn;
+  }
 
   if (persist) {
     try {
       localStorage.setItem(CELL_COLORS_KEY, categoryColorsOn ? "1" : "0");
       localStorage.setItem(CELL_EMOJI_KEY, cellEmojiOn ? "1" : "0");
       localStorage.setItem(COLOR_INK_KEY, colorInkOn ? "1" : "0");
+      localStorage.setItem(VOWEL_COLORS_KEY, vowelColorsOn ? "1" : "0");
     } catch {
       /* ignore */
     }
@@ -1378,6 +1536,11 @@ function setCategoryColorsOn(next, options) {
 
 function setCellEmojiOn(next, options) {
   cellEmojiOn = Boolean(next);
+  applyCellDisplayToggles(options);
+}
+
+function setVowelColorsOn(next, options) {
+  vowelColorsOn = Boolean(next);
   applyCellDisplayToggles(options);
 }
 
@@ -1576,6 +1739,10 @@ cellEmojiToggle?.addEventListener("change", () => {
   setCellEmojiOn(cellEmojiToggle.checked);
 });
 
+vowelColorsToggle?.addEventListener("change", () => {
+  setVowelColorsOn(vowelColorsToggle.checked);
+});
+
 graphicsModeSlider?.addEventListener("input", () => {
   applyGraphicsMode(graphicsModeSlider.value);
 });
@@ -1612,6 +1779,7 @@ try {
 setCategoryColorsOn(readStoredToggle(CELL_COLORS_KEY), { persist: false });
 setCellEmojiOn(readStoredToggle(CELL_EMOJI_KEY), { persist: false });
 if (isBasicCatalog) setColorInkOn(readStoredToggle(COLOR_INK_KEY), { persist: false });
+if (isPinyinCatalog) setVowelColorsOn(readStoredToggle(VOWEL_COLORS_KEY), { persist: false });
 
 applyMatcap(getGlyphMaterialMode());
 syncMatcapToggleVisibility();

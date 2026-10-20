@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="../css/style.css?v=189">
+  <link rel="stylesheet" href="../css/style.css?v=195">
   <script>
     (function () {
-      var BUILD = "189";
+      var BUILD = "195";
       document.addEventListener("DOMContentLoaded", function () {
         var buildEl = document.getElementById("header-build");
         if (buildEl) buildEl.textContent = "v" + BUILD;
@@ -133,6 +133,17 @@
               <span class="display-toggle__thumb"></span>
             </span>
             <span class="display-toggle__label">Цвет по категориям</span>
+          </label>
+          <label class="display-toggle" for="toggle-vowel-colors">
+            <input
+              type="checkbox"
+              id="toggle-vowel-colors"
+              class="display-toggle__input"
+            >
+            <span class="display-toggle__track" aria-hidden="true">
+              <span class="display-toggle__thumb"></span>
+            </span>
+            <span class="display-toggle__label">Гласные и согласные</span>
           </label>
         </div>
       </div>
@@ -287,7 +298,7 @@
                 <span id="modal-cn" class="modal__reading-text"></span>
                 <div class="modal__reading-controls">
                   <div class="speaker-slot">
-                    <button type="button" class="speaker" id="speaker-cn" aria-label="Произнести по-китайски" title="Произнести (клавиша 1)">
+                    <button type="button" class="speaker" id="speaker-cn" aria-label="Произнести по-китайски" title="Произнести (клавиши 1–4)">
                       <svg class="speaker__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
                         <path class="speaker__wave speaker__wave--single" d="M15.5 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -400,6 +411,6 @@
     }
   }
   </script>
-  <script type="module" src="../js/app.js?v=189"></script>
+  <script type="module" src="../js/app.js?v=195"></script>
 </body>
 </html>
