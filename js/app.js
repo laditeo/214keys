@@ -1,19 +1,21 @@
-import radicals, {
+import {
+  items,
   getRadicalCategory,
   getCategoryMeta,
   getRadicalEmoji,
   getItemInkColor,
   getItemInkContrast,
   isBasicCatalog,
+  isPinyinCatalog,
   itemGroupKey,
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=181";
+} from "./catalog.js?v=185";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=181";
+import "./char3dOrbit.js?v=185";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -48,7 +50,7 @@ import {
   prefetchItemAudio,
   speakRadical,
   unlockSpeech,
-} from "./radicalSpeech.js";
+} from "./radicalSpeech.js?v=185";
 import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js";
 import {
   hideSpatialCanvas,
@@ -105,7 +107,7 @@ const fields = {
 let copyBtnTimer = 0;
 
 let activeItem = null;
-let visibleItems = radicals;
+let visibleItems = items;
 let colorInkOn = false;
 let savedScrollY = 0;
 let activeCellEl = null;
@@ -142,7 +144,7 @@ function ensureModalRuScale() {
   document.body.appendChild(probe);
 
   let minScale = 1;
-  for (const item of radicals) {
+  for (const item of items) {
     probe.textContent = item.ru;
     const naturalH = probe.scrollHeight;
     if (naturalH > fitHeight) {
@@ -191,15 +193,15 @@ function strokeSectionLabel(n) {
 }
 
 function itemHaystack(item) {
-  return [item.id, item.char, item.variants, item.jp, item.cn, item.ru]
-    .join(" ")
-    .toLowerCase();
+  const parts = [item.id, item.char, item.variants, item.cn, item.ru];
+  if (!isPinyinCatalog && item.jp) parts.push(item.jp);
+  return parts.join(" ").toLowerCase();
 }
 
 function filterRadicals(query) {
   const q = query.trim().toLowerCase();
-  if (!q) return radicals;
-  return radicals.filter((item) => itemHaystack(item).includes(q));
+  if (!q) return items;
+  return items.filter((item) => itemHaystack(item).includes(q));
 }
 
 function pitchTintTargets(lang) {
@@ -210,26 +212,32 @@ function pitchTintTargets(lang) {
 function setSpeakerState(lang, active) {
   speaking[lang] = active;
   const btn = lang === "jp" ? speakerJp : speakerCn;
+  if (!btn) return;
   btn.classList.toggle("speaker--active", active);
   btn.setAttribute("aria-pressed", String(active));
   if (!active) clearPitchTint(pitchTintTargets(lang));
-  fields.charWrap?.classList.toggle("modal__char-wrap--playing", speaking.jp || speaking.cn);
+  const anySpeaking = (isPinyinCatalog && speaking.cn) || (!isPinyinCatalog && (speaking.jp || speaking.cn));
+  fields.charWrap?.classList.toggle("modal__char-wrap--playing", anySpeaking);
 }
 
 function setSpeakerLoading(lang, loading) {
   const btn = lang === "jp" ? speakerJp : speakerCn;
+  if (!btn) return;
   const wait = lang === "jp" ? speakerWaitJp : speakerWaitCn;
   const slot = btn.closest(".speaker-slot");
   btn.setAttribute("aria-busy", String(loading));
-  wait.setAttribute("aria-hidden", String(!loading));
+  if (wait) wait.setAttribute("aria-hidden", String(!loading));
   slot?.classList.toggle("speaker-slot--loading", loading);
 }
 
 function resetReadingWaves() {
-  for (const lang of ["jp", "cn"]) {
-    readingWaves[lang].setPeaks(null);
-    readingWaves[lang].hide();
-    readingWaves[lang].reset();
+  const langs = isPinyinCatalog ? ["cn"] : ["jp", "cn"];
+  for (const lang of langs) {
+    if (readingWaves[lang]) {
+      readingWaves[lang].setPeaks(null);
+      readingWaves[lang].hide();
+      readingWaves[lang].reset();
+    }
   }
 }
 
@@ -254,14 +262,14 @@ function syncReadingWave(item, lang) {
 }
 
 function syncModalReadingWaves(item) {
-  syncReadingWave(item, "jp");
+  if (!isPinyinCatalog) syncReadingWave(item, "jp");
   syncReadingWave(item, "cn");
 }
 
 function triggerReadingPlayback(lang) {
   const btn = lang === "jp" ? speakerJp : speakerCn;
   const wave = readingWaves[lang];
-  if (!activeItem || btn.disabled) return;
+  if (!btn || !wave || !activeItem || btn.disabled) return;
 
   unlockSpeech();
   const item = activeItem;
@@ -341,14 +349,16 @@ function wireReadingWave(rootEl, lang) {
 }
 
 function resetSpeakers() {
-  setSpeakerState("jp", false);
+  if (!isPinyinCatalog) {
+    setSpeakerState("jp", false);
+    setSpeakerLoading("jp", false);
+  }
   setSpeakerState("cn", false);
-  setSpeakerLoading("jp", false);
   setSpeakerLoading("cn", false);
   stopHeroPlaybackEmojis();
-  readingWaves.jp.setPlaying(false);
+  if (readingWaves.jp) readingWaves.jp.setPlaying(false);
   readingWaves.cn.setPlaying(false);
-  readingWaves.jp.setProgress(0);
+  if (readingWaves.jp) readingWaves.jp.setProgress(0);
   readingWaves.cn.setProgress(0);
 }
 
@@ -458,10 +468,10 @@ function fillModal(item) {
   fields.variants.textContent = item.variants
     ? `варианты: ${item.variants.split(/\s+/).join(" · ")}`
     : "";
-  fields.jp.textContent = item.jp;
+  if (fields.jp) fields.jp.textContent = item.jp;
   fields.cn.textContent = item.cn;
   fields.ru.textContent = item.ru;
-  fields.strokes.textContent = strokeCompactLabel(item.strokes);
+  fields.strokes.textContent = item.strokes ? strokeCompactLabel(item.strokes) : "";
   syncModalChar3dForItem(item.char);
 
   updateModalNav();
@@ -934,7 +944,12 @@ function createGridFragment(items, onCellClick, { sectionActions = false } = {})
     btn.type = "button";
     btn.className = "cell";
     btn.dataset.id = item.id;
-    btn.setAttribute("aria-label", `${item.id}. ${item.char} — ${item.jp}, ${item.cn}`);
+    btn.setAttribute(
+      "aria-label",
+      isPinyinCatalog
+        ? `${item.char} — слог ${item.cn}`
+        : `${item.id}. ${item.char} — ${item.jp}, ${item.cn}`,
+    );
 
     decorateCell(btn, item);
     btn.addEventListener(
@@ -1194,7 +1209,7 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.key === "1") {
     e.preventDefault();
-    speakerJp.click();
+    if (speakerJp) speakerJp.click();
   }
   if (e.key === "2") {
     e.preventDefault();
@@ -1240,9 +1255,9 @@ function wireHeroChar() {
   });
 }
 
-wireSpeaker(speakerJp, "jp");
+if (!isPinyinCatalog && speakerJp) wireSpeaker(speakerJp, "jp");
 wireSpeaker(speakerCn, "cn");
-wireReadingWave(waveRoots.jp, "jp");
+if (!isPinyinCatalog && waveRoots.jp) wireReadingWave(waveRoots.jp, "jp");
 wireReadingWave(waveRoots.cn, "cn");
 wireHeroChar();
 wireCopyButton();
@@ -1300,6 +1315,14 @@ function decorateCell(btn, item) {
 
   if (isBasicCatalog) {
     btn.append(ch, emoji);
+    return;
+  }
+
+  if (isPinyinCatalog) {
+    const pinyin = document.createElement("span");
+    pinyin.className = "cell__pinyin";
+    pinyin.textContent = item.cn;
+    btn.append(ch, pinyin);
     return;
   }
 
@@ -1584,4 +1607,4 @@ modalNext.disabled = true;
 modalGroupPrev.disabled = true;
 modalGroupNext.disabled = true;
 
-render(radicals);
+render(items);

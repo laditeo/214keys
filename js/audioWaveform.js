@@ -17,6 +17,19 @@ function readWaveColors(rootEl) {
 }
 
 export function createReadingWaveform(rootEl) {
+  if (!rootEl) {
+    return {
+      hide() {},
+      show() {},
+      setPeaks() {},
+      setProgress() {},
+      setPlaying() {},
+      reset() {},
+      resize() {},
+      draw() {},
+    };
+  }
+
   const canvas = rootEl.querySelector(".audio-wave__canvas");
   const ctx = canvas.getContext("2d");
   let peaks = null;

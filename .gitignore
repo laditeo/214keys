@@ -5,3 +5,6 @@ generate-audio.log
 local/particleDebug.local.js
 local/heroEaseDebug.local.js
 local/heroEaseDebugToggle.local.js
+
+pinyin_audio_report.txt
+pinyin_gen_summary.txt

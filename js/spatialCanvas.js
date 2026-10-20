@@ -3,7 +3,7 @@ import radicals, {
   getCategoryMeta,
   getRadicalCategory,
   canvasStorageKey,
-} from "./catalog.js?v=181";
+} from "./catalog.js?v=185";
 
 const STORAGE_KEY = canvasStorageKey;
 const LEGACY_STORAGE_KEYS = STORAGE_KEY === "214keys-spatial-canvas-v12"

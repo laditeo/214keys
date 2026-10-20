@@ -797,6 +797,29 @@ html[data-catalog="basic"] .cell__num {
   display: none;
 }
 
+html[data-catalog="pinyin"] .cell {
+  flex-direction: column;
+  gap: 0.12rem;
+  padding: 1rem 0.5rem;
+}
+
+html[data-catalog="pinyin"] .cell__char {
+  font-size: clamp(0.8rem, 54cqi, 2.1rem);
+}
+
+.cell__pinyin {
+  font-size: clamp(0.42rem, 18cqi, 0.72rem);
+  line-height: 1;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+  text-transform: lowercase;
+}
+
+.cell--active .cell__pinyin {
+  position: relative;
+  z-index: 1;
+}
+
 @container (max-width: 4.25rem) {
   .cell__num {
     display: none;

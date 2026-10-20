@@ -1,4 +1,4 @@
-import { getRadicalEmoji, hasSfxAudio, sfxAudioDir } from "./catalog.js?v=181";
+import { getRadicalEmoji, hasSfxAudio, sfxAudioDir } from "./catalog.js?v=185";
 import { appAssetUrl } from "./appBase.js";
 
 /** CC0 — Kenney (kenney.nl), via gamesounds.xyz mirror */

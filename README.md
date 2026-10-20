@@ -2,7 +2,7 @@
 
 Интерактивный справочник по всем **214 радикалам Канси** — с японскими и китайскими чтениями, озвучкой и объяснениями на русском.
 
-**Сайт:** [spatilabs.co/214keys](https://spatilabs.co/214keys/) · [basic](https://spatilabs.co/214keys/basic/)
+**Сайт:** [spatilabs.co/214keys](https://spatilabs.co/214keys/) · [basic](https://spatilabs.co/214keys/basic/) · [pynpinyin](https://spatilabs.co/214keys/pynpinyin/)
 
 ---
 
@@ -100,6 +100,20 @@ npm run generate:audio
 ```
 
 Файлы пишутся в `audio/jp/` и `audio/cn/` (по одному MP3 на радикал). Лог генерации — в `.gitignore`.
+
+### Пиньинь (`pynpinyin`)
+
+407 слогов озвучиваются тем же нейронным голосом Edge/Azure TTS (`zh-CN-XiaoxiaoNeural`),
+но текст — сам слог пиньиня, поэтому все карточки читаются в одном (первом) тоне,
+а не в тоне иероглифа-примера.
+
+```bash
+pip install edge-tts
+npm run generate:audio:pinyin          # только недостающие файлы
+python scripts/generate-pinyin-audio.py --force   # перегенерировать всё
+```
+
+Файлы — `audio/pinyin/cn/001.mp3` … `407.mp3`, отчёт — `pinyin_audio_report.txt`.
 
 ### Звуковые эффекты (клик по иероглифу)
 

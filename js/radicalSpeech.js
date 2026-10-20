@@ -1,4 +1,9 @@
-import radicals, { hasSpeechAudio, hasSfxAudio, speechAudioDir } from "./catalog.js?v=181";
+import radicals, {
+  hasSpeechAudio,
+  hasSfxAudio,
+  isPinyinCatalog,
+  speechAudioDir,
+} from "./catalog.js?v=185";
 import { appAssetUrl } from "./appBase.js";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
@@ -537,10 +542,10 @@ export function preloadAllRadicalSfx() {
 export function preloadAllSpeechSamples() {
   if (speechPreloadPromise) return speechPreloadPromise;
 
+  const langs = isPinyinCatalog ? ["cn"] : ["jp", "cn"];
   const urls = [];
   for (const item of radicals) {
-    urls.push(audioUrl("jp", item.id));
-    urls.push(audioUrl("cn", item.id));
+    for (const lang of langs) urls.push(audioUrl(lang, item.id));
   }
 
   speechPreloadPromise = pumpBatches(urls, SPEECH_BATCH_SIZE, SPEECH_BATCH_GAP_MS);
@@ -550,7 +555,8 @@ export function preloadAllSpeechSamples() {
 export function initAudioPreload() {
   installGlobalAudioUnlock();
   if (hasSfxAudio) void preloadAllRadicalSfx();
-  if (hasSpeechAudio) void preloadAllSpeechSamples();
+  // 407 pinyin syllables are fetched on demand instead of all at once.
+  if (hasSpeechAudio && !isPinyinCatalog) void preloadAllSpeechSamples();
 }
 
 function outputLatencySec(ctx) {
@@ -738,7 +744,7 @@ export function isSampleReady(lang, id) {
 export function prefetchItemAudio(item) {
   if (hasSfxAudio) void fetchAndDecode(radicalSfxUrl(item.id));
   if (!hasSpeechAudio) return;
-  void fetchAndDecode(audioUrl("jp", item.id));
+  if (!isPinyinCatalog) void fetchAndDecode(audioUrl("jp", item.id));
   void fetchAndDecode(audioUrl("cn", item.id));
 }
 

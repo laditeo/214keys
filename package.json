@@ -5,6 +5,7 @@
   "scripts": {
     "generate:audio": "node scripts/generate-audio.mjs",
     "generate:audio:basic": "node scripts/generate-basic-audio.mjs",
+    "generate:audio:pinyin": "python scripts/generate-pinyin-audio.py",
     "generate:sfx": "node scripts/generate-radical-sfx.mjs",
     "generate:sfx:basic": "node scripts/generate-basic-sfx.mjs",
     "sync:beta": "node scripts/sync-beta.mjs",

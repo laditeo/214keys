@@ -7,6 +7,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dirs = [
   join(root, "audio", "jp"),
   join(root, "audio", "cn"),
+  join(root, "audio", "pinyin", "cn"),
   join(root, "audio", "basic", "jp"),
   join(root, "audio", "basic", "cn"),
 ];
