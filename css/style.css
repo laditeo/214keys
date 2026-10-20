@@ -909,6 +909,15 @@ html[data-catalog="pinyin"] .grid > .cell .cell__char {
   color: var(--text-muted);
 }
 
+/* «Цвет по категориям» красит иероглифы и буквы групп A / I / U / Ü. */
+html[data-catalog="pinyin"][data-cell-colors="on"] .grid > .cell .cell__char {
+  color: var(--cell-category-color, var(--text));
+}
+
+html[data-catalog="pinyin"][data-cell-colors="on"] .section-label {
+  color: var(--cell-category-color, var(--text-muted));
+}
+
 /* Режим «гласные / согласные»: гласные — красным, согласные — синим. */
 html[data-vowel-colors="on"] .grid > .cell .cell__pinyin .syl-vowel,
 html[data-vowel-colors="on"] .pinyin-table__row-label {
@@ -949,7 +958,7 @@ html[data-vowel-colors="on"] .pinyin-table__corner {
 
 .modal__tone {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.55rem;
   width: 100%;
   margin: 0;
@@ -987,7 +996,22 @@ html[data-vowel-colors="on"] .pinyin-table__corner {
 }
 
 .modal__tone-text {
+  flex: 0 0 auto;
   letter-spacing: 0.02em;
+}
+
+.modal__tone-wave {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 3rem;
+  max-width: 7rem;
+  height: 1.35rem;
+  margin-left: auto;
+  padding: 0 0.3rem;
+}
+
+.modal__tone-wave .audio-wave__canvas {
+  height: 0.75rem;
 }
 
 @container (max-width: 4.25rem) {
@@ -1956,6 +1980,21 @@ html[data-theme="dark"] .modal-map__viewport {
   pointer-events: none;
 }
 
+.spatial-card__char--pinyin {
+  font-family: var(--font-ui);
+  font-size: 0.52rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  transform: none;
+}
+
+.modal-canvas__tool--glyph {
+  font-family: var(--font-han);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
 .modal__card {
   position: relative;
   flex: 1 1 auto;
@@ -2514,6 +2553,10 @@ html[data-theme="dark"] .modal-map__viewport {
   align-items: center;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+}
+
+.audio-wave[hidden] {
+  display: none;
 }
 
 .audio-wave:not([hidden]) {

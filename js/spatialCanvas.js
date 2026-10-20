@@ -3,7 +3,8 @@ import radicals, {
   getCategoryMeta,
   getRadicalCategory,
   canvasStorageKey,
-} from "./catalog.js?v=195";
+  isPinyinCatalog,
+} from "./catalog.js?v=196";
 
 const STORAGE_KEY = canvasStorageKey;
 const LEGACY_STORAGE_KEYS = STORAGE_KEY === "214keys-spatial-canvas-v12"
@@ -22,6 +23,7 @@ const LEGACY_STORAGE_KEYS = STORAGE_KEY === "214keys-spatial-canvas-v12"
     ]
   : [];
 const CARD_SIZE = 36;
+const CARD_GLYPH_KEY = "214keys-pinyin-canvas-glyphs";
 const FENCE_PAD = 12;
 const FENCE_LABEL_H = 22;
 const WORLD_MIN_W = 2200;
@@ -69,6 +71,9 @@ let toolbarEl = null;
 let clearConfirmEl = null;
 let clearConfirmOkBtn = null;
 let clearConfirmCancelBtn = null;
+let glyphBtn = null;
+
+let cardGlyphMode = "char";
 
 let spawnStreakTimer = 0;
 let spawnStreakActive = false;
@@ -1218,6 +1223,8 @@ function createCardElement(item) {
   const card = state.cards[key];
   if (!card) return null;
 
+  const showPinyin = isPinyinCatalog && cardGlyphMode === "pinyin";
+
   const el = document.createElement("button");
   el.type = "button";
   el.className = "spatial-card";
@@ -1227,11 +1234,12 @@ function createCardElement(item) {
   el.style.left = `${card.x}px`;
   el.style.top = `${card.y}px`;
   el.style.setProperty("--spatial-card-color", meta.color);
-  el.setAttribute("aria-label", `${item.id}. ${item.char}`);
+  el.setAttribute("aria-label", showPinyin ? `${item.id}. ${item.cn}` : `${item.id}. ${item.char}`);
 
   const glyph = document.createElement("span");
   glyph.className = "spatial-card__char";
-  glyph.textContent = item.char;
+  if (showPinyin) glyph.classList.add("spatial-card__char--pinyin");
+  glyph.textContent = showPinyin ? item.cn : item.char;
   el.appendChild(glyph);
 
   if (item.id === activeCardId) el.classList.add("spatial-card--active");
@@ -2250,6 +2258,42 @@ function syncOrientation() {
   if (rootEl && !rootEl.hidden) applyCollapsed(!landscape);
 }
 
+function syncGlyphButton() {
+  if (!glyphBtn) return;
+  const pinyin = cardGlyphMode === "pinyin";
+  glyphBtn.textContent = pinyin ? "拼" : "汉";
+  const label = pinyin ? "Показать иероглифы" : "Показать пиньинь";
+  glyphBtn.title = label;
+  glyphBtn.setAttribute("aria-label", label);
+  glyphBtn.setAttribute("aria-pressed", String(pinyin));
+}
+
+function bindGlyphToggle() {
+  if (!isPinyinCatalog) {
+    glyphBtn?.remove();
+    return;
+  }
+  try {
+    cardGlyphMode = localStorage.getItem(CARD_GLYPH_KEY) === "char" ? "char" : "pinyin";
+  } catch {
+    cardGlyphMode = "pinyin";
+  }
+  syncGlyphButton();
+  if (!glyphBtn) return;
+  glyphBtn.addEventListener("pointerdown", (event) => event.stopPropagation());
+  glyphBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    cardGlyphMode = cardGlyphMode === "pinyin" ? "char" : "pinyin";
+    try {
+      localStorage.setItem(CARD_GLYPH_KEY, cardGlyphMode);
+    } catch {
+      /* ignore */
+    }
+    syncGlyphButton();
+    renderCards();
+  });
+}
+
 export function initSpatialCanvas(options) {
   hooks = options;
   rootEl = document.getElementById("modal-canvas");
@@ -2274,6 +2318,7 @@ export function initSpatialCanvas(options) {
   clearConfirmEl = document.getElementById("modal-canvas-clear-confirm");
   clearConfirmOkBtn = document.getElementById("modal-canvas-clear-ok");
   clearConfirmCancelBtn = document.getElementById("modal-canvas-clear-cancel");
+  glyphBtn = document.getElementById("modal-canvas-glyph");
 
   if (!rootEl || !stageEl || !viewportEl || !worldEl || !filtersEl || !toggleEl) return;
 
@@ -2284,6 +2329,7 @@ export function initSpatialCanvas(options) {
   renderFences();
   renderSpawnDock();
   renderFilters();
+  bindGlyphToggle();
   renderCards();
   bindStage();
   bindPanelResize();

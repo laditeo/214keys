@@ -132,6 +132,16 @@ async def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--force", action="store_true", help="regenerate existing files")
     parser.add_argument(
+        "--tones",
+        default="",
+        help="comma separated tone numbers to regenerate, e.g. 3",
+    )
+    parser.add_argument(
+        "--ids",
+        default="",
+        help="comma separated syllable ids to regenerate, e.g. 130,360",
+    )
+    parser.add_argument(
         "--finalize-only",
         action="store_true",
         help="only trim silence and resample existing files",
@@ -139,6 +149,10 @@ async def main():
     args = parser.parse_args()
 
     items = load_items()
+    if args.ids:
+        wanted = {int(part) for part in args.ids.split(",") if part.strip()}
+        items = [item for item in items if int(item["id"]) in wanted]
+    tones = [int(part) for part in args.tones.split(",") if part.strip()] or TONES
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
     if args.finalize_only:
@@ -154,7 +168,7 @@ async def main():
     tasks = [
         make_one(item, tone, args.force, semaphore, report)
         for item in items
-        for tone in TONES
+        for tone in tones
     ]
     results = await asyncio.gather(*tasks)
 

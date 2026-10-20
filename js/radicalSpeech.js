@@ -3,7 +3,7 @@ import radicals, {
   hasSfxAudio,
   isPinyinCatalog,
   speechAudioDir,
-} from "./catalog.js?v=195";
+} from "./catalog.js?v=196";
 import { appAssetUrl } from "./appBase.js";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
@@ -59,10 +59,14 @@ function padId(id) {
   return String(id).padStart(3, "0");
 }
 
+/** Bump when the pinyin recordings are regenerated (busts the browser cache). */
+const PINYIN_AUDIO_REV = "2";
+
 export function audioUrl(lang, id, tone = 1) {
   if (!hasSpeechAudio) return "";
   const suffix = isPinyinCatalog ? `-${tone}` : "";
-  return appAssetUrl(`${speechAudioDir}/${lang}/${padId(id)}${suffix}.mp3`);
+  const rev = isPinyinCatalog ? `?a=${PINYIN_AUDIO_REV}` : "";
+  return appAssetUrl(`${speechAudioDir}/${lang}/${padId(id)}${suffix}.mp3${rev}`);
 }
 
 function speakKey(lang, id, tone = 1) {

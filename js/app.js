@@ -11,11 +11,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=195";
+} from "./catalog.js?v=196";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=195";
+import "./char3dOrbit.js?v=196";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -50,7 +50,7 @@ import {
   prefetchItemAudio,
   speakRadical,
   unlockSpeech,
-} from "./radicalSpeech.js?v=195";
+} from "./radicalSpeech.js?v=196";
 import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js";
 import {
   hideSpatialCanvas,
@@ -109,6 +109,7 @@ let copyBtnTimer = 0;
 
 let activeItem = null;
 let activeTone = 1;
+let toneWaves = [];
 let visibleItems = items;
 let colorInkOn = false;
 let savedScrollY = 0;
@@ -264,8 +265,12 @@ function syncReadingWave(item, lang, tone = 1) {
 }
 
 function syncModalReadingWaves(item) {
-  if (!isPinyinCatalog) syncReadingWave(item, "jp");
-  syncReadingWave(item, "cn", isPinyinCatalog ? activeTone : 1);
+  if (isPinyinCatalog) {
+    syncToneWaves(item);
+    return;
+  }
+  syncReadingWave(item, "jp");
+  syncReadingWave(item, "cn");
 }
 
 function triggerReadingPlayback(lang, tone) {
@@ -474,7 +479,7 @@ function fillModal(item) {
     ? `варианты: ${item.variants.split(/\s+/).join(" · ")}`
     : "";
   if (fields.jp) fields.jp.textContent = item.jp;
-  fields.cn.textContent = item.cn;
+  if (fields.cn) fields.cn.textContent = item.cn;
   if (fields.tones) fillTones(item.tones);
   fields.ru.textContent = item.ru;
   fields.strokes.textContent = item.strokes ? strokeCompactLabel(item.strokes) : "";
@@ -487,6 +492,7 @@ function fillModal(item) {
 function fillTones(tones) {
   if (!fields.tones) return;
   activeTone = 1;
+  toneWaves = [];
   fields.tones.replaceChildren(
     ...(tones || []).map((tone, index) => {
       const number = index + 1;
@@ -501,7 +507,17 @@ function fillTones(tones) {
       const text = document.createElement("span");
       text.className = "modal__tone-text";
       text.textContent = tone;
-      chip.append(num, text);
+
+      const waveRoot = document.createElement("span");
+      waveRoot.className = "audio-wave modal__tone-wave";
+      waveRoot.hidden = true;
+      const canvas = document.createElement("canvas");
+      canvas.className = "audio-wave__canvas";
+      canvas.setAttribute("aria-hidden", "true");
+      waveRoot.appendChild(canvas);
+      toneWaves.push(createReadingWaveform(waveRoot));
+
+      chip.append(num, text, waveRoot);
       chip.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -511,6 +527,33 @@ function fillTones(tones) {
     }),
   );
   syncActiveTone();
+}
+
+/* У каждого тона своя волна: рисуем пики всех четырёх сразу при открытии. */
+function syncToneWaves(item) {
+  if (!isPinyinCatalog || !item) return;
+  for (let index = 0; index < 4; index += 1) {
+    const wave = toneWaves[index];
+    if (!wave) continue;
+    const tone = index + 1;
+    wave.reset();
+    wave.setPlaying(false);
+    wave.setProgress(0);
+
+    const peaks = getSamplePeaks("cn", item.id, 120, tone);
+    if (peaks) {
+      wave.setPeaks(peaks);
+      requestAnimationFrame(() => wave.resize());
+      continue;
+    }
+
+    void loadSamplePeaks("cn", item.id, 120, tone).then((loaded) => {
+      if (!loaded || !activeItem || activeItem.id !== item.id) return;
+      wave.setPeaks(loaded);
+      wave.reset();
+      requestAnimationFrame(() => wave.resize());
+    });
+  }
 }
 
 function syncActiveTone() {
@@ -525,13 +568,47 @@ function setActiveTone(tone) {
   if (!isPinyinCatalog) return;
   activeTone = Math.min(4, Math.max(1, tone));
   syncActiveTone();
-  if (activeItem) syncReadingWave(activeItem, "cn", activeTone);
 }
 
 function playTone(tone) {
-  if (!isPinyinCatalog) return;
+  if (!isPinyinCatalog || !activeItem) return;
   setActiveTone(tone);
-  triggerReadingPlayback("cn", activeTone);
+  unlockSpeech();
+
+  const item = activeItem;
+  const wave = toneWaves[tone - 1];
+  const chip = fields.tones?.querySelector(`.modal__tone[data-tone="${tone}"]`) || null;
+
+  for (let index = 0; index < toneWaves.length; index += 1) {
+    if (index === tone - 1) continue;
+    toneWaves[index].setPlaying(false);
+    toneWaves[index].setProgress(0);
+  }
+
+  speakRadical(item, "cn", {
+    tone,
+    onStart: () => {
+      setSpeakerState("cn", true);
+      fields.charWrap?.classList.add("modal__char-wrap--playing");
+      wave?.setPlaying(true);
+      if (chip) {
+        try {
+          burstSpeakerParticles(chip, "cn", item);
+          burstHeroGlyphWhisper(fields.charWrap, item);
+        } catch {
+          /* particles are optional */
+        }
+      }
+    },
+    onProgress: (t) => wave?.setProgress(t),
+    onEnd: () => {
+      setSpeakerState("cn", false);
+      fields.charWrap?.classList.remove("modal__char-wrap--playing");
+      wave?.setPlaying(false);
+      wave?.setProgress(0);
+      stopHeroPlaybackEmojis();
+    },
+  });
 }
 
 function updateActiveCellEl(container, item, prevEl) {
@@ -1108,6 +1185,7 @@ function createPinyinTableFragment(list, onCellClick) {
       const label = document.createElement("div");
       label.className = "section-label";
       label.textContent = PINYIN_TABLE_SECTIONS[row.category] || row.category;
+      label.style.setProperty("--cell-category-color", getCategoryMeta(row.category).color);
       frag.appendChild(label);
     }
 
@@ -1384,7 +1462,7 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.key === "2") {
     e.preventDefault();
-    speakerCn.click();
+    speakerCn?.click();
   }
   if (e.key === " ") {
     const target = e.target;
@@ -1427,9 +1505,9 @@ function wireHeroChar() {
 }
 
 if (!isPinyinCatalog && speakerJp) wireSpeaker(speakerJp, "jp");
-wireSpeaker(speakerCn, "cn");
+if (speakerCn) wireSpeaker(speakerCn, "cn");
 if (!isPinyinCatalog && waveRoots.jp) wireReadingWave(waveRoots.jp, "jp");
-wireReadingWave(waveRoots.cn, "cn");
+if (waveRoots.cn) wireReadingWave(waveRoots.cn, "cn");
 wireHeroChar();
 wireCopyButton();
 initSpeakerParticles();

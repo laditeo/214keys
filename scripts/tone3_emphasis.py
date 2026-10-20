@@ -3,10 +3,17 @@
 
 Microsoft's zh-CN voices render tone 3 as a shallow dip, so learners cannot
 hear the difference from tone 2. This module re-synthesises the clip with a
-TD-PSOLA style pitch contour: down, a short hold at the bottom, then up.
+TD-PSOLA style contour: a long fall, a clear hold at the bottom, then a short
+rise that still ends below the starting pitch.
+
+Time and pitch are controlled independently: the output is stretched by
+:data:`STRETCH` (grain repetition) while the pitch multiplier comes from
+:data:`CONTOUR`, so the syllable can be made slow *and* deep without turning
+into a different voice.
 
 Usage (standalone, re-process every existing tone-3 file):
-    python scripts/tone3-emphasis.py
+    python scripts/tone3_emphasis.py
+Do not run it twice on the same files: the effect compounds.
 """
 import subprocess
 import wave
@@ -20,8 +27,14 @@ SR = 16000
 HOP_SEC = 0.005
 WIN_SEC = 0.04
 
+# How much longer the 3rd tone becomes compared to the raw TTS clip.
+STRETCH = 1.55
+# Loudness compensation: the low hold sounds quieter than the other tones.
+GAIN = 1.3
+
 # Pitch multiplier along the syllable (0 = start, 1 = end).
-CONTOUR = ((0.0, 1.0), (0.18, 0.9), (0.38, 0.76), (0.66, 0.76), (0.85, 1.05), (1.0, 1.42))
+# 1.0 -> 0.70 (deep fall) -> hold -> 0.95 (short rise, below the start).
+CONTOUR = ((0.0, 1.0), (0.12, 0.9), (0.30, 0.7), (0.64, 0.7), (0.84, 0.78), (1.0, 0.95))
 
 
 def _decode(path):
@@ -77,7 +90,6 @@ def _f0_track(x):
         if corr[peak] > 0.32:
             f0[i] = SR / peak
 
-    # Fill gaps with the nearest voiced value and smooth.
     if not f0.any():
         return f0
     idx = np.where(f0 > 0)[0]
@@ -95,66 +107,81 @@ def _value_at(points, u):
     return points[-1][1]
 
 
-def emphasize(path):
-    """Rewrite ``path`` so its 3rd tone dips deeper and holds longer.
+def _grains(f0, duration):
+    """Pitch-synchronous grain centres (seconds) and their periods."""
+    centers = []
+    periods = []
+    t = 0.0
+    while t < duration:
+        index = int(t / HOP_SEC)
+        freq = float(f0[index]) if 0 <= index < len(f0) else 0.0
+        period = 1.0 / freq if freq > 0 else 0.005
+        centers.append(t)
+        periods.append(period)
+        t += period
+    return np.asarray(centers, dtype=np.float32), np.asarray(periods, dtype=np.float32)
 
-    TD-PSOLA with a pitch multiplier that follows :data:`CONTOUR`: grains are
-    taken at the original period but laid out at ``period / factor``, so a
-    factor below 1 both lowers the pitch and stretches the dip.
-    """
+
+def emphasize(path):
+    """Rewrite ``path`` so its 3rd tone falls deep, holds and then rises."""
     x = _decode(path)
     if len(x) < int(0.08 * SR):
         return False
 
     f0 = _f0_track(x)
-
-    def f0_at(t):
-        i = int(t / HOP_SEC)
-        return float(f0[i]) if 0 <= i < len(f0) else 0.0
-
     duration = len(x) / SR
-    # Output is longer than the input: integral of 1/factor, plus headroom.
-    out = np.zeros(int(duration * 2.0 * SR) + int(0.08 * SR), dtype=np.float32)
+    target = duration * STRETCH
+
+    centers, periods = _grains(f0, duration)
+    if not len(centers):
+        return False
+
+    out = np.zeros(int(target * SR) + int(0.1 * SR), dtype=np.float32)
     weight = np.zeros_like(out)
 
-    pos = 0.0
     out_pos = 0.0
-    while pos < duration:
-        freq = f0_at(pos)
-        period = 1.0 / freq if freq > 0 else 0.005
+    cursor = 0
+    last = len(centers) - 1
+    while out_pos < target:
+        # Content position for this output moment, snapped to a pitch period.
+        wanted = out_pos / STRETCH
+        while cursor < last and centers[cursor + 1] <= wanted:
+            cursor += 1
+        if cursor < last and abs(centers[cursor + 1] - wanted) < abs(centers[cursor] - wanted):
+            index = cursor + 1
+        else:
+            index = cursor
+
+        center = float(centers[index])
+        period = float(periods[index])
         half = max(8, int(period * SR))
-        center = int(pos * SR)
-        a, b = center - half, center + half
-        if a < 0 or b > len(x):
-            pos += period
+        start = int(center * SR) - half
+        if start < 0 or start + 2 * half > len(x):
             out_pos += period
             continue
 
-        grain = x[a:b] * np.hanning(b - a)
-        factor = _value_at(CONTOUR, pos / duration)
-        target = int(out_pos * SR)
-        ga, gb = target - half, target + half
-        if gb > len(out):
+        grain = x[start: start + 2 * half] * np.hanning(2 * half)
+        factor = _value_at(CONTOUR, center / duration)
+        at = int(out_pos * SR) - half
+        if at + 2 * half > len(out):
             break
 
-        out[ga:gb] += grain
-        weight[ga:gb] += np.hanning(b - a)
-        pos += period
+        out[at: at + 2 * half] += grain
+        weight[at: at + 2 * half] += np.hanning(2 * half)
         out_pos += period / factor
 
     mask = weight > 1e-3
     out[mask] /= weight[mask]
-    out = out[: int(out_pos * SR) + int(0.02 * SR)]
+    out = out[: int(min(target, out_pos) * SR) + int(0.02 * SR)]
 
-    # Keep the perceived loudness in line with the other tones.
     rms_in = float(np.sqrt(np.mean(x ** 2)))
     rms_out = float(np.sqrt(np.mean(out ** 2))) if out.size else 0.0
     if rms_in > 0 and rms_out > 0:
-        out *= min(1.35, rms_in / rms_out)
+        out *= rms_in / rms_out * GAIN
 
     peak = float(np.max(np.abs(out))) if out.size else 0.0
-    if peak > 0.99:
-        out *= 0.99 / peak
+    if peak > 0.97:
+        out *= 0.97 / peak
 
     _encode(out, path)
     return True

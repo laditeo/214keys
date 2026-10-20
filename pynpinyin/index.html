@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="../css/style.css?v=195">
+  <link rel="stylesheet" href="../css/style.css?v=196">
   <script>
     (function () {
-      var BUILD = "195";
+      var BUILD = "196";
       document.addEventListener("DOMContentLoaded", function () {
         var buildEl = document.getElementById("header-build");
         if (buildEl) buildEl.textContent = "v" + BUILD;
@@ -232,6 +232,7 @@
                   <circle cx="15" cy="15" r="1.55" fill="currentColor"/>
                 </svg>
               </button>
+              <button type="button" class="modal-canvas__tool modal-canvas__tool--glyph" id="modal-canvas-glyph" aria-label="Показать иероглифы" title="Показать иероглифы">拼</button>
             </div>
             <div class="modal-canvas__tools modal-canvas__tools--tr">
               <button type="button" class="modal-canvas__tool modal-canvas__tool--fullscreen" id="modal-canvas-fullscreen" aria-label="Развернуть на весь экран" aria-pressed="false">
@@ -292,32 +293,6 @@
           </div>
 
           <dl class="modal__readings">
-            <div class="modal__row">
-              <dt>中文</dt>
-              <dd class="modal__reading">
-                <span id="modal-cn" class="modal__reading-text"></span>
-                <div class="modal__reading-controls">
-                  <div class="speaker-slot">
-                    <button type="button" class="speaker" id="speaker-cn" aria-label="Произнести по-китайски" title="Произнести (клавиши 1–4)">
-                      <svg class="speaker__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-                        <path class="speaker__wave speaker__wave--single" d="M15.5 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                        <path class="speaker__wave speaker__wave--double" d="M15.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
-                        <path class="speaker__wave speaker__wave--double" d="M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" hidden/>
-                      </svg>
-                    </button>
-                    <span class="speaker-wait" id="speaker-wait-cn" aria-hidden="true">
-                      <svg class="speaker-wait__spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="16 38"/>
-                      </svg>
-                    </span>
-                  </div>
-                  <div class="audio-wave" id="audio-wave-cn" hidden title="Произнести">
-                    <canvas class="audio-wave__canvas" aria-hidden="true"></canvas>
-                  </div>
-                </div>
-              </dd>
-            </div>
             <div class="modal__row modal__row--wide">
               <dt class="modal__row-label">
                 <span class="modal__row-label-text">Слог</span>
@@ -411,6 +386,6 @@
     }
   }
   </script>
-  <script type="module" src="../js/app.js?v=195"></script>
+  <script type="module" src="../js/app.js?v=196"></script>
 </body>
 </html>
