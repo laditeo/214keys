@@ -1982,9 +1982,9 @@ html[data-theme="dark"] .modal-map__viewport {
 
 .spatial-card__char--pinyin {
   font-family: var(--font-ui);
-  font-size: 0.52rem;
+  font-size: 0.62rem;
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
   transform: none;
 }
 
