@@ -11,11 +11,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=198";
+} from "./catalog.js?v=199";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=198";
+import "./char3dOrbit.js?v=199";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -50,7 +50,7 @@ import {
   prefetchItemAudio,
   speakRadical,
   unlockSpeech,
-} from "./radicalSpeech.js?v=198";
+} from "./radicalSpeech.js?v=199";
 import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js";
 import {
   hideSpatialCanvas,
