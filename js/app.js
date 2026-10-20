@@ -11,11 +11,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=205";
+} from "./catalog.js?v=206";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=205";
+import "./char3dOrbit.js?v=206";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -52,7 +52,7 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=205";
+} from "./radicalSpeech.js?v=206";
 import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js";
 import {
   hideSpatialCanvas,
@@ -1520,22 +1520,35 @@ initAudioPreload();
 function syncVoiceToggle() {
   if (!isPinyinCatalog) return;
   const gender = getPinyinGender();
-  document.querySelectorAll(".voice-toggle__btn").forEach((btn) => {
-    const active = btn.dataset.voice === gender;
-    btn.classList.toggle("is-active", active);
-    btn.setAttribute("aria-pressed", String(active));
+  const btn = document.querySelector(".voice-toggle__btn");
+  if (!btn) return;
+  const female = gender === "female";
+  btn.dataset.voice = gender;
+  btn.classList.toggle("is-active", female);
+  btn.setAttribute("aria-pressed", String(female));
+  btn.title = female ? "Женский голос" : "Мужской голос";
+  const letter = btn.querySelector(".voice-toggle__letter");
+  if (letter) letter.textContent = female ? "ж" : "м";
+  const char = btn.lastChild;
+  // update the Chinese char (second text node after <br>)
+  btn.childNodes.forEach((n) => {
+    if (n.nodeType === 3 && n.textContent.trim()) {
+      n.textContent = female ? "女" : "男";
+    }
   });
 }
 
 if (isPinyinCatalog) {
-  document.querySelectorAll(".voice-toggle__btn").forEach((btn) => {
+  const btn = document.querySelector(".voice-toggle__btn");
+  if (btn) {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      setPinyinGender(btn.dataset.voice);
+      const next = getPinyinGender() === "female" ? "male" : "female";
+      setPinyinGender(next);
       syncVoiceToggle();
       if (activeItem) syncToneWaves(activeItem);
     });
-  });
+  }
   syncVoiceToggle();
 }
 
