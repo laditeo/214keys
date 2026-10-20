@@ -115,6 +115,9 @@ python scripts/generate-pinyin-audio.py --force   # перегенерирова
 
 Файлы — `audio/pinyin/cn/001.mp3` … `407.mp3`, отчёт — `pinyin_audio_report.txt`.
 
+В карточке слога показаны все четыре тона (`zhuāng zhuáng zhuǎng zhuàng`),
+а клавиша **1** (как и 2) включает озвучку слога.
+
 ### Звуковые эффекты (клик по иероглифу)
 
 214 коротких `.ogg` подбираются по emoji радикала из [Kenney's Sound Pack](https://kenney.nl/assets) (CC0). Скрипт скачивает их с зеркала gamesounds.xyz:

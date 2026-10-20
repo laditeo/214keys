@@ -6,6 +6,12 @@ export default [
     "strokes": 0,
     "cn": "a",
     "ru": "без инициали · финаль a",
+    "tones": [
+      "ā",
+      "á",
+      "ǎ",
+      "à"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -17,6 +23,12 @@ export default [
     "strokes": 0,
     "cn": "ba",
     "ru": "инициаль b · финаль a",
+    "tones": [
+      "bā",
+      "bá",
+      "bǎ",
+      "bà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -28,6 +40,12 @@ export default [
     "strokes": 0,
     "cn": "pa",
     "ru": "инициаль p · финаль a",
+    "tones": [
+      "pā",
+      "pá",
+      "pǎ",
+      "pà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -39,6 +57,12 @@ export default [
     "strokes": 0,
     "cn": "ma",
     "ru": "инициаль m · финаль a",
+    "tones": [
+      "mā",
+      "má",
+      "mǎ",
+      "mà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -50,6 +74,12 @@ export default [
     "strokes": 0,
     "cn": "fa",
     "ru": "инициаль f · финаль a",
+    "tones": [
+      "fā",
+      "fá",
+      "fǎ",
+      "fà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -61,6 +91,12 @@ export default [
     "strokes": 0,
     "cn": "da",
     "ru": "инициаль d · финаль a",
+    "tones": [
+      "dā",
+      "dá",
+      "dǎ",
+      "dà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -72,6 +108,12 @@ export default [
     "strokes": 0,
     "cn": "ta",
     "ru": "инициаль t · финаль a",
+    "tones": [
+      "tā",
+      "tá",
+      "tǎ",
+      "tà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -83,6 +125,12 @@ export default [
     "strokes": 0,
     "cn": "na",
     "ru": "инициаль n · финаль a",
+    "tones": [
+      "nā",
+      "ná",
+      "nǎ",
+      "nà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -94,6 +142,12 @@ export default [
     "strokes": 0,
     "cn": "la",
     "ru": "инициаль l · финаль a",
+    "tones": [
+      "lā",
+      "lá",
+      "lǎ",
+      "là"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -105,6 +159,12 @@ export default [
     "strokes": 0,
     "cn": "ga",
     "ru": "инициаль g · финаль a",
+    "tones": [
+      "gā",
+      "gá",
+      "gǎ",
+      "gà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -116,6 +176,12 @@ export default [
     "strokes": 0,
     "cn": "ka",
     "ru": "инициаль k · финаль a",
+    "tones": [
+      "kā",
+      "ká",
+      "kǎ",
+      "kà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -127,6 +193,12 @@ export default [
     "strokes": 0,
     "cn": "ha",
     "ru": "инициаль h · финаль a",
+    "tones": [
+      "hā",
+      "há",
+      "hǎ",
+      "hà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -138,6 +210,12 @@ export default [
     "strokes": 0,
     "cn": "zha",
     "ru": "инициаль zh · финаль a",
+    "tones": [
+      "zhā",
+      "zhá",
+      "zhǎ",
+      "zhà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -149,6 +227,12 @@ export default [
     "strokes": 0,
     "cn": "cha",
     "ru": "инициаль ch · финаль a",
+    "tones": [
+      "chā",
+      "chá",
+      "chǎ",
+      "chà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -160,6 +244,12 @@ export default [
     "strokes": 0,
     "cn": "sha",
     "ru": "инициаль sh · финаль a",
+    "tones": [
+      "shā",
+      "shá",
+      "shǎ",
+      "shà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -171,6 +261,12 @@ export default [
     "strokes": 0,
     "cn": "za",
     "ru": "инициаль z · финаль a",
+    "tones": [
+      "zā",
+      "zá",
+      "zǎ",
+      "zà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -182,6 +278,12 @@ export default [
     "strokes": 0,
     "cn": "ca",
     "ru": "инициаль c · финаль a",
+    "tones": [
+      "cā",
+      "cá",
+      "cǎ",
+      "cà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -193,6 +295,12 @@ export default [
     "strokes": 0,
     "cn": "sa",
     "ru": "инициаль s · финаль a",
+    "tones": [
+      "sā",
+      "sá",
+      "sǎ",
+      "sà"
+    ],
     "category": "a",
     "group": "a:a",
     "groupLabel": "Финаль a"
@@ -204,6 +312,12 @@ export default [
     "strokes": 0,
     "cn": "o",
     "ru": "без инициали · финаль o",
+    "tones": [
+      "ō",
+      "ó",
+      "ǒ",
+      "ò"
+    ],
     "category": "a",
     "group": "a:o",
     "groupLabel": "Финаль o"
@@ -215,6 +329,12 @@ export default [
     "strokes": 0,
     "cn": "bo",
     "ru": "инициаль b · финаль o",
+    "tones": [
+      "bō",
+      "bó",
+      "bǒ",
+      "bò"
+    ],
     "category": "a",
     "group": "a:o",
     "groupLabel": "Финаль o"
@@ -226,6 +346,12 @@ export default [
     "strokes": 0,
     "cn": "po",
     "ru": "инициаль p · финаль o",
+    "tones": [
+      "pō",
+      "pó",
+      "pǒ",
+      "pò"
+    ],
     "category": "a",
     "group": "a:o",
     "groupLabel": "Финаль o"
@@ -237,6 +363,12 @@ export default [
     "strokes": 0,
     "cn": "mo",
     "ru": "инициаль m · финаль o",
+    "tones": [
+      "mō",
+      "mó",
+      "mǒ",
+      "mò"
+    ],
     "category": "a",
     "group": "a:o",
     "groupLabel": "Финаль o"
@@ -248,6 +380,12 @@ export default [
     "strokes": 0,
     "cn": "fo",
     "ru": "инициаль f · финаль o",
+    "tones": [
+      "fō",
+      "fó",
+      "fǒ",
+      "fò"
+    ],
     "category": "a",
     "group": "a:o",
     "groupLabel": "Финаль o"
@@ -259,6 +397,12 @@ export default [
     "strokes": 0,
     "cn": "e",
     "ru": "без инициали · финаль e",
+    "tones": [
+      "ē",
+      "é",
+      "ě",
+      "è"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -270,6 +414,12 @@ export default [
     "strokes": 0,
     "cn": "me",
     "ru": "инициаль m · финаль e",
+    "tones": [
+      "mē",
+      "mé",
+      "mě",
+      "mè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -281,6 +431,12 @@ export default [
     "strokes": 0,
     "cn": "de",
     "ru": "инициаль d · финаль e",
+    "tones": [
+      "dē",
+      "dé",
+      "dě",
+      "dè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -292,6 +448,12 @@ export default [
     "strokes": 0,
     "cn": "te",
     "ru": "инициаль t · финаль e",
+    "tones": [
+      "tē",
+      "té",
+      "tě",
+      "tè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -303,6 +465,12 @@ export default [
     "strokes": 0,
     "cn": "ne",
     "ru": "инициаль n · финаль e",
+    "tones": [
+      "nē",
+      "né",
+      "ně",
+      "nè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -314,6 +482,12 @@ export default [
     "strokes": 0,
     "cn": "le",
     "ru": "инициаль l · финаль e",
+    "tones": [
+      "lē",
+      "lé",
+      "lě",
+      "lè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -325,6 +499,12 @@ export default [
     "strokes": 0,
     "cn": "ge",
     "ru": "инициаль g · финаль e",
+    "tones": [
+      "gē",
+      "gé",
+      "gě",
+      "gè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -336,6 +516,12 @@ export default [
     "strokes": 0,
     "cn": "ke",
     "ru": "инициаль k · финаль e",
+    "tones": [
+      "kē",
+      "ké",
+      "kě",
+      "kè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -347,6 +533,12 @@ export default [
     "strokes": 0,
     "cn": "he",
     "ru": "инициаль h · финаль e",
+    "tones": [
+      "hē",
+      "hé",
+      "hě",
+      "hè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -358,6 +550,12 @@ export default [
     "strokes": 0,
     "cn": "zhe",
     "ru": "инициаль zh · финаль e",
+    "tones": [
+      "zhē",
+      "zhé",
+      "zhě",
+      "zhè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -369,6 +567,12 @@ export default [
     "strokes": 0,
     "cn": "che",
     "ru": "инициаль ch · финаль e",
+    "tones": [
+      "chē",
+      "ché",
+      "chě",
+      "chè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -380,6 +584,12 @@ export default [
     "strokes": 0,
     "cn": "she",
     "ru": "инициаль sh · финаль e",
+    "tones": [
+      "shē",
+      "shé",
+      "shě",
+      "shè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -391,6 +601,12 @@ export default [
     "strokes": 0,
     "cn": "re",
     "ru": "инициаль r · финаль e",
+    "tones": [
+      "rē",
+      "ré",
+      "rě",
+      "rè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -402,6 +618,12 @@ export default [
     "strokes": 0,
     "cn": "ze",
     "ru": "инициаль z · финаль e",
+    "tones": [
+      "zē",
+      "zé",
+      "zě",
+      "zè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -413,6 +635,12 @@ export default [
     "strokes": 0,
     "cn": "ce",
     "ru": "инициаль c · финаль e",
+    "tones": [
+      "cē",
+      "cé",
+      "cě",
+      "cè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -424,6 +652,12 @@ export default [
     "strokes": 0,
     "cn": "se",
     "ru": "инициаль s · финаль e",
+    "tones": [
+      "sē",
+      "sé",
+      "sě",
+      "sè"
+    ],
     "category": "a",
     "group": "a:e",
     "groupLabel": "Финаль e"
@@ -435,6 +669,12 @@ export default [
     "strokes": 0,
     "cn": "ê",
     "ru": "без инициали · финаль ê",
+    "tones": [
+      "ê",
+      "ê",
+      "ê",
+      "ê"
+    ],
     "category": "a",
     "group": "a:ê",
     "groupLabel": "Финаль ê"
@@ -446,6 +686,12 @@ export default [
     "strokes": 0,
     "cn": "ai",
     "ru": "без инициали · финаль ai",
+    "tones": [
+      "āi",
+      "ái",
+      "ǎi",
+      "ài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -457,6 +703,12 @@ export default [
     "strokes": 0,
     "cn": "bai",
     "ru": "инициаль b · финаль ai",
+    "tones": [
+      "bāi",
+      "bái",
+      "bǎi",
+      "bài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -468,6 +720,12 @@ export default [
     "strokes": 0,
     "cn": "pai",
     "ru": "инициаль p · финаль ai",
+    "tones": [
+      "pāi",
+      "pái",
+      "pǎi",
+      "pài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -479,6 +737,12 @@ export default [
     "strokes": 0,
     "cn": "mai",
     "ru": "инициаль m · финаль ai",
+    "tones": [
+      "māi",
+      "mái",
+      "mǎi",
+      "mài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -490,6 +754,12 @@ export default [
     "strokes": 0,
     "cn": "dai",
     "ru": "инициаль d · финаль ai",
+    "tones": [
+      "dāi",
+      "dái",
+      "dǎi",
+      "dài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -501,6 +771,12 @@ export default [
     "strokes": 0,
     "cn": "tai",
     "ru": "инициаль t · финаль ai",
+    "tones": [
+      "tāi",
+      "tái",
+      "tǎi",
+      "tài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -512,6 +788,12 @@ export default [
     "strokes": 0,
     "cn": "nai",
     "ru": "инициаль n · финаль ai",
+    "tones": [
+      "nāi",
+      "nái",
+      "nǎi",
+      "nài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -523,6 +805,12 @@ export default [
     "strokes": 0,
     "cn": "lai",
     "ru": "инициаль l · финаль ai",
+    "tones": [
+      "lāi",
+      "lái",
+      "lǎi",
+      "lài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -534,6 +822,12 @@ export default [
     "strokes": 0,
     "cn": "gai",
     "ru": "инициаль g · финаль ai",
+    "tones": [
+      "gāi",
+      "gái",
+      "gǎi",
+      "gài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -545,6 +839,12 @@ export default [
     "strokes": 0,
     "cn": "kai",
     "ru": "инициаль k · финаль ai",
+    "tones": [
+      "kāi",
+      "kái",
+      "kǎi",
+      "kài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -556,6 +856,12 @@ export default [
     "strokes": 0,
     "cn": "hai",
     "ru": "инициаль h · финаль ai",
+    "tones": [
+      "hāi",
+      "hái",
+      "hǎi",
+      "hài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -567,6 +873,12 @@ export default [
     "strokes": 0,
     "cn": "zhai",
     "ru": "инициаль zh · финаль ai",
+    "tones": [
+      "zhāi",
+      "zhái",
+      "zhǎi",
+      "zhài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -578,6 +890,12 @@ export default [
     "strokes": 0,
     "cn": "chai",
     "ru": "инициаль ch · финаль ai",
+    "tones": [
+      "chāi",
+      "chái",
+      "chǎi",
+      "chài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -589,6 +907,12 @@ export default [
     "strokes": 0,
     "cn": "shai",
     "ru": "инициаль sh · финаль ai",
+    "tones": [
+      "shāi",
+      "shái",
+      "shǎi",
+      "shài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -600,6 +924,12 @@ export default [
     "strokes": 0,
     "cn": "zai",
     "ru": "инициаль z · финаль ai",
+    "tones": [
+      "zāi",
+      "zái",
+      "zǎi",
+      "zài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -611,6 +941,12 @@ export default [
     "strokes": 0,
     "cn": "cai",
     "ru": "инициаль c · финаль ai",
+    "tones": [
+      "cāi",
+      "cái",
+      "cǎi",
+      "cài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -622,6 +958,12 @@ export default [
     "strokes": 0,
     "cn": "sai",
     "ru": "инициаль s · финаль ai",
+    "tones": [
+      "sāi",
+      "sái",
+      "sǎi",
+      "sài"
+    ],
     "category": "a",
     "group": "a:ai",
     "groupLabel": "Финаль ai"
@@ -633,6 +975,12 @@ export default [
     "strokes": 0,
     "cn": "ei",
     "ru": "без инициали · финаль ei",
+    "tones": [
+      "ēi",
+      "éi",
+      "ěi",
+      "èi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -644,6 +992,12 @@ export default [
     "strokes": 0,
     "cn": "bei",
     "ru": "инициаль b · финаль ei",
+    "tones": [
+      "bēi",
+      "béi",
+      "běi",
+      "bèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -655,6 +1009,12 @@ export default [
     "strokes": 0,
     "cn": "pei",
     "ru": "инициаль p · финаль ei",
+    "tones": [
+      "pēi",
+      "péi",
+      "pěi",
+      "pèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -666,6 +1026,12 @@ export default [
     "strokes": 0,
     "cn": "mei",
     "ru": "инициаль m · финаль ei",
+    "tones": [
+      "mēi",
+      "méi",
+      "měi",
+      "mèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -677,6 +1043,12 @@ export default [
     "strokes": 0,
     "cn": "fei",
     "ru": "инициаль f · финаль ei",
+    "tones": [
+      "fēi",
+      "féi",
+      "fěi",
+      "fèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -688,6 +1060,12 @@ export default [
     "strokes": 0,
     "cn": "dei",
     "ru": "инициаль d · финаль ei",
+    "tones": [
+      "dēi",
+      "déi",
+      "děi",
+      "dèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -699,6 +1077,12 @@ export default [
     "strokes": 0,
     "cn": "nei",
     "ru": "инициаль n · финаль ei",
+    "tones": [
+      "nēi",
+      "néi",
+      "něi",
+      "nèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -710,6 +1094,12 @@ export default [
     "strokes": 0,
     "cn": "lei",
     "ru": "инициаль l · финаль ei",
+    "tones": [
+      "lēi",
+      "léi",
+      "lěi",
+      "lèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -721,6 +1111,12 @@ export default [
     "strokes": 0,
     "cn": "gei",
     "ru": "инициаль g · финаль ei",
+    "tones": [
+      "gēi",
+      "géi",
+      "gěi",
+      "gèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -732,6 +1128,12 @@ export default [
     "strokes": 0,
     "cn": "hei",
     "ru": "инициаль h · финаль ei",
+    "tones": [
+      "hēi",
+      "héi",
+      "hěi",
+      "hèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -743,6 +1145,12 @@ export default [
     "strokes": 0,
     "cn": "zhei",
     "ru": "инициаль zh · финаль ei",
+    "tones": [
+      "zhēi",
+      "zhéi",
+      "zhěi",
+      "zhèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -754,6 +1162,12 @@ export default [
     "strokes": 0,
     "cn": "shei",
     "ru": "инициаль sh · финаль ei",
+    "tones": [
+      "shēi",
+      "shéi",
+      "shěi",
+      "shèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -765,6 +1179,12 @@ export default [
     "strokes": 0,
     "cn": "zei",
     "ru": "инициаль z · финаль ei",
+    "tones": [
+      "zēi",
+      "zéi",
+      "zěi",
+      "zèi"
+    ],
     "category": "a",
     "group": "a:ei",
     "groupLabel": "Финаль ei"
@@ -776,6 +1196,12 @@ export default [
     "strokes": 0,
     "cn": "ao",
     "ru": "без инициали · финаль ao",
+    "tones": [
+      "āo",
+      "áo",
+      "ǎo",
+      "ào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -787,6 +1213,12 @@ export default [
     "strokes": 0,
     "cn": "bao",
     "ru": "инициаль b · финаль ao",
+    "tones": [
+      "bāo",
+      "báo",
+      "bǎo",
+      "bào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -798,6 +1230,12 @@ export default [
     "strokes": 0,
     "cn": "pao",
     "ru": "инициаль p · финаль ao",
+    "tones": [
+      "pāo",
+      "páo",
+      "pǎo",
+      "pào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -809,6 +1247,12 @@ export default [
     "strokes": 0,
     "cn": "mao",
     "ru": "инициаль m · финаль ao",
+    "tones": [
+      "māo",
+      "máo",
+      "mǎo",
+      "mào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -820,6 +1264,12 @@ export default [
     "strokes": 0,
     "cn": "dao",
     "ru": "инициаль d · финаль ao",
+    "tones": [
+      "dāo",
+      "dáo",
+      "dǎo",
+      "dào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -831,6 +1281,12 @@ export default [
     "strokes": 0,
     "cn": "tao",
     "ru": "инициаль t · финаль ao",
+    "tones": [
+      "tāo",
+      "táo",
+      "tǎo",
+      "tào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -842,6 +1298,12 @@ export default [
     "strokes": 0,
     "cn": "nao",
     "ru": "инициаль n · финаль ao",
+    "tones": [
+      "nāo",
+      "náo",
+      "nǎo",
+      "nào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -853,6 +1315,12 @@ export default [
     "strokes": 0,
     "cn": "lao",
     "ru": "инициаль l · финаль ao",
+    "tones": [
+      "lāo",
+      "láo",
+      "lǎo",
+      "lào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -864,6 +1332,12 @@ export default [
     "strokes": 0,
     "cn": "gao",
     "ru": "инициаль g · финаль ao",
+    "tones": [
+      "gāo",
+      "gáo",
+      "gǎo",
+      "gào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -875,6 +1349,12 @@ export default [
     "strokes": 0,
     "cn": "kao",
     "ru": "инициаль k · финаль ao",
+    "tones": [
+      "kāo",
+      "káo",
+      "kǎo",
+      "kào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -886,6 +1366,12 @@ export default [
     "strokes": 0,
     "cn": "hao",
     "ru": "инициаль h · финаль ao",
+    "tones": [
+      "hāo",
+      "háo",
+      "hǎo",
+      "hào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -897,6 +1383,12 @@ export default [
     "strokes": 0,
     "cn": "zhao",
     "ru": "инициаль zh · финаль ao",
+    "tones": [
+      "zhāo",
+      "zháo",
+      "zhǎo",
+      "zhào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -908,6 +1400,12 @@ export default [
     "strokes": 0,
     "cn": "chao",
     "ru": "инициаль ch · финаль ao",
+    "tones": [
+      "chāo",
+      "cháo",
+      "chǎo",
+      "chào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -919,6 +1417,12 @@ export default [
     "strokes": 0,
     "cn": "shao",
     "ru": "инициаль sh · финаль ao",
+    "tones": [
+      "shāo",
+      "sháo",
+      "shǎo",
+      "shào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -930,6 +1434,12 @@ export default [
     "strokes": 0,
     "cn": "rao",
     "ru": "инициаль r · финаль ao",
+    "tones": [
+      "rāo",
+      "ráo",
+      "rǎo",
+      "rào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -941,6 +1451,12 @@ export default [
     "strokes": 0,
     "cn": "zao",
     "ru": "инициаль z · финаль ao",
+    "tones": [
+      "zāo",
+      "záo",
+      "zǎo",
+      "zào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -952,6 +1468,12 @@ export default [
     "strokes": 0,
     "cn": "cao",
     "ru": "инициаль c · финаль ao",
+    "tones": [
+      "cāo",
+      "cáo",
+      "cǎo",
+      "cào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -963,6 +1485,12 @@ export default [
     "strokes": 0,
     "cn": "sao",
     "ru": "инициаль s · финаль ao",
+    "tones": [
+      "sāo",
+      "sáo",
+      "sǎo",
+      "sào"
+    ],
     "category": "a",
     "group": "a:ao",
     "groupLabel": "Финаль ao"
@@ -974,6 +1502,12 @@ export default [
     "strokes": 0,
     "cn": "ou",
     "ru": "без инициали · финаль ou",
+    "tones": [
+      "ōu",
+      "óu",
+      "ǒu",
+      "òu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -985,6 +1519,12 @@ export default [
     "strokes": 0,
     "cn": "pou",
     "ru": "инициаль p · финаль ou",
+    "tones": [
+      "pōu",
+      "póu",
+      "pǒu",
+      "pòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -996,6 +1536,12 @@ export default [
     "strokes": 0,
     "cn": "mou",
     "ru": "инициаль m · финаль ou",
+    "tones": [
+      "mōu",
+      "móu",
+      "mǒu",
+      "mòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1007,6 +1553,12 @@ export default [
     "strokes": 0,
     "cn": "fou",
     "ru": "инициаль f · финаль ou",
+    "tones": [
+      "fōu",
+      "fóu",
+      "fǒu",
+      "fòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1018,6 +1570,12 @@ export default [
     "strokes": 0,
     "cn": "dou",
     "ru": "инициаль d · финаль ou",
+    "tones": [
+      "dōu",
+      "dóu",
+      "dǒu",
+      "dòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1029,6 +1587,12 @@ export default [
     "strokes": 0,
     "cn": "tou",
     "ru": "инициаль t · финаль ou",
+    "tones": [
+      "tōu",
+      "tóu",
+      "tǒu",
+      "tòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1040,6 +1604,12 @@ export default [
     "strokes": 0,
     "cn": "nou",
     "ru": "инициаль n · финаль ou",
+    "tones": [
+      "nōu",
+      "nóu",
+      "nǒu",
+      "nòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1051,6 +1621,12 @@ export default [
     "strokes": 0,
     "cn": "lou",
     "ru": "инициаль l · финаль ou",
+    "tones": [
+      "lōu",
+      "lóu",
+      "lǒu",
+      "lòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1062,6 +1638,12 @@ export default [
     "strokes": 0,
     "cn": "gou",
     "ru": "инициаль g · финаль ou",
+    "tones": [
+      "gōu",
+      "góu",
+      "gǒu",
+      "gòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1073,6 +1655,12 @@ export default [
     "strokes": 0,
     "cn": "kou",
     "ru": "инициаль k · финаль ou",
+    "tones": [
+      "kōu",
+      "kóu",
+      "kǒu",
+      "kòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1084,6 +1672,12 @@ export default [
     "strokes": 0,
     "cn": "hou",
     "ru": "инициаль h · финаль ou",
+    "tones": [
+      "hōu",
+      "hóu",
+      "hǒu",
+      "hòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1095,6 +1689,12 @@ export default [
     "strokes": 0,
     "cn": "zhou",
     "ru": "инициаль zh · финаль ou",
+    "tones": [
+      "zhōu",
+      "zhóu",
+      "zhǒu",
+      "zhòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1106,6 +1706,12 @@ export default [
     "strokes": 0,
     "cn": "chou",
     "ru": "инициаль ch · финаль ou",
+    "tones": [
+      "chōu",
+      "chóu",
+      "chǒu",
+      "chòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1117,6 +1723,12 @@ export default [
     "strokes": 0,
     "cn": "shou",
     "ru": "инициаль sh · финаль ou",
+    "tones": [
+      "shōu",
+      "shóu",
+      "shǒu",
+      "shòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1128,6 +1740,12 @@ export default [
     "strokes": 0,
     "cn": "rou",
     "ru": "инициаль r · финаль ou",
+    "tones": [
+      "rōu",
+      "róu",
+      "rǒu",
+      "ròu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1139,6 +1757,12 @@ export default [
     "strokes": 0,
     "cn": "zou",
     "ru": "инициаль z · финаль ou",
+    "tones": [
+      "zōu",
+      "zóu",
+      "zǒu",
+      "zòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1150,6 +1774,12 @@ export default [
     "strokes": 0,
     "cn": "cou",
     "ru": "инициаль c · финаль ou",
+    "tones": [
+      "cōu",
+      "cóu",
+      "cǒu",
+      "còu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1161,6 +1791,12 @@ export default [
     "strokes": 0,
     "cn": "sou",
     "ru": "инициаль s · финаль ou",
+    "tones": [
+      "sōu",
+      "sóu",
+      "sǒu",
+      "sòu"
+    ],
     "category": "a",
     "group": "a:ou",
     "groupLabel": "Финаль ou"
@@ -1172,6 +1808,12 @@ export default [
     "strokes": 0,
     "cn": "an",
     "ru": "без инициали · финаль an",
+    "tones": [
+      "ān",
+      "án",
+      "ǎn",
+      "àn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1183,6 +1825,12 @@ export default [
     "strokes": 0,
     "cn": "ban",
     "ru": "инициаль b · финаль an",
+    "tones": [
+      "bān",
+      "bán",
+      "bǎn",
+      "bàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1194,6 +1842,12 @@ export default [
     "strokes": 0,
     "cn": "pan",
     "ru": "инициаль p · финаль an",
+    "tones": [
+      "pān",
+      "pán",
+      "pǎn",
+      "pàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1205,6 +1859,12 @@ export default [
     "strokes": 0,
     "cn": "man",
     "ru": "инициаль m · финаль an",
+    "tones": [
+      "mān",
+      "mán",
+      "mǎn",
+      "màn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1216,6 +1876,12 @@ export default [
     "strokes": 0,
     "cn": "fan",
     "ru": "инициаль f · финаль an",
+    "tones": [
+      "fān",
+      "fán",
+      "fǎn",
+      "fàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1227,6 +1893,12 @@ export default [
     "strokes": 0,
     "cn": "dan",
     "ru": "инициаль d · финаль an",
+    "tones": [
+      "dān",
+      "dán",
+      "dǎn",
+      "dàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1238,6 +1910,12 @@ export default [
     "strokes": 0,
     "cn": "tan",
     "ru": "инициаль t · финаль an",
+    "tones": [
+      "tān",
+      "tán",
+      "tǎn",
+      "tàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1249,6 +1927,12 @@ export default [
     "strokes": 0,
     "cn": "nan",
     "ru": "инициаль n · финаль an",
+    "tones": [
+      "nān",
+      "nán",
+      "nǎn",
+      "nàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1260,6 +1944,12 @@ export default [
     "strokes": 0,
     "cn": "lan",
     "ru": "инициаль l · финаль an",
+    "tones": [
+      "lān",
+      "lán",
+      "lǎn",
+      "làn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1271,6 +1961,12 @@ export default [
     "strokes": 0,
     "cn": "gan",
     "ru": "инициаль g · финаль an",
+    "tones": [
+      "gān",
+      "gán",
+      "gǎn",
+      "gàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1282,6 +1978,12 @@ export default [
     "strokes": 0,
     "cn": "kan",
     "ru": "инициаль k · финаль an",
+    "tones": [
+      "kān",
+      "kán",
+      "kǎn",
+      "kàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1293,6 +1995,12 @@ export default [
     "strokes": 0,
     "cn": "han",
     "ru": "инициаль h · финаль an",
+    "tones": [
+      "hān",
+      "hán",
+      "hǎn",
+      "hàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1304,6 +2012,12 @@ export default [
     "strokes": 0,
     "cn": "zhan",
     "ru": "инициаль zh · финаль an",
+    "tones": [
+      "zhān",
+      "zhán",
+      "zhǎn",
+      "zhàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1315,6 +2029,12 @@ export default [
     "strokes": 0,
     "cn": "chan",
     "ru": "инициаль ch · финаль an",
+    "tones": [
+      "chān",
+      "chán",
+      "chǎn",
+      "chàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1326,6 +2046,12 @@ export default [
     "strokes": 0,
     "cn": "shan",
     "ru": "инициаль sh · финаль an",
+    "tones": [
+      "shān",
+      "shán",
+      "shǎn",
+      "shàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1337,6 +2063,12 @@ export default [
     "strokes": 0,
     "cn": "ran",
     "ru": "инициаль r · финаль an",
+    "tones": [
+      "rān",
+      "rán",
+      "rǎn",
+      "ràn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1348,6 +2080,12 @@ export default [
     "strokes": 0,
     "cn": "zan",
     "ru": "инициаль z · финаль an",
+    "tones": [
+      "zān",
+      "zán",
+      "zǎn",
+      "zàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1359,6 +2097,12 @@ export default [
     "strokes": 0,
     "cn": "can",
     "ru": "инициаль c · финаль an",
+    "tones": [
+      "cān",
+      "cán",
+      "cǎn",
+      "càn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1370,6 +2114,12 @@ export default [
     "strokes": 0,
     "cn": "san",
     "ru": "инициаль s · финаль an",
+    "tones": [
+      "sān",
+      "sán",
+      "sǎn",
+      "sàn"
+    ],
     "category": "a",
     "group": "a:an",
     "groupLabel": "Финаль an"
@@ -1381,6 +2131,12 @@ export default [
     "strokes": 0,
     "cn": "en",
     "ru": "без инициали · финаль en",
+    "tones": [
+      "ēn",
+      "én",
+      "ěn",
+      "èn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1392,6 +2148,12 @@ export default [
     "strokes": 0,
     "cn": "ben",
     "ru": "инициаль b · финаль en",
+    "tones": [
+      "bēn",
+      "bén",
+      "běn",
+      "bèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1403,6 +2165,12 @@ export default [
     "strokes": 0,
     "cn": "pen",
     "ru": "инициаль p · финаль en",
+    "tones": [
+      "pēn",
+      "pén",
+      "pěn",
+      "pèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1414,6 +2182,12 @@ export default [
     "strokes": 0,
     "cn": "men",
     "ru": "инициаль m · финаль en",
+    "tones": [
+      "mēn",
+      "mén",
+      "měn",
+      "mèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1425,6 +2199,12 @@ export default [
     "strokes": 0,
     "cn": "fen",
     "ru": "инициаль f · финаль en",
+    "tones": [
+      "fēn",
+      "fén",
+      "fěn",
+      "fèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1436,6 +2216,12 @@ export default [
     "strokes": 0,
     "cn": "den",
     "ru": "инициаль d · финаль en",
+    "tones": [
+      "dēn",
+      "dén",
+      "děn",
+      "dèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1447,6 +2233,12 @@ export default [
     "strokes": 0,
     "cn": "nen",
     "ru": "инициаль n · финаль en",
+    "tones": [
+      "nēn",
+      "nén",
+      "něn",
+      "nèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1458,6 +2250,12 @@ export default [
     "strokes": 0,
     "cn": "gen",
     "ru": "инициаль g · финаль en",
+    "tones": [
+      "gēn",
+      "gén",
+      "gěn",
+      "gèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1469,6 +2267,12 @@ export default [
     "strokes": 0,
     "cn": "ken",
     "ru": "инициаль k · финаль en",
+    "tones": [
+      "kēn",
+      "kén",
+      "kěn",
+      "kèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1480,6 +2284,12 @@ export default [
     "strokes": 0,
     "cn": "hen",
     "ru": "инициаль h · финаль en",
+    "tones": [
+      "hēn",
+      "hén",
+      "hěn",
+      "hèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1491,6 +2301,12 @@ export default [
     "strokes": 0,
     "cn": "zhen",
     "ru": "инициаль zh · финаль en",
+    "tones": [
+      "zhēn",
+      "zhén",
+      "zhěn",
+      "zhèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1502,6 +2318,12 @@ export default [
     "strokes": 0,
     "cn": "chen",
     "ru": "инициаль ch · финаль en",
+    "tones": [
+      "chēn",
+      "chén",
+      "chěn",
+      "chèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1513,6 +2335,12 @@ export default [
     "strokes": 0,
     "cn": "shen",
     "ru": "инициаль sh · финаль en",
+    "tones": [
+      "shēn",
+      "shén",
+      "shěn",
+      "shèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1524,6 +2352,12 @@ export default [
     "strokes": 0,
     "cn": "ren",
     "ru": "инициаль r · финаль en",
+    "tones": [
+      "rēn",
+      "rén",
+      "rěn",
+      "rèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1535,6 +2369,12 @@ export default [
     "strokes": 0,
     "cn": "zen",
     "ru": "инициаль z · финаль en",
+    "tones": [
+      "zēn",
+      "zén",
+      "zěn",
+      "zèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1546,6 +2386,12 @@ export default [
     "strokes": 0,
     "cn": "cen",
     "ru": "инициаль c · финаль en",
+    "tones": [
+      "cēn",
+      "cén",
+      "cěn",
+      "cèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1557,6 +2403,12 @@ export default [
     "strokes": 0,
     "cn": "sen",
     "ru": "инициаль s · финаль en",
+    "tones": [
+      "sēn",
+      "sén",
+      "sěn",
+      "sèn"
+    ],
     "category": "a",
     "group": "a:en",
     "groupLabel": "Финаль en"
@@ -1568,6 +2420,12 @@ export default [
     "strokes": 0,
     "cn": "ang",
     "ru": "без инициали · финаль ang",
+    "tones": [
+      "āng",
+      "áng",
+      "ǎng",
+      "àng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1579,6 +2437,12 @@ export default [
     "strokes": 0,
     "cn": "bang",
     "ru": "инициаль b · финаль ang",
+    "tones": [
+      "bāng",
+      "báng",
+      "bǎng",
+      "bàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1590,6 +2454,12 @@ export default [
     "strokes": 0,
     "cn": "pang",
     "ru": "инициаль p · финаль ang",
+    "tones": [
+      "pāng",
+      "páng",
+      "pǎng",
+      "pàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1601,6 +2471,12 @@ export default [
     "strokes": 0,
     "cn": "mang",
     "ru": "инициаль m · финаль ang",
+    "tones": [
+      "māng",
+      "máng",
+      "mǎng",
+      "màng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1612,6 +2488,12 @@ export default [
     "strokes": 0,
     "cn": "fang",
     "ru": "инициаль f · финаль ang",
+    "tones": [
+      "fāng",
+      "fáng",
+      "fǎng",
+      "fàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1623,6 +2505,12 @@ export default [
     "strokes": 0,
     "cn": "dang",
     "ru": "инициаль d · финаль ang",
+    "tones": [
+      "dāng",
+      "dáng",
+      "dǎng",
+      "dàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1634,6 +2522,12 @@ export default [
     "strokes": 0,
     "cn": "tang",
     "ru": "инициаль t · финаль ang",
+    "tones": [
+      "tāng",
+      "táng",
+      "tǎng",
+      "tàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1645,6 +2539,12 @@ export default [
     "strokes": 0,
     "cn": "nang",
     "ru": "инициаль n · финаль ang",
+    "tones": [
+      "nāng",
+      "náng",
+      "nǎng",
+      "nàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1656,6 +2556,12 @@ export default [
     "strokes": 0,
     "cn": "lang",
     "ru": "инициаль l · финаль ang",
+    "tones": [
+      "lāng",
+      "láng",
+      "lǎng",
+      "làng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1667,6 +2573,12 @@ export default [
     "strokes": 0,
     "cn": "gang",
     "ru": "инициаль g · финаль ang",
+    "tones": [
+      "gāng",
+      "gáng",
+      "gǎng",
+      "gàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1678,6 +2590,12 @@ export default [
     "strokes": 0,
     "cn": "kang",
     "ru": "инициаль k · финаль ang",
+    "tones": [
+      "kāng",
+      "káng",
+      "kǎng",
+      "kàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1689,6 +2607,12 @@ export default [
     "strokes": 0,
     "cn": "hang",
     "ru": "инициаль h · финаль ang",
+    "tones": [
+      "hāng",
+      "háng",
+      "hǎng",
+      "hàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1700,6 +2624,12 @@ export default [
     "strokes": 0,
     "cn": "zhang",
     "ru": "инициаль zh · финаль ang",
+    "tones": [
+      "zhāng",
+      "zháng",
+      "zhǎng",
+      "zhàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1711,6 +2641,12 @@ export default [
     "strokes": 0,
     "cn": "chang",
     "ru": "инициаль ch · финаль ang",
+    "tones": [
+      "chāng",
+      "cháng",
+      "chǎng",
+      "chàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1722,6 +2658,12 @@ export default [
     "strokes": 0,
     "cn": "shang",
     "ru": "инициаль sh · финаль ang",
+    "tones": [
+      "shāng",
+      "sháng",
+      "shǎng",
+      "shàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1733,6 +2675,12 @@ export default [
     "strokes": 0,
     "cn": "rang",
     "ru": "инициаль r · финаль ang",
+    "tones": [
+      "rāng",
+      "ráng",
+      "rǎng",
+      "ràng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1744,6 +2692,12 @@ export default [
     "strokes": 0,
     "cn": "zang",
     "ru": "инициаль z · финаль ang",
+    "tones": [
+      "zāng",
+      "záng",
+      "zǎng",
+      "zàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1755,6 +2709,12 @@ export default [
     "strokes": 0,
     "cn": "cang",
     "ru": "инициаль c · финаль ang",
+    "tones": [
+      "cāng",
+      "cáng",
+      "cǎng",
+      "càng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1766,6 +2726,12 @@ export default [
     "strokes": 0,
     "cn": "sang",
     "ru": "инициаль s · финаль ang",
+    "tones": [
+      "sāng",
+      "sáng",
+      "sǎng",
+      "sàng"
+    ],
     "category": "a",
     "group": "a:ang",
     "groupLabel": "Финаль ang"
@@ -1777,6 +2743,12 @@ export default [
     "strokes": 0,
     "cn": "eng",
     "ru": "без инициали · финаль eng",
+    "tones": [
+      "ēng",
+      "éng",
+      "ěng",
+      "èng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1788,6 +2760,12 @@ export default [
     "strokes": 0,
     "cn": "beng",
     "ru": "инициаль b · финаль eng",
+    "tones": [
+      "bēng",
+      "béng",
+      "běng",
+      "bèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1799,6 +2777,12 @@ export default [
     "strokes": 0,
     "cn": "peng",
     "ru": "инициаль p · финаль eng",
+    "tones": [
+      "pēng",
+      "péng",
+      "pěng",
+      "pèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1810,6 +2794,12 @@ export default [
     "strokes": 0,
     "cn": "meng",
     "ru": "инициаль m · финаль eng",
+    "tones": [
+      "mēng",
+      "méng",
+      "měng",
+      "mèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1821,6 +2811,12 @@ export default [
     "strokes": 0,
     "cn": "feng",
     "ru": "инициаль f · финаль eng",
+    "tones": [
+      "fēng",
+      "féng",
+      "fěng",
+      "fèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1832,6 +2828,12 @@ export default [
     "strokes": 0,
     "cn": "deng",
     "ru": "инициаль d · финаль eng",
+    "tones": [
+      "dēng",
+      "déng",
+      "děng",
+      "dèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1843,6 +2845,12 @@ export default [
     "strokes": 0,
     "cn": "teng",
     "ru": "инициаль t · финаль eng",
+    "tones": [
+      "tēng",
+      "téng",
+      "těng",
+      "tèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1854,6 +2862,12 @@ export default [
     "strokes": 0,
     "cn": "neng",
     "ru": "инициаль n · финаль eng",
+    "tones": [
+      "nēng",
+      "néng",
+      "něng",
+      "nèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1865,6 +2879,12 @@ export default [
     "strokes": 0,
     "cn": "leng",
     "ru": "инициаль l · финаль eng",
+    "tones": [
+      "lēng",
+      "léng",
+      "lěng",
+      "lèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1876,6 +2896,12 @@ export default [
     "strokes": 0,
     "cn": "geng",
     "ru": "инициаль g · финаль eng",
+    "tones": [
+      "gēng",
+      "géng",
+      "gěng",
+      "gèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1887,6 +2913,12 @@ export default [
     "strokes": 0,
     "cn": "keng",
     "ru": "инициаль k · финаль eng",
+    "tones": [
+      "kēng",
+      "kéng",
+      "kěng",
+      "kèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1898,6 +2930,12 @@ export default [
     "strokes": 0,
     "cn": "heng",
     "ru": "инициаль h · финаль eng",
+    "tones": [
+      "hēng",
+      "héng",
+      "hěng",
+      "hèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1909,6 +2947,12 @@ export default [
     "strokes": 0,
     "cn": "zheng",
     "ru": "инициаль zh · финаль eng",
+    "tones": [
+      "zhēng",
+      "zhéng",
+      "zhěng",
+      "zhèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1920,6 +2964,12 @@ export default [
     "strokes": 0,
     "cn": "cheng",
     "ru": "инициаль ch · финаль eng",
+    "tones": [
+      "chēng",
+      "chéng",
+      "chěng",
+      "chèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1931,6 +2981,12 @@ export default [
     "strokes": 0,
     "cn": "sheng",
     "ru": "инициаль sh · финаль eng",
+    "tones": [
+      "shēng",
+      "shéng",
+      "shěng",
+      "shèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1942,6 +2998,12 @@ export default [
     "strokes": 0,
     "cn": "reng",
     "ru": "инициаль r · финаль eng",
+    "tones": [
+      "rēng",
+      "réng",
+      "rěng",
+      "rèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1953,6 +3015,12 @@ export default [
     "strokes": 0,
     "cn": "zeng",
     "ru": "инициаль z · финаль eng",
+    "tones": [
+      "zēng",
+      "zéng",
+      "zěng",
+      "zèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1964,6 +3032,12 @@ export default [
     "strokes": 0,
     "cn": "ceng",
     "ru": "инициаль c · финаль eng",
+    "tones": [
+      "cēng",
+      "céng",
+      "cěng",
+      "cèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1975,6 +3049,12 @@ export default [
     "strokes": 0,
     "cn": "seng",
     "ru": "инициаль s · финаль eng",
+    "tones": [
+      "sēng",
+      "séng",
+      "sěng",
+      "sèng"
+    ],
     "category": "a",
     "group": "a:eng",
     "groupLabel": "Финаль eng"
@@ -1986,6 +3066,12 @@ export default [
     "strokes": 0,
     "cn": "er",
     "ru": "без инициали · финаль er",
+    "tones": [
+      "ēr",
+      "ér",
+      "ěr",
+      "èr"
+    ],
     "category": "a",
     "group": "a:er",
     "groupLabel": "Финаль er"
@@ -1997,6 +3083,12 @@ export default [
     "strokes": 0,
     "cn": "yi",
     "ru": "без инициали · финаль i",
+    "tones": [
+      "yī",
+      "yí",
+      "yǐ",
+      "yì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2008,6 +3100,12 @@ export default [
     "strokes": 0,
     "cn": "bi",
     "ru": "инициаль b · финаль i",
+    "tones": [
+      "bī",
+      "bí",
+      "bǐ",
+      "bì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2019,6 +3117,12 @@ export default [
     "strokes": 0,
     "cn": "pi",
     "ru": "инициаль p · финаль i",
+    "tones": [
+      "pī",
+      "pí",
+      "pǐ",
+      "pì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2030,6 +3134,12 @@ export default [
     "strokes": 0,
     "cn": "mi",
     "ru": "инициаль m · финаль i",
+    "tones": [
+      "mī",
+      "mí",
+      "mǐ",
+      "mì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2041,6 +3151,12 @@ export default [
     "strokes": 0,
     "cn": "di",
     "ru": "инициаль d · финаль i",
+    "tones": [
+      "dī",
+      "dí",
+      "dǐ",
+      "dì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2052,6 +3168,12 @@ export default [
     "strokes": 0,
     "cn": "ti",
     "ru": "инициаль t · финаль i",
+    "tones": [
+      "tī",
+      "tí",
+      "tǐ",
+      "tì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2063,6 +3185,12 @@ export default [
     "strokes": 0,
     "cn": "ni",
     "ru": "инициаль n · финаль i",
+    "tones": [
+      "nī",
+      "ní",
+      "nǐ",
+      "nì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2074,6 +3202,12 @@ export default [
     "strokes": 0,
     "cn": "li",
     "ru": "инициаль l · финаль i",
+    "tones": [
+      "lī",
+      "lí",
+      "lǐ",
+      "lì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2085,6 +3219,12 @@ export default [
     "strokes": 0,
     "cn": "ji",
     "ru": "инициаль j · финаль i",
+    "tones": [
+      "jī",
+      "jí",
+      "jǐ",
+      "jì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2096,6 +3236,12 @@ export default [
     "strokes": 0,
     "cn": "qi",
     "ru": "инициаль q · финаль i",
+    "tones": [
+      "qī",
+      "qí",
+      "qǐ",
+      "qì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2107,6 +3253,12 @@ export default [
     "strokes": 0,
     "cn": "xi",
     "ru": "инициаль x · финаль i",
+    "tones": [
+      "xī",
+      "xí",
+      "xǐ",
+      "xì"
+    ],
     "category": "i",
     "group": "i:i",
     "groupLabel": "Финаль i"
@@ -2118,6 +3270,12 @@ export default [
     "strokes": 0,
     "cn": "ya",
     "ru": "без инициали · финаль ia",
+    "tones": [
+      "yā",
+      "yá",
+      "yǎ",
+      "yà"
+    ],
     "category": "i",
     "group": "i:ia",
     "groupLabel": "Финаль ia"
@@ -2129,6 +3287,12 @@ export default [
     "strokes": 0,
     "cn": "jia",
     "ru": "инициаль j · финаль ia",
+    "tones": [
+      "jiā",
+      "jiá",
+      "jiǎ",
+      "jià"
+    ],
     "category": "i",
     "group": "i:ia",
     "groupLabel": "Финаль ia"
@@ -2140,6 +3304,12 @@ export default [
     "strokes": 0,
     "cn": "qia",
     "ru": "инициаль q · финаль ia",
+    "tones": [
+      "qiā",
+      "qiá",
+      "qiǎ",
+      "qià"
+    ],
     "category": "i",
     "group": "i:ia",
     "groupLabel": "Финаль ia"
@@ -2151,6 +3321,12 @@ export default [
     "strokes": 0,
     "cn": "xia",
     "ru": "инициаль x · финаль ia",
+    "tones": [
+      "xiā",
+      "xiá",
+      "xiǎ",
+      "xià"
+    ],
     "category": "i",
     "group": "i:ia",
     "groupLabel": "Финаль ia"
@@ -2162,6 +3338,12 @@ export default [
     "strokes": 0,
     "cn": "yo",
     "ru": "без инициали · финаль io",
+    "tones": [
+      "yō",
+      "yó",
+      "yǒ",
+      "yò"
+    ],
     "category": "i",
     "group": "i:io",
     "groupLabel": "Финаль io"
@@ -2173,6 +3355,12 @@ export default [
     "strokes": 0,
     "cn": "ye",
     "ru": "без инициали · финаль ie",
+    "tones": [
+      "yē",
+      "yé",
+      "yě",
+      "yè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2184,6 +3372,12 @@ export default [
     "strokes": 0,
     "cn": "bie",
     "ru": "инициаль b · финаль ie",
+    "tones": [
+      "biē",
+      "bié",
+      "biě",
+      "biè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2195,6 +3389,12 @@ export default [
     "strokes": 0,
     "cn": "pie",
     "ru": "инициаль p · финаль ie",
+    "tones": [
+      "piē",
+      "pié",
+      "piě",
+      "piè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2206,6 +3406,12 @@ export default [
     "strokes": 0,
     "cn": "mie",
     "ru": "инициаль m · финаль ie",
+    "tones": [
+      "miē",
+      "mié",
+      "miě",
+      "miè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2217,6 +3423,12 @@ export default [
     "strokes": 0,
     "cn": "die",
     "ru": "инициаль d · финаль ie",
+    "tones": [
+      "diē",
+      "dié",
+      "diě",
+      "diè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2228,6 +3440,12 @@ export default [
     "strokes": 0,
     "cn": "tie",
     "ru": "инициаль t · финаль ie",
+    "tones": [
+      "tiē",
+      "tié",
+      "tiě",
+      "tiè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2239,6 +3457,12 @@ export default [
     "strokes": 0,
     "cn": "nie",
     "ru": "инициаль n · финаль ie",
+    "tones": [
+      "niē",
+      "nié",
+      "niě",
+      "niè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2250,6 +3474,12 @@ export default [
     "strokes": 0,
     "cn": "lie",
     "ru": "инициаль l · финаль ie",
+    "tones": [
+      "liē",
+      "lié",
+      "liě",
+      "liè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2261,6 +3491,12 @@ export default [
     "strokes": 0,
     "cn": "jie",
     "ru": "инициаль j · финаль ie",
+    "tones": [
+      "jiē",
+      "jié",
+      "jiě",
+      "jiè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2272,6 +3508,12 @@ export default [
     "strokes": 0,
     "cn": "qie",
     "ru": "инициаль q · финаль ie",
+    "tones": [
+      "qiē",
+      "qié",
+      "qiě",
+      "qiè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2283,6 +3525,12 @@ export default [
     "strokes": 0,
     "cn": "xie",
     "ru": "инициаль x · финаль ie",
+    "tones": [
+      "xiē",
+      "xié",
+      "xiě",
+      "xiè"
+    ],
     "category": "i",
     "group": "i:ie",
     "groupLabel": "Финаль ie"
@@ -2294,6 +3542,12 @@ export default [
     "strokes": 0,
     "cn": "yao",
     "ru": "без инициали · финаль iao",
+    "tones": [
+      "yāo",
+      "yáo",
+      "yǎo",
+      "yào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2305,6 +3559,12 @@ export default [
     "strokes": 0,
     "cn": "biao",
     "ru": "инициаль b · финаль iao",
+    "tones": [
+      "biāo",
+      "biáo",
+      "biǎo",
+      "biào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2316,6 +3576,12 @@ export default [
     "strokes": 0,
     "cn": "piao",
     "ru": "инициаль p · финаль iao",
+    "tones": [
+      "piāo",
+      "piáo",
+      "piǎo",
+      "piào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2327,6 +3593,12 @@ export default [
     "strokes": 0,
     "cn": "miao",
     "ru": "инициаль m · финаль iao",
+    "tones": [
+      "miāo",
+      "miáo",
+      "miǎo",
+      "miào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2338,6 +3610,12 @@ export default [
     "strokes": 0,
     "cn": "diao",
     "ru": "инициаль d · финаль iao",
+    "tones": [
+      "diāo",
+      "diáo",
+      "diǎo",
+      "diào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2349,6 +3627,12 @@ export default [
     "strokes": 0,
     "cn": "tiao",
     "ru": "инициаль t · финаль iao",
+    "tones": [
+      "tiāo",
+      "tiáo",
+      "tiǎo",
+      "tiào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2360,6 +3644,12 @@ export default [
     "strokes": 0,
     "cn": "niao",
     "ru": "инициаль n · финаль iao",
+    "tones": [
+      "niāo",
+      "niáo",
+      "niǎo",
+      "niào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2371,6 +3661,12 @@ export default [
     "strokes": 0,
     "cn": "liao",
     "ru": "инициаль l · финаль iao",
+    "tones": [
+      "liāo",
+      "liáo",
+      "liǎo",
+      "liào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2382,6 +3678,12 @@ export default [
     "strokes": 0,
     "cn": "jiao",
     "ru": "инициаль j · финаль iao",
+    "tones": [
+      "jiāo",
+      "jiáo",
+      "jiǎo",
+      "jiào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2393,6 +3695,12 @@ export default [
     "strokes": 0,
     "cn": "qiao",
     "ru": "инициаль q · финаль iao",
+    "tones": [
+      "qiāo",
+      "qiáo",
+      "qiǎo",
+      "qiào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2404,6 +3712,12 @@ export default [
     "strokes": 0,
     "cn": "xiao",
     "ru": "инициаль x · финаль iao",
+    "tones": [
+      "xiāo",
+      "xiáo",
+      "xiǎo",
+      "xiào"
+    ],
     "category": "i",
     "group": "i:iao",
     "groupLabel": "Финаль iao"
@@ -2415,6 +3729,12 @@ export default [
     "strokes": 0,
     "cn": "you",
     "ru": "без инициали · финаль iu",
+    "tones": [
+      "yōu",
+      "yóu",
+      "yǒu",
+      "yòu"
+    ],
     "category": "i",
     "group": "i:iu",
     "groupLabel": "Финаль iu"
@@ -2426,6 +3746,12 @@ export default [
     "strokes": 0,
     "cn": "miu",
     "ru": "инициаль m · финаль iu",
+    "tones": [
+      "miū",
+      "miú",
+      "miǔ",
+      "miù"
+    ],
     "category": "i",
     "group": "i:iu",
     "groupLabel": "Финаль iu"
@@ -2437,6 +3763,12 @@ export default [
     "strokes": 0,
     "cn": "diu",
     "ru": "инициаль d · финаль iu",
+    "tones": [
+      "diū",
+      "diú",
+      "diǔ",
+      "diù"
+    ],
     "category": "i",
     "group": "i:iu",
     "groupLabel": "Финаль iu"
@@ -2448,6 +3780,12 @@ export default [
     "strokes": 0,
     "cn": "niu",
     "ru": "инициаль n · финаль iu",
+    "tones": [
+      "niū",
+      "niú",
+      "niǔ",
+      "niù"
+    ],
     "category": "i",
     "group": "i:iu",
     "groupLabel": "Финаль iu"
@@ -2459,6 +3797,12 @@ export default [
     "strokes": 0,
     "cn": "liu",
     "ru": "инициаль l · финаль iu",
+    "tones": [
+      "liū",
+      "liú",
+      "liǔ",
+      "liù"
+    ],
     "category": "i",
     "group": "i:iu",
     "groupLabel": "Финаль iu"
@@ -2470,6 +3814,12 @@ export default [
     "strokes": 0,
     "cn": "jiu",
     "ru": "инициаль j · финаль iu",
+    "tones": [
+      "jiū",
+      "jiú",
+      "jiǔ",
+      "jiù"
+    ],
     "category": "i",
     "group": "i:iu",
     "groupLabel": "Финаль iu"
@@ -2481,6 +3831,12 @@ export default [
     "strokes": 0,
     "cn": "qiu",
     "ru": "инициаль q · финаль iu",
+    "tones": [
+      "qiū",
+      "qiú",
+      "qiǔ",
+      "qiù"
+    ],
     "category": "i",
     "group": "i:iu",
     "groupLabel": "Финаль iu"
@@ -2492,6 +3848,12 @@ export default [
     "strokes": 0,
     "cn": "xiu",
     "ru": "инициаль x · финаль iu",
+    "tones": [
+      "xiū",
+      "xiú",
+      "xiǔ",
+      "xiù"
+    ],
     "category": "i",
     "group": "i:iu",
     "groupLabel": "Финаль iu"
@@ -2503,6 +3865,12 @@ export default [
     "strokes": 0,
     "cn": "yan",
     "ru": "без инициали · финаль ian",
+    "tones": [
+      "yān",
+      "yán",
+      "yǎn",
+      "yàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2514,6 +3882,12 @@ export default [
     "strokes": 0,
     "cn": "bian",
     "ru": "инициаль b · финаль ian",
+    "tones": [
+      "biān",
+      "bián",
+      "biǎn",
+      "biàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2525,6 +3899,12 @@ export default [
     "strokes": 0,
     "cn": "pian",
     "ru": "инициаль p · финаль ian",
+    "tones": [
+      "piān",
+      "pián",
+      "piǎn",
+      "piàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2536,6 +3916,12 @@ export default [
     "strokes": 0,
     "cn": "mian",
     "ru": "инициаль m · финаль ian",
+    "tones": [
+      "miān",
+      "mián",
+      "miǎn",
+      "miàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2547,6 +3933,12 @@ export default [
     "strokes": 0,
     "cn": "dian",
     "ru": "инициаль d · финаль ian",
+    "tones": [
+      "diān",
+      "dián",
+      "diǎn",
+      "diàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2558,6 +3950,12 @@ export default [
     "strokes": 0,
     "cn": "tian",
     "ru": "инициаль t · финаль ian",
+    "tones": [
+      "tiān",
+      "tián",
+      "tiǎn",
+      "tiàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2569,6 +3967,12 @@ export default [
     "strokes": 0,
     "cn": "nian",
     "ru": "инициаль n · финаль ian",
+    "tones": [
+      "niān",
+      "nián",
+      "niǎn",
+      "niàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2580,6 +3984,12 @@ export default [
     "strokes": 0,
     "cn": "lian",
     "ru": "инициаль l · финаль ian",
+    "tones": [
+      "liān",
+      "lián",
+      "liǎn",
+      "liàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2591,6 +4001,12 @@ export default [
     "strokes": 0,
     "cn": "jian",
     "ru": "инициаль j · финаль ian",
+    "tones": [
+      "jiān",
+      "jián",
+      "jiǎn",
+      "jiàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2602,6 +4018,12 @@ export default [
     "strokes": 0,
     "cn": "qian",
     "ru": "инициаль q · финаль ian",
+    "tones": [
+      "qiān",
+      "qián",
+      "qiǎn",
+      "qiàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2613,6 +4035,12 @@ export default [
     "strokes": 0,
     "cn": "xian",
     "ru": "инициаль x · финаль ian",
+    "tones": [
+      "xiān",
+      "xián",
+      "xiǎn",
+      "xiàn"
+    ],
     "category": "i",
     "group": "i:ian",
     "groupLabel": "Финаль ian"
@@ -2624,6 +4052,12 @@ export default [
     "strokes": 0,
     "cn": "yin",
     "ru": "без инициали · финаль in",
+    "tones": [
+      "yīn",
+      "yín",
+      "yǐn",
+      "yìn"
+    ],
     "category": "i",
     "group": "i:in",
     "groupLabel": "Финаль in"
@@ -2635,6 +4069,12 @@ export default [
     "strokes": 0,
     "cn": "bin",
     "ru": "инициаль b · финаль in",
+    "tones": [
+      "bīn",
+      "bín",
+      "bǐn",
+      "bìn"
+    ],
     "category": "i",
     "group": "i:in",
     "groupLabel": "Финаль in"
@@ -2646,6 +4086,12 @@ export default [
     "strokes": 0,
     "cn": "pin",
     "ru": "инициаль p · финаль in",
+    "tones": [
+      "pīn",
+      "pín",
+      "pǐn",
+      "pìn"
+    ],
     "category": "i",
     "group": "i:in",
     "groupLabel": "Финаль in"
@@ -2657,6 +4103,12 @@ export default [
     "strokes": 0,
     "cn": "min",
     "ru": "инициаль m · финаль in",
+    "tones": [
+      "mīn",
+      "mín",
+      "mǐn",
+      "mìn"
+    ],
     "category": "i",
     "group": "i:in",
     "groupLabel": "Финаль in"
@@ -2668,6 +4120,12 @@ export default [
     "strokes": 0,
     "cn": "nin",
     "ru": "инициаль n · финаль in",
+    "tones": [
+      "nīn",
+      "nín",
+      "nǐn",
+      "nìn"
+    ],
     "category": "i",
     "group": "i:in",
     "groupLabel": "Финаль in"
@@ -2679,6 +4137,12 @@ export default [
     "strokes": 0,
     "cn": "lin",
     "ru": "инициаль l · финаль in",
+    "tones": [
+      "līn",
+      "lín",
+      "lǐn",
+      "lìn"
+    ],
     "category": "i",
     "group": "i:in",
     "groupLabel": "Финаль in"
@@ -2690,6 +4154,12 @@ export default [
     "strokes": 0,
     "cn": "jin",
     "ru": "инициаль j · финаль in",
+    "tones": [
+      "jīn",
+      "jín",
+      "jǐn",
+      "jìn"
+    ],
     "category": "i",
     "group": "i:in",
     "groupLabel": "Финаль in"
@@ -2701,6 +4171,12 @@ export default [
     "strokes": 0,
     "cn": "qin",
     "ru": "инициаль q · финаль in",
+    "tones": [
+      "qīn",
+      "qín",
+      "qǐn",
+      "qìn"
+    ],
     "category": "i",
     "group": "i:in",
     "groupLabel": "Финаль in"
@@ -2712,6 +4188,12 @@ export default [
     "strokes": 0,
     "cn": "xin",
     "ru": "инициаль x · финаль in",
+    "tones": [
+      "xīn",
+      "xín",
+      "xǐn",
+      "xìn"
+    ],
     "category": "i",
     "group": "i:in",
     "groupLabel": "Финаль in"
@@ -2723,6 +4205,12 @@ export default [
     "strokes": 0,
     "cn": "yang",
     "ru": "без инициали · финаль iang",
+    "tones": [
+      "yāng",
+      "yáng",
+      "yǎng",
+      "yàng"
+    ],
     "category": "i",
     "group": "i:iang",
     "groupLabel": "Финаль iang"
@@ -2734,6 +4222,12 @@ export default [
     "strokes": 0,
     "cn": "niang",
     "ru": "инициаль n · финаль iang",
+    "tones": [
+      "niāng",
+      "niáng",
+      "niǎng",
+      "niàng"
+    ],
     "category": "i",
     "group": "i:iang",
     "groupLabel": "Финаль iang"
@@ -2745,6 +4239,12 @@ export default [
     "strokes": 0,
     "cn": "liang",
     "ru": "инициаль l · финаль iang",
+    "tones": [
+      "liāng",
+      "liáng",
+      "liǎng",
+      "liàng"
+    ],
     "category": "i",
     "group": "i:iang",
     "groupLabel": "Финаль iang"
@@ -2756,6 +4256,12 @@ export default [
     "strokes": 0,
     "cn": "jiang",
     "ru": "инициаль j · финаль iang",
+    "tones": [
+      "jiāng",
+      "jiáng",
+      "jiǎng",
+      "jiàng"
+    ],
     "category": "i",
     "group": "i:iang",
     "groupLabel": "Финаль iang"
@@ -2767,6 +4273,12 @@ export default [
     "strokes": 0,
     "cn": "qiang",
     "ru": "инициаль q · финаль iang",
+    "tones": [
+      "qiāng",
+      "qiáng",
+      "qiǎng",
+      "qiàng"
+    ],
     "category": "i",
     "group": "i:iang",
     "groupLabel": "Финаль iang"
@@ -2778,6 +4290,12 @@ export default [
     "strokes": 0,
     "cn": "xiang",
     "ru": "инициаль x · финаль iang",
+    "tones": [
+      "xiāng",
+      "xiáng",
+      "xiǎng",
+      "xiàng"
+    ],
     "category": "i",
     "group": "i:iang",
     "groupLabel": "Финаль iang"
@@ -2789,6 +4307,12 @@ export default [
     "strokes": 0,
     "cn": "ying",
     "ru": "без инициали · финаль ing",
+    "tones": [
+      "yīng",
+      "yíng",
+      "yǐng",
+      "yìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2800,6 +4324,12 @@ export default [
     "strokes": 0,
     "cn": "bing",
     "ru": "инициаль b · финаль ing",
+    "tones": [
+      "bīng",
+      "bíng",
+      "bǐng",
+      "bìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2811,6 +4341,12 @@ export default [
     "strokes": 0,
     "cn": "ping",
     "ru": "инициаль p · финаль ing",
+    "tones": [
+      "pīng",
+      "píng",
+      "pǐng",
+      "pìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2822,6 +4358,12 @@ export default [
     "strokes": 0,
     "cn": "ming",
     "ru": "инициаль m · финаль ing",
+    "tones": [
+      "mīng",
+      "míng",
+      "mǐng",
+      "mìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2833,6 +4375,12 @@ export default [
     "strokes": 0,
     "cn": "ding",
     "ru": "инициаль d · финаль ing",
+    "tones": [
+      "dīng",
+      "díng",
+      "dǐng",
+      "dìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2844,6 +4392,12 @@ export default [
     "strokes": 0,
     "cn": "ting",
     "ru": "инициаль t · финаль ing",
+    "tones": [
+      "tīng",
+      "tíng",
+      "tǐng",
+      "tìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2855,6 +4409,12 @@ export default [
     "strokes": 0,
     "cn": "ning",
     "ru": "инициаль n · финаль ing",
+    "tones": [
+      "nīng",
+      "níng",
+      "nǐng",
+      "nìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2866,6 +4426,12 @@ export default [
     "strokes": 0,
     "cn": "ling",
     "ru": "инициаль l · финаль ing",
+    "tones": [
+      "līng",
+      "líng",
+      "lǐng",
+      "lìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2877,6 +4443,12 @@ export default [
     "strokes": 0,
     "cn": "jing",
     "ru": "инициаль j · финаль ing",
+    "tones": [
+      "jīng",
+      "jíng",
+      "jǐng",
+      "jìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2888,6 +4460,12 @@ export default [
     "strokes": 0,
     "cn": "qing",
     "ru": "инициаль q · финаль ing",
+    "tones": [
+      "qīng",
+      "qíng",
+      "qǐng",
+      "qìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2899,6 +4477,12 @@ export default [
     "strokes": 0,
     "cn": "xing",
     "ru": "инициаль x · финаль ing",
+    "tones": [
+      "xīng",
+      "xíng",
+      "xǐng",
+      "xìng"
+    ],
     "category": "i",
     "group": "i:ing",
     "groupLabel": "Финаль ing"
@@ -2910,6 +4494,12 @@ export default [
     "strokes": 0,
     "cn": "wu",
     "ru": "без инициали · финаль u",
+    "tones": [
+      "wū",
+      "wú",
+      "wǔ",
+      "wù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -2921,6 +4511,12 @@ export default [
     "strokes": 0,
     "cn": "bu",
     "ru": "инициаль b · финаль u",
+    "tones": [
+      "bū",
+      "bú",
+      "bǔ",
+      "bù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -2932,6 +4528,12 @@ export default [
     "strokes": 0,
     "cn": "pu",
     "ru": "инициаль p · финаль u",
+    "tones": [
+      "pū",
+      "pú",
+      "pǔ",
+      "pù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -2943,6 +4545,12 @@ export default [
     "strokes": 0,
     "cn": "mu",
     "ru": "инициаль m · финаль u",
+    "tones": [
+      "mū",
+      "mú",
+      "mǔ",
+      "mù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -2954,6 +4562,12 @@ export default [
     "strokes": 0,
     "cn": "fu",
     "ru": "инициаль f · финаль u",
+    "tones": [
+      "fū",
+      "fú",
+      "fǔ",
+      "fù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -2965,6 +4579,12 @@ export default [
     "strokes": 0,
     "cn": "du",
     "ru": "инициаль d · финаль u",
+    "tones": [
+      "dū",
+      "dú",
+      "dǔ",
+      "dù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -2976,6 +4596,12 @@ export default [
     "strokes": 0,
     "cn": "tu",
     "ru": "инициаль t · финаль u",
+    "tones": [
+      "tū",
+      "tú",
+      "tǔ",
+      "tù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -2987,6 +4613,12 @@ export default [
     "strokes": 0,
     "cn": "nu",
     "ru": "инициаль n · финаль u",
+    "tones": [
+      "nū",
+      "nú",
+      "nǔ",
+      "nù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -2998,6 +4630,12 @@ export default [
     "strokes": 0,
     "cn": "lu",
     "ru": "инициаль l · финаль u",
+    "tones": [
+      "lū",
+      "lú",
+      "lǔ",
+      "lù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3009,6 +4647,12 @@ export default [
     "strokes": 0,
     "cn": "gu",
     "ru": "инициаль g · финаль u",
+    "tones": [
+      "gū",
+      "gú",
+      "gǔ",
+      "gù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3020,6 +4664,12 @@ export default [
     "strokes": 0,
     "cn": "ku",
     "ru": "инициаль k · финаль u",
+    "tones": [
+      "kū",
+      "kú",
+      "kǔ",
+      "kù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3031,6 +4681,12 @@ export default [
     "strokes": 0,
     "cn": "hu",
     "ru": "инициаль h · финаль u",
+    "tones": [
+      "hū",
+      "hú",
+      "hǔ",
+      "hù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3042,6 +4698,12 @@ export default [
     "strokes": 0,
     "cn": "zhu",
     "ru": "инициаль zh · финаль u",
+    "tones": [
+      "zhū",
+      "zhú",
+      "zhǔ",
+      "zhù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3053,6 +4715,12 @@ export default [
     "strokes": 0,
     "cn": "chu",
     "ru": "инициаль ch · финаль u",
+    "tones": [
+      "chū",
+      "chú",
+      "chǔ",
+      "chù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3064,6 +4732,12 @@ export default [
     "strokes": 0,
     "cn": "shu",
     "ru": "инициаль sh · финаль u",
+    "tones": [
+      "shū",
+      "shú",
+      "shǔ",
+      "shù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3075,6 +4749,12 @@ export default [
     "strokes": 0,
     "cn": "ru",
     "ru": "инициаль r · финаль u",
+    "tones": [
+      "rū",
+      "rú",
+      "rǔ",
+      "rù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3086,6 +4766,12 @@ export default [
     "strokes": 0,
     "cn": "zu",
     "ru": "инициаль z · финаль u",
+    "tones": [
+      "zū",
+      "zú",
+      "zǔ",
+      "zù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3097,6 +4783,12 @@ export default [
     "strokes": 0,
     "cn": "cu",
     "ru": "инициаль c · финаль u",
+    "tones": [
+      "cū",
+      "cú",
+      "cǔ",
+      "cù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3108,6 +4800,12 @@ export default [
     "strokes": 0,
     "cn": "su",
     "ru": "инициаль s · финаль u",
+    "tones": [
+      "sū",
+      "sú",
+      "sǔ",
+      "sù"
+    ],
     "category": "u",
     "group": "u:u",
     "groupLabel": "Финаль u"
@@ -3119,6 +4817,12 @@ export default [
     "strokes": 0,
     "cn": "wa",
     "ru": "без инициали · финаль ua",
+    "tones": [
+      "wā",
+      "wá",
+      "wǎ",
+      "wà"
+    ],
     "category": "u",
     "group": "u:ua",
     "groupLabel": "Финаль ua"
@@ -3130,6 +4834,12 @@ export default [
     "strokes": 0,
     "cn": "gua",
     "ru": "инициаль g · финаль ua",
+    "tones": [
+      "guā",
+      "guá",
+      "guǎ",
+      "guà"
+    ],
     "category": "u",
     "group": "u:ua",
     "groupLabel": "Финаль ua"
@@ -3141,6 +4851,12 @@ export default [
     "strokes": 0,
     "cn": "kua",
     "ru": "инициаль k · финаль ua",
+    "tones": [
+      "kuā",
+      "kuá",
+      "kuǎ",
+      "kuà"
+    ],
     "category": "u",
     "group": "u:ua",
     "groupLabel": "Финаль ua"
@@ -3152,6 +4868,12 @@ export default [
     "strokes": 0,
     "cn": "hua",
     "ru": "инициаль h · финаль ua",
+    "tones": [
+      "huā",
+      "huá",
+      "huǎ",
+      "huà"
+    ],
     "category": "u",
     "group": "u:ua",
     "groupLabel": "Финаль ua"
@@ -3163,6 +4885,12 @@ export default [
     "strokes": 0,
     "cn": "zhua",
     "ru": "инициаль zh · финаль ua",
+    "tones": [
+      "zhuā",
+      "zhuá",
+      "zhuǎ",
+      "zhuà"
+    ],
     "category": "u",
     "group": "u:ua",
     "groupLabel": "Финаль ua"
@@ -3174,6 +4902,12 @@ export default [
     "strokes": 0,
     "cn": "chua",
     "ru": "инициаль ch · финаль ua",
+    "tones": [
+      "chuā",
+      "chuá",
+      "chuǎ",
+      "chuà"
+    ],
     "category": "u",
     "group": "u:ua",
     "groupLabel": "Финаль ua"
@@ -3185,6 +4919,12 @@ export default [
     "strokes": 0,
     "cn": "shua",
     "ru": "инициаль sh · финаль ua",
+    "tones": [
+      "shuā",
+      "shuá",
+      "shuǎ",
+      "shuà"
+    ],
     "category": "u",
     "group": "u:ua",
     "groupLabel": "Финаль ua"
@@ -3196,6 +4936,12 @@ export default [
     "strokes": 0,
     "cn": "wo",
     "ru": "без инициали · финаль uo",
+    "tones": [
+      "wō",
+      "wó",
+      "wǒ",
+      "wò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3207,6 +4953,12 @@ export default [
     "strokes": 0,
     "cn": "duo",
     "ru": "инициаль d · финаль uo",
+    "tones": [
+      "duō",
+      "duó",
+      "duǒ",
+      "duò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3218,6 +4970,12 @@ export default [
     "strokes": 0,
     "cn": "tuo",
     "ru": "инициаль t · финаль uo",
+    "tones": [
+      "tuō",
+      "tuó",
+      "tuǒ",
+      "tuò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3229,6 +4987,12 @@ export default [
     "strokes": 0,
     "cn": "nuo",
     "ru": "инициаль n · финаль uo",
+    "tones": [
+      "nuō",
+      "nuó",
+      "nuǒ",
+      "nuò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3240,6 +5004,12 @@ export default [
     "strokes": 0,
     "cn": "luo",
     "ru": "инициаль l · финаль uo",
+    "tones": [
+      "luō",
+      "luó",
+      "luǒ",
+      "luò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3251,6 +5021,12 @@ export default [
     "strokes": 0,
     "cn": "guo",
     "ru": "инициаль g · финаль uo",
+    "tones": [
+      "guō",
+      "guó",
+      "guǒ",
+      "guò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3262,6 +5038,12 @@ export default [
     "strokes": 0,
     "cn": "kuo",
     "ru": "инициаль k · финаль uo",
+    "tones": [
+      "kuō",
+      "kuó",
+      "kuǒ",
+      "kuò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3273,6 +5055,12 @@ export default [
     "strokes": 0,
     "cn": "huo",
     "ru": "инициаль h · финаль uo",
+    "tones": [
+      "huō",
+      "huó",
+      "huǒ",
+      "huò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3284,6 +5072,12 @@ export default [
     "strokes": 0,
     "cn": "zhuo",
     "ru": "инициаль zh · финаль uo",
+    "tones": [
+      "zhuō",
+      "zhuó",
+      "zhuǒ",
+      "zhuò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3295,6 +5089,12 @@ export default [
     "strokes": 0,
     "cn": "chuo",
     "ru": "инициаль ch · финаль uo",
+    "tones": [
+      "chuō",
+      "chuó",
+      "chuǒ",
+      "chuò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3306,6 +5106,12 @@ export default [
     "strokes": 0,
     "cn": "shuo",
     "ru": "инициаль sh · финаль uo",
+    "tones": [
+      "shuō",
+      "shuó",
+      "shuǒ",
+      "shuò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3317,6 +5123,12 @@ export default [
     "strokes": 0,
     "cn": "ruo",
     "ru": "инициаль r · финаль uo",
+    "tones": [
+      "ruō",
+      "ruó",
+      "ruǒ",
+      "ruò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3328,6 +5140,12 @@ export default [
     "strokes": 0,
     "cn": "zuo",
     "ru": "инициаль z · финаль uo",
+    "tones": [
+      "zuō",
+      "zuó",
+      "zuǒ",
+      "zuò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3339,6 +5157,12 @@ export default [
     "strokes": 0,
     "cn": "cuo",
     "ru": "инициаль c · финаль uo",
+    "tones": [
+      "cuō",
+      "cuó",
+      "cuǒ",
+      "cuò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3350,6 +5174,12 @@ export default [
     "strokes": 0,
     "cn": "suo",
     "ru": "инициаль s · финаль uo",
+    "tones": [
+      "suō",
+      "suó",
+      "suǒ",
+      "suò"
+    ],
     "category": "u",
     "group": "u:uo",
     "groupLabel": "Финаль uo"
@@ -3361,6 +5191,12 @@ export default [
     "strokes": 0,
     "cn": "wai",
     "ru": "без инициали · финаль uai",
+    "tones": [
+      "wāi",
+      "wái",
+      "wǎi",
+      "wài"
+    ],
     "category": "u",
     "group": "u:uai",
     "groupLabel": "Финаль uai"
@@ -3372,6 +5208,12 @@ export default [
     "strokes": 0,
     "cn": "guai",
     "ru": "инициаль g · финаль uai",
+    "tones": [
+      "guāi",
+      "guái",
+      "guǎi",
+      "guài"
+    ],
     "category": "u",
     "group": "u:uai",
     "groupLabel": "Финаль uai"
@@ -3383,6 +5225,12 @@ export default [
     "strokes": 0,
     "cn": "kuai",
     "ru": "инициаль k · финаль uai",
+    "tones": [
+      "kuāi",
+      "kuái",
+      "kuǎi",
+      "kuài"
+    ],
     "category": "u",
     "group": "u:uai",
     "groupLabel": "Финаль uai"
@@ -3394,6 +5242,12 @@ export default [
     "strokes": 0,
     "cn": "huai",
     "ru": "инициаль h · финаль uai",
+    "tones": [
+      "huāi",
+      "huái",
+      "huǎi",
+      "huài"
+    ],
     "category": "u",
     "group": "u:uai",
     "groupLabel": "Финаль uai"
@@ -3405,6 +5259,12 @@ export default [
     "strokes": 0,
     "cn": "zhuai",
     "ru": "инициаль zh · финаль uai",
+    "tones": [
+      "zhuāi",
+      "zhuái",
+      "zhuǎi",
+      "zhuài"
+    ],
     "category": "u",
     "group": "u:uai",
     "groupLabel": "Финаль uai"
@@ -3416,6 +5276,12 @@ export default [
     "strokes": 0,
     "cn": "chuai",
     "ru": "инициаль ch · финаль uai",
+    "tones": [
+      "chuāi",
+      "chuái",
+      "chuǎi",
+      "chuài"
+    ],
     "category": "u",
     "group": "u:uai",
     "groupLabel": "Финаль uai"
@@ -3427,6 +5293,12 @@ export default [
     "strokes": 0,
     "cn": "shuai",
     "ru": "инициаль sh · финаль uai",
+    "tones": [
+      "shuāi",
+      "shuái",
+      "shuǎi",
+      "shuài"
+    ],
     "category": "u",
     "group": "u:uai",
     "groupLabel": "Финаль uai"
@@ -3438,6 +5310,12 @@ export default [
     "strokes": 0,
     "cn": "wei",
     "ru": "без инициали · финаль ui",
+    "tones": [
+      "wēi",
+      "wéi",
+      "wěi",
+      "wèi"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3449,6 +5327,12 @@ export default [
     "strokes": 0,
     "cn": "dui",
     "ru": "инициаль d · финаль ui",
+    "tones": [
+      "duī",
+      "duí",
+      "duǐ",
+      "duì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3460,6 +5344,12 @@ export default [
     "strokes": 0,
     "cn": "tui",
     "ru": "инициаль t · финаль ui",
+    "tones": [
+      "tuī",
+      "tuí",
+      "tuǐ",
+      "tuì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3471,6 +5361,12 @@ export default [
     "strokes": 0,
     "cn": "gui",
     "ru": "инициаль g · финаль ui",
+    "tones": [
+      "guī",
+      "guí",
+      "guǐ",
+      "guì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3482,6 +5378,12 @@ export default [
     "strokes": 0,
     "cn": "kui",
     "ru": "инициаль k · финаль ui",
+    "tones": [
+      "kuī",
+      "kuí",
+      "kuǐ",
+      "kuì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3493,6 +5395,12 @@ export default [
     "strokes": 0,
     "cn": "hui",
     "ru": "инициаль h · финаль ui",
+    "tones": [
+      "huī",
+      "huí",
+      "huǐ",
+      "huì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3504,6 +5412,12 @@ export default [
     "strokes": 0,
     "cn": "zhui",
     "ru": "инициаль zh · финаль ui",
+    "tones": [
+      "zhuī",
+      "zhuí",
+      "zhuǐ",
+      "zhuì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3515,6 +5429,12 @@ export default [
     "strokes": 0,
     "cn": "chui",
     "ru": "инициаль ch · финаль ui",
+    "tones": [
+      "chuī",
+      "chuí",
+      "chuǐ",
+      "chuì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3526,6 +5446,12 @@ export default [
     "strokes": 0,
     "cn": "shui",
     "ru": "инициаль sh · финаль ui",
+    "tones": [
+      "shuī",
+      "shuí",
+      "shuǐ",
+      "shuì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3537,6 +5463,12 @@ export default [
     "strokes": 0,
     "cn": "rui",
     "ru": "инициаль r · финаль ui",
+    "tones": [
+      "ruī",
+      "ruí",
+      "ruǐ",
+      "ruì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3548,6 +5480,12 @@ export default [
     "strokes": 0,
     "cn": "zui",
     "ru": "инициаль z · финаль ui",
+    "tones": [
+      "zuī",
+      "zuí",
+      "zuǐ",
+      "zuì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3559,6 +5497,12 @@ export default [
     "strokes": 0,
     "cn": "cui",
     "ru": "инициаль c · финаль ui",
+    "tones": [
+      "cuī",
+      "cuí",
+      "cuǐ",
+      "cuì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3570,6 +5514,12 @@ export default [
     "strokes": 0,
     "cn": "sui",
     "ru": "инициаль s · финаль ui",
+    "tones": [
+      "suī",
+      "suí",
+      "suǐ",
+      "suì"
+    ],
     "category": "u",
     "group": "u:ui",
     "groupLabel": "Финаль ui"
@@ -3581,6 +5531,12 @@ export default [
     "strokes": 0,
     "cn": "wan",
     "ru": "без инициали · финаль uan",
+    "tones": [
+      "wān",
+      "wán",
+      "wǎn",
+      "wàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3592,6 +5548,12 @@ export default [
     "strokes": 0,
     "cn": "duan",
     "ru": "инициаль d · финаль uan",
+    "tones": [
+      "duān",
+      "duán",
+      "duǎn",
+      "duàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3603,6 +5565,12 @@ export default [
     "strokes": 0,
     "cn": "tuan",
     "ru": "инициаль t · финаль uan",
+    "tones": [
+      "tuān",
+      "tuán",
+      "tuǎn",
+      "tuàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3614,6 +5582,12 @@ export default [
     "strokes": 0,
     "cn": "nuan",
     "ru": "инициаль n · финаль uan",
+    "tones": [
+      "nuān",
+      "nuán",
+      "nuǎn",
+      "nuàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3625,6 +5599,12 @@ export default [
     "strokes": 0,
     "cn": "luan",
     "ru": "инициаль l · финаль uan",
+    "tones": [
+      "luān",
+      "luán",
+      "luǎn",
+      "luàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3636,6 +5616,12 @@ export default [
     "strokes": 0,
     "cn": "guan",
     "ru": "инициаль g · финаль uan",
+    "tones": [
+      "guān",
+      "guán",
+      "guǎn",
+      "guàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3647,6 +5633,12 @@ export default [
     "strokes": 0,
     "cn": "kuan",
     "ru": "инициаль k · финаль uan",
+    "tones": [
+      "kuān",
+      "kuán",
+      "kuǎn",
+      "kuàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3658,6 +5650,12 @@ export default [
     "strokes": 0,
     "cn": "huan",
     "ru": "инициаль h · финаль uan",
+    "tones": [
+      "huān",
+      "huán",
+      "huǎn",
+      "huàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3669,6 +5667,12 @@ export default [
     "strokes": 0,
     "cn": "zhuan",
     "ru": "инициаль zh · финаль uan",
+    "tones": [
+      "zhuān",
+      "zhuán",
+      "zhuǎn",
+      "zhuàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3680,6 +5684,12 @@ export default [
     "strokes": 0,
     "cn": "chuan",
     "ru": "инициаль ch · финаль uan",
+    "tones": [
+      "chuān",
+      "chuán",
+      "chuǎn",
+      "chuàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3691,6 +5701,12 @@ export default [
     "strokes": 0,
     "cn": "shuan",
     "ru": "инициаль sh · финаль uan",
+    "tones": [
+      "shuān",
+      "shuán",
+      "shuǎn",
+      "shuàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3702,6 +5718,12 @@ export default [
     "strokes": 0,
     "cn": "ruan",
     "ru": "инициаль r · финаль uan",
+    "tones": [
+      "ruān",
+      "ruán",
+      "ruǎn",
+      "ruàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3713,6 +5735,12 @@ export default [
     "strokes": 0,
     "cn": "zuan",
     "ru": "инициаль z · финаль uan",
+    "tones": [
+      "zuān",
+      "zuán",
+      "zuǎn",
+      "zuàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3724,6 +5752,12 @@ export default [
     "strokes": 0,
     "cn": "cuan",
     "ru": "инициаль c · финаль uan",
+    "tones": [
+      "cuān",
+      "cuán",
+      "cuǎn",
+      "cuàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3735,6 +5769,12 @@ export default [
     "strokes": 0,
     "cn": "suan",
     "ru": "инициаль s · финаль uan",
+    "tones": [
+      "suān",
+      "suán",
+      "suǎn",
+      "suàn"
+    ],
     "category": "u",
     "group": "u:uan",
     "groupLabel": "Финаль uan"
@@ -3746,6 +5786,12 @@ export default [
     "strokes": 0,
     "cn": "wen",
     "ru": "без инициали · финаль un",
+    "tones": [
+      "wēn",
+      "wén",
+      "wěn",
+      "wèn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3757,6 +5803,12 @@ export default [
     "strokes": 0,
     "cn": "dun",
     "ru": "инициаль d · финаль un",
+    "tones": [
+      "dūn",
+      "dún",
+      "dǔn",
+      "dùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3768,6 +5820,12 @@ export default [
     "strokes": 0,
     "cn": "tun",
     "ru": "инициаль t · финаль un",
+    "tones": [
+      "tūn",
+      "tún",
+      "tǔn",
+      "tùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3779,6 +5837,12 @@ export default [
     "strokes": 0,
     "cn": "nun",
     "ru": "инициаль n · финаль un",
+    "tones": [
+      "nūn",
+      "nún",
+      "nǔn",
+      "nùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3790,6 +5854,12 @@ export default [
     "strokes": 0,
     "cn": "lun",
     "ru": "инициаль l · финаль un",
+    "tones": [
+      "lūn",
+      "lún",
+      "lǔn",
+      "lùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3801,6 +5871,12 @@ export default [
     "strokes": 0,
     "cn": "gun",
     "ru": "инициаль g · финаль un",
+    "tones": [
+      "gūn",
+      "gún",
+      "gǔn",
+      "gùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3812,6 +5888,12 @@ export default [
     "strokes": 0,
     "cn": "kun",
     "ru": "инициаль k · финаль un",
+    "tones": [
+      "kūn",
+      "kún",
+      "kǔn",
+      "kùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3823,6 +5905,12 @@ export default [
     "strokes": 0,
     "cn": "hun",
     "ru": "инициаль h · финаль un",
+    "tones": [
+      "hūn",
+      "hún",
+      "hǔn",
+      "hùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3834,6 +5922,12 @@ export default [
     "strokes": 0,
     "cn": "zhun",
     "ru": "инициаль zh · финаль un",
+    "tones": [
+      "zhūn",
+      "zhún",
+      "zhǔn",
+      "zhùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3845,6 +5939,12 @@ export default [
     "strokes": 0,
     "cn": "chun",
     "ru": "инициаль ch · финаль un",
+    "tones": [
+      "chūn",
+      "chún",
+      "chǔn",
+      "chùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3856,6 +5956,12 @@ export default [
     "strokes": 0,
     "cn": "shun",
     "ru": "инициаль sh · финаль un",
+    "tones": [
+      "shūn",
+      "shún",
+      "shǔn",
+      "shùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3867,6 +5973,12 @@ export default [
     "strokes": 0,
     "cn": "run",
     "ru": "инициаль r · финаль un",
+    "tones": [
+      "rūn",
+      "rún",
+      "rǔn",
+      "rùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3878,6 +5990,12 @@ export default [
     "strokes": 0,
     "cn": "zun",
     "ru": "инициаль z · финаль un",
+    "tones": [
+      "zūn",
+      "zún",
+      "zǔn",
+      "zùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3889,6 +6007,12 @@ export default [
     "strokes": 0,
     "cn": "cun",
     "ru": "инициаль c · финаль un",
+    "tones": [
+      "cūn",
+      "cún",
+      "cǔn",
+      "cùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3900,6 +6024,12 @@ export default [
     "strokes": 0,
     "cn": "sun",
     "ru": "инициаль s · финаль un",
+    "tones": [
+      "sūn",
+      "sún",
+      "sǔn",
+      "sùn"
+    ],
     "category": "u",
     "group": "u:un",
     "groupLabel": "Финаль un"
@@ -3911,6 +6041,12 @@ export default [
     "strokes": 0,
     "cn": "wang",
     "ru": "без инициали · финаль uang",
+    "tones": [
+      "wāng",
+      "wáng",
+      "wǎng",
+      "wàng"
+    ],
     "category": "u",
     "group": "u:uang",
     "groupLabel": "Финаль uang"
@@ -3922,6 +6058,12 @@ export default [
     "strokes": 0,
     "cn": "guang",
     "ru": "инициаль g · финаль uang",
+    "tones": [
+      "guāng",
+      "guáng",
+      "guǎng",
+      "guàng"
+    ],
     "category": "u",
     "group": "u:uang",
     "groupLabel": "Финаль uang"
@@ -3933,6 +6075,12 @@ export default [
     "strokes": 0,
     "cn": "kuang",
     "ru": "инициаль k · финаль uang",
+    "tones": [
+      "kuāng",
+      "kuáng",
+      "kuǎng",
+      "kuàng"
+    ],
     "category": "u",
     "group": "u:uang",
     "groupLabel": "Финаль uang"
@@ -3944,6 +6092,12 @@ export default [
     "strokes": 0,
     "cn": "huang",
     "ru": "инициаль h · финаль uang",
+    "tones": [
+      "huāng",
+      "huáng",
+      "huǎng",
+      "huàng"
+    ],
     "category": "u",
     "group": "u:uang",
     "groupLabel": "Финаль uang"
@@ -3955,6 +6109,12 @@ export default [
     "strokes": 0,
     "cn": "zhuang",
     "ru": "инициаль zh · финаль uang",
+    "tones": [
+      "zhuāng",
+      "zhuáng",
+      "zhuǎng",
+      "zhuàng"
+    ],
     "category": "u",
     "group": "u:uang",
     "groupLabel": "Финаль uang"
@@ -3966,6 +6126,12 @@ export default [
     "strokes": 0,
     "cn": "chuang",
     "ru": "инициаль ch · финаль uang",
+    "tones": [
+      "chuāng",
+      "chuáng",
+      "chuǎng",
+      "chuàng"
+    ],
     "category": "u",
     "group": "u:uang",
     "groupLabel": "Финаль uang"
@@ -3977,6 +6143,12 @@ export default [
     "strokes": 0,
     "cn": "shuang",
     "ru": "инициаль sh · финаль uang",
+    "tones": [
+      "shuāng",
+      "shuáng",
+      "shuǎng",
+      "shuàng"
+    ],
     "category": "u",
     "group": "u:uang",
     "groupLabel": "Финаль uang"
@@ -3988,6 +6160,12 @@ export default [
     "strokes": 0,
     "cn": "weng",
     "ru": "без инициали · финаль ong",
+    "tones": [
+      "wēng",
+      "wéng",
+      "wěng",
+      "wèng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -3999,6 +6177,12 @@ export default [
     "strokes": 0,
     "cn": "dong",
     "ru": "инициаль d · финаль ong",
+    "tones": [
+      "dōng",
+      "dóng",
+      "dǒng",
+      "dòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4010,6 +6194,12 @@ export default [
     "strokes": 0,
     "cn": "tong",
     "ru": "инициаль t · финаль ong",
+    "tones": [
+      "tōng",
+      "tóng",
+      "tǒng",
+      "tòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4021,6 +6211,12 @@ export default [
     "strokes": 0,
     "cn": "nong",
     "ru": "инициаль n · финаль ong",
+    "tones": [
+      "nōng",
+      "nóng",
+      "nǒng",
+      "nòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4032,6 +6228,12 @@ export default [
     "strokes": 0,
     "cn": "long",
     "ru": "инициаль l · финаль ong",
+    "tones": [
+      "lōng",
+      "lóng",
+      "lǒng",
+      "lòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4043,6 +6245,12 @@ export default [
     "strokes": 0,
     "cn": "gong",
     "ru": "инициаль g · финаль ong",
+    "tones": [
+      "gōng",
+      "góng",
+      "gǒng",
+      "gòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4054,6 +6262,12 @@ export default [
     "strokes": 0,
     "cn": "kong",
     "ru": "инициаль k · финаль ong",
+    "tones": [
+      "kōng",
+      "kóng",
+      "kǒng",
+      "kòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4065,6 +6279,12 @@ export default [
     "strokes": 0,
     "cn": "hong",
     "ru": "инициаль h · финаль ong",
+    "tones": [
+      "hōng",
+      "hóng",
+      "hǒng",
+      "hòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4076,6 +6296,12 @@ export default [
     "strokes": 0,
     "cn": "zhong",
     "ru": "инициаль zh · финаль ong",
+    "tones": [
+      "zhōng",
+      "zhóng",
+      "zhǒng",
+      "zhòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4087,6 +6313,12 @@ export default [
     "strokes": 0,
     "cn": "chong",
     "ru": "инициаль ch · финаль ong",
+    "tones": [
+      "chōng",
+      "chóng",
+      "chǒng",
+      "chòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4098,6 +6330,12 @@ export default [
     "strokes": 0,
     "cn": "rong",
     "ru": "инициаль r · финаль ong",
+    "tones": [
+      "rōng",
+      "róng",
+      "rǒng",
+      "ròng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4109,6 +6347,12 @@ export default [
     "strokes": 0,
     "cn": "zong",
     "ru": "инициаль z · финаль ong",
+    "tones": [
+      "zōng",
+      "zóng",
+      "zǒng",
+      "zòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4120,6 +6364,12 @@ export default [
     "strokes": 0,
     "cn": "cong",
     "ru": "инициаль c · финаль ong",
+    "tones": [
+      "cōng",
+      "cóng",
+      "cǒng",
+      "còng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4131,6 +6381,12 @@ export default [
     "strokes": 0,
     "cn": "song",
     "ru": "инициаль s · финаль ong",
+    "tones": [
+      "sōng",
+      "sóng",
+      "sǒng",
+      "sòng"
+    ],
     "category": "u",
     "group": "u:ong",
     "groupLabel": "Финаль ong"
@@ -4142,6 +6398,12 @@ export default [
     "strokes": 0,
     "cn": "yu",
     "ru": "без инициали · финаль ü",
+    "tones": [
+      "yū",
+      "yú",
+      "yǔ",
+      "yù"
+    ],
     "category": "ü",
     "group": "ü:ü",
     "groupLabel": "Финаль ü"
@@ -4153,6 +6415,12 @@ export default [
     "strokes": 0,
     "cn": "nü",
     "ru": "инициаль n · финаль ü",
+    "tones": [
+      "nǖ",
+      "nǘ",
+      "nǚ",
+      "nǜ"
+    ],
     "category": "ü",
     "group": "ü:ü",
     "groupLabel": "Финаль ü"
@@ -4164,6 +6432,12 @@ export default [
     "strokes": 0,
     "cn": "lü",
     "ru": "инициаль l · финаль ü",
+    "tones": [
+      "lǖ",
+      "lǘ",
+      "lǚ",
+      "lǜ"
+    ],
     "category": "ü",
     "group": "ü:ü",
     "groupLabel": "Финаль ü"
@@ -4175,6 +6449,12 @@ export default [
     "strokes": 0,
     "cn": "ju",
     "ru": "инициаль j · финаль u",
+    "tones": [
+      "jū",
+      "jú",
+      "jǔ",
+      "jù"
+    ],
     "category": "ü",
     "group": "ü:ü",
     "groupLabel": "Финаль ü"
@@ -4186,6 +6466,12 @@ export default [
     "strokes": 0,
     "cn": "qu",
     "ru": "инициаль q · финаль u",
+    "tones": [
+      "qū",
+      "qú",
+      "qǔ",
+      "qù"
+    ],
     "category": "ü",
     "group": "ü:ü",
     "groupLabel": "Финаль ü"
@@ -4197,6 +6483,12 @@ export default [
     "strokes": 0,
     "cn": "xu",
     "ru": "инициаль x · финаль u",
+    "tones": [
+      "xū",
+      "xú",
+      "xǔ",
+      "xù"
+    ],
     "category": "ü",
     "group": "ü:ü",
     "groupLabel": "Финаль ü"
@@ -4208,6 +6500,12 @@ export default [
     "strokes": 0,
     "cn": "yue",
     "ru": "без инициали · финаль üe",
+    "tones": [
+      "yuē",
+      "yué",
+      "yuě",
+      "yuè"
+    ],
     "category": "ü",
     "group": "ü:üe",
     "groupLabel": "Финаль üe"
@@ -4219,6 +6517,12 @@ export default [
     "strokes": 0,
     "cn": "nüe",
     "ru": "инициаль n · финаль üe",
+    "tones": [
+      "nüē",
+      "nüé",
+      "nüě",
+      "nüè"
+    ],
     "category": "ü",
     "group": "ü:üe",
     "groupLabel": "Финаль üe"
@@ -4230,6 +6534,12 @@ export default [
     "strokes": 0,
     "cn": "lüe",
     "ru": "инициаль l · финаль üe",
+    "tones": [
+      "lüē",
+      "lüé",
+      "lüě",
+      "lüè"
+    ],
     "category": "ü",
     "group": "ü:üe",
     "groupLabel": "Финаль üe"
@@ -4241,6 +6551,12 @@ export default [
     "strokes": 0,
     "cn": "jue",
     "ru": "инициаль j · финаль ue",
+    "tones": [
+      "juē",
+      "jué",
+      "juě",
+      "juè"
+    ],
     "category": "ü",
     "group": "ü:üe",
     "groupLabel": "Финаль üe"
@@ -4252,6 +6568,12 @@ export default [
     "strokes": 0,
     "cn": "que",
     "ru": "инициаль q · финаль ue",
+    "tones": [
+      "quē",
+      "qué",
+      "quě",
+      "què"
+    ],
     "category": "ü",
     "group": "ü:üe",
     "groupLabel": "Финаль üe"
@@ -4263,6 +6585,12 @@ export default [
     "strokes": 0,
     "cn": "xue",
     "ru": "инициаль x · финаль ue",
+    "tones": [
+      "xuē",
+      "xué",
+      "xuě",
+      "xuè"
+    ],
     "category": "ü",
     "group": "ü:üe",
     "groupLabel": "Финаль üe"
@@ -4274,6 +6602,12 @@ export default [
     "strokes": 0,
     "cn": "yuan",
     "ru": "без инициали · финаль üan",
+    "tones": [
+      "yuān",
+      "yuán",
+      "yuǎn",
+      "yuàn"
+    ],
     "category": "ü",
     "group": "ü:üan",
     "groupLabel": "Финаль üan"
@@ -4285,6 +6619,12 @@ export default [
     "strokes": 0,
     "cn": "juan",
     "ru": "инициаль j · финаль uan",
+    "tones": [
+      "juān",
+      "juán",
+      "juǎn",
+      "juàn"
+    ],
     "category": "ü",
     "group": "ü:üan",
     "groupLabel": "Финаль üan"
@@ -4296,6 +6636,12 @@ export default [
     "strokes": 0,
     "cn": "quan",
     "ru": "инициаль q · финаль uan",
+    "tones": [
+      "quān",
+      "quán",
+      "quǎn",
+      "quàn"
+    ],
     "category": "ü",
     "group": "ü:üan",
     "groupLabel": "Финаль üan"
@@ -4307,6 +6653,12 @@ export default [
     "strokes": 0,
     "cn": "xuan",
     "ru": "инициаль x · финаль uan",
+    "tones": [
+      "xuān",
+      "xuán",
+      "xuǎn",
+      "xuàn"
+    ],
     "category": "ü",
     "group": "ü:üan",
     "groupLabel": "Финаль üan"
@@ -4318,6 +6670,12 @@ export default [
     "strokes": 0,
     "cn": "yun",
     "ru": "без инициали · финаль ün",
+    "tones": [
+      "yūn",
+      "yún",
+      "yǔn",
+      "yùn"
+    ],
     "category": "ü",
     "group": "ü:ün",
     "groupLabel": "Финаль ün"
@@ -4329,6 +6687,12 @@ export default [
     "strokes": 0,
     "cn": "jun",
     "ru": "инициаль j · финаль un",
+    "tones": [
+      "jūn",
+      "jún",
+      "jǔn",
+      "jùn"
+    ],
     "category": "ü",
     "group": "ü:ün",
     "groupLabel": "Финаль ün"
@@ -4340,6 +6704,12 @@ export default [
     "strokes": 0,
     "cn": "qun",
     "ru": "инициаль q · финаль un",
+    "tones": [
+      "qūn",
+      "qún",
+      "qǔn",
+      "qùn"
+    ],
     "category": "ü",
     "group": "ü:ün",
     "groupLabel": "Финаль ün"
@@ -4351,6 +6721,12 @@ export default [
     "strokes": 0,
     "cn": "xun",
     "ru": "инициаль x · финаль un",
+    "tones": [
+      "xūn",
+      "xún",
+      "xǔn",
+      "xùn"
+    ],
     "category": "ü",
     "group": "ü:ün",
     "groupLabel": "Финаль ün"
@@ -4362,6 +6738,12 @@ export default [
     "strokes": 0,
     "cn": "yong",
     "ru": "без инициали · финаль iong",
+    "tones": [
+      "yōng",
+      "yóng",
+      "yǒng",
+      "yòng"
+    ],
     "category": "ü",
     "group": "ü:iong",
     "groupLabel": "Финаль iong"
@@ -4373,6 +6755,12 @@ export default [
     "strokes": 0,
     "cn": "jiong",
     "ru": "инициаль j · финаль iong",
+    "tones": [
+      "jiōng",
+      "jióng",
+      "jiǒng",
+      "jiòng"
+    ],
     "category": "ü",
     "group": "ü:iong",
     "groupLabel": "Финаль iong"
@@ -4384,6 +6772,12 @@ export default [
     "strokes": 0,
     "cn": "qiong",
     "ru": "инициаль q · финаль iong",
+    "tones": [
+      "qiōng",
+      "qióng",
+      "qiǒng",
+      "qiòng"
+    ],
     "category": "ü",
     "group": "ü:iong",
     "groupLabel": "Финаль iong"
@@ -4395,6 +6789,12 @@ export default [
     "strokes": 0,
     "cn": "xiong",
     "ru": "инициаль x · финаль iong",
+    "tones": [
+      "xiōng",
+      "xióng",
+      "xiǒng",
+      "xiòng"
+    ],
     "category": "ü",
     "group": "ü:iong",
     "groupLabel": "Финаль iong"
@@ -4406,6 +6806,12 @@ export default [
     "strokes": 0,
     "cn": "zhi",
     "ru": "целый слог zhi",
+    "tones": [
+      "zhī",
+      "zhí",
+      "zhǐ",
+      "zhì"
+    ],
     "category": "special",
     "group": "special:i",
     "groupLabel": "Целые слоги"
@@ -4417,6 +6823,12 @@ export default [
     "strokes": 0,
     "cn": "chi",
     "ru": "целый слог chi",
+    "tones": [
+      "chī",
+      "chí",
+      "chǐ",
+      "chì"
+    ],
     "category": "special",
     "group": "special:i",
     "groupLabel": "Целые слоги"
@@ -4428,6 +6840,12 @@ export default [
     "strokes": 0,
     "cn": "shi",
     "ru": "целый слог shi",
+    "tones": [
+      "shī",
+      "shí",
+      "shǐ",
+      "shì"
+    ],
     "category": "special",
     "group": "special:i",
     "groupLabel": "Целые слоги"
@@ -4439,6 +6857,12 @@ export default [
     "strokes": 0,
     "cn": "ri",
     "ru": "целый слог ri",
+    "tones": [
+      "rī",
+      "rí",
+      "rǐ",
+      "rì"
+    ],
     "category": "special",
     "group": "special:i",
     "groupLabel": "Целые слоги"
@@ -4450,6 +6874,12 @@ export default [
     "strokes": 0,
     "cn": "zi",
     "ru": "целый слог zi",
+    "tones": [
+      "zī",
+      "zí",
+      "zǐ",
+      "zì"
+    ],
     "category": "special",
     "group": "special:i",
     "groupLabel": "Целые слоги"
@@ -4461,6 +6891,12 @@ export default [
     "strokes": 0,
     "cn": "ci",
     "ru": "целый слог ci",
+    "tones": [
+      "cī",
+      "cí",
+      "cǐ",
+      "cì"
+    ],
     "category": "special",
     "group": "special:i",
     "groupLabel": "Целые слоги"
@@ -4472,6 +6908,12 @@ export default [
     "strokes": 0,
     "cn": "si",
     "ru": "целый слог si",
+    "tones": [
+      "sī",
+      "sí",
+      "sǐ",
+      "sì"
+    ],
     "category": "special",
     "group": "special:i",
     "groupLabel": "Целые слоги"

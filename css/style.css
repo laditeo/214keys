@@ -820,6 +820,28 @@ html[data-catalog="pinyin"] .cell__char {
   z-index: 1;
 }
 
+.modal__tones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.3rem 1rem;
+  margin: 0;
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  letter-spacing: 0.02em;
+}
+
+.modal__tone {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  color: var(--text);
+}
+
+.modal__tone-num {
+  font-size: 0.62em;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 @container (max-width: 4.25rem) {
   .cell__num {
     display: none;

@@ -11,11 +11,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=185";
+} from "./catalog.js?v=189";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=185";
+import "./char3dOrbit.js?v=189";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -50,7 +50,7 @@ import {
   prefetchItemAudio,
   speakRadical,
   unlockSpeech,
-} from "./radicalSpeech.js?v=185";
+} from "./radicalSpeech.js?v=189";
 import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js";
 import {
   hideSpatialCanvas,
@@ -99,6 +99,7 @@ const fields = {
   variants: document.getElementById("modal-variants"),
   jp: document.getElementById("modal-jp"),
   cn: document.getElementById("modal-cn"),
+  tones: document.getElementById("modal-tones"),
   ru: document.getElementById("modal-ru"),
   strokes: document.getElementById("modal-strokes"),
   copyBtn: document.getElementById("modal-copy-btn"),
@@ -470,12 +471,28 @@ function fillModal(item) {
     : "";
   if (fields.jp) fields.jp.textContent = item.jp;
   fields.cn.textContent = item.cn;
+  if (fields.tones) fillTones(item.tones);
   fields.ru.textContent = item.ru;
   fields.strokes.textContent = item.strokes ? strokeCompactLabel(item.strokes) : "";
   syncModalChar3dForItem(item.char);
 
   updateModalNav();
   syncModalReadingWaves(item);
+}
+
+function fillTones(tones) {
+  if (!fields.tones) return;
+  fields.tones.replaceChildren(
+    ...(tones || []).map((tone, index) => {
+      const chip = document.createElement("span");
+      chip.className = "modal__tone";
+      const num = document.createElement("span");
+      num.className = "modal__tone-num";
+      num.textContent = String(index + 1);
+      chip.append(num, document.createTextNode(tone));
+      return chip;
+    }),
+  );
 }
 
 function updateActiveCellEl(container, item, prevEl) {
@@ -1209,7 +1226,8 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.key === "1") {
     e.preventDefault();
-    if (speakerJp) speakerJp.click();
+    if (isPinyinCatalog) speakerCn.click();
+    else if (speakerJp) speakerJp.click();
   }
   if (e.key === "2") {
     e.preventDefault();

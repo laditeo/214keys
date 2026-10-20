@@ -122,6 +122,41 @@ def hanzi_for(table, syllable):
     return [rare] if rare else []
 
 
+TONE_MARKS = {
+    "a": "āáǎà",
+    "e": "ēéěè",
+    "i": "īíǐì",
+    "o": "ōóǒò",
+    "u": "ūúǔù",
+    "ü": "ǖǘǚǜ",
+}
+TONE_VOWELS = "aeiouü"
+
+
+def tone_marks(syllable):
+    """The four tone-marked spellings of a pinyin syllable."""
+    if "ê" in syllable:
+        return [syllable] * 4
+
+    lower = syllable
+    if "a" in lower:
+        index = lower.index("a")
+    elif "e" in lower:
+        index = lower.index("e")
+    elif "ou" in lower:
+        index = lower.index("o")
+    else:
+        index = max((lower.rfind(v) for v in TONE_VOWELS if v in lower), default=-1)
+    if index < 0:
+        return [syllable] * 4
+
+    vowel = lower[index]
+    return [
+        lower[:index] + TONE_MARKS[vowel][tone] + lower[index + 1:]
+        for tone in range(4)
+    ]
+
+
 def make_item(item_id, syllable, initial, final, group, table):
     hanzis = hanzi_for(table, syllable)
     if not hanzis:
@@ -142,6 +177,7 @@ def make_item(item_id, syllable, initial, final, group, table):
         "strokes": 0,
         "cn": syllable,
         "ru": note,
+        "tones": tone_marks(syllable),
         "category": group,
         "group": f"{group}:{final}",
         "groupLabel": f"Финаль {final}" if group != "special" else "Целые слоги",
