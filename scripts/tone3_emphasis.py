@@ -1,20 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Exaggerate the falling-rising (3rd) tone of a pinyin recording.
-
-Microsoft's zh-CN voices render tone 3 as a shallow dip, so learners cannot
-hear the difference from tone 2. This module re-synthesises the clip with a
-TD-PSOLA style contour: a long fall, a clear hold at the bottom, then a short
-rise that still ends below the starting pitch.
-
-Time and pitch are controlled independently: the output is stretched by
-:data:`STRETCH` (grain repetition) while the pitch multiplier comes from
-:data:`CONTOUR`, so the syllable can be made slow *and* deep without turning
-into a different voice.
-
-Usage (standalone, re-process every existing tone-3 file):
-    python scripts/tone3_emphasis.py
-Do not run it twice on the same files: the effect compounds.
-"""
+"""Exaggerate the falling-rising (3rd) tone of a pinyin recording."""
 import subprocess
 import wave
 from pathlib import Path
@@ -27,22 +12,20 @@ SR = 16000
 HOP_SEC = 0.005
 WIN_SEC = 0.04
 
-# How much longer the 3rd tone becomes compared to the raw TTS clip.
 STRETCH = 1.55
-# Loudness compensation: the low hold sounds quieter than the other tones.
-GAIN = 1.3
+GAIN = 1.35
 
-# Pitch multiplier along the syllable (0 = start, 1 = end).
-# 1.0 -> 0.70 (deep fall) -> hold -> 0.95 (short rise, below the start).
-CONTOUR = ((0.0, 1.0), (0.12, 0.9), (0.30, 0.7), (0.64, 0.7), (0.84, 0.78), (1.0, 0.95))
+# Pitch multiplier on the *voiced* part (0 = vowel onset, 1 = end):
+# a steep fall over the first half, a hold, then the modulation ends and the
+# original recording (with its natural rise) plays untouched.
+CONTOUR = ((0.0, 1.0), (0.08, 0.88), (0.25, 0.62), (0.45, 0.62), (0.55, 1.0), (1.0, 1.0))
 
 
 def _decode(path):
     wav = path.with_suffix(".psola.wav")
     subprocess.run(
         [str(FFMPEG), "-y", "-v", "error", "-i", str(path), "-ac", "1", "-ar", str(SR), str(wav)],
-        check=True,
-        capture_output=True,
+        check=True, capture_output=True,
     )
     with wave.open(str(wav)) as handle:
         data = np.frombuffer(handle.readframes(handle.getnframes()), dtype=np.int16)
@@ -58,24 +41,19 @@ def _encode(samples, path):
         handle.setframerate(SR)
         handle.writeframes((np.clip(samples, -1.0, 1.0) * 32767).astype(np.int16).tobytes())
     subprocess.run(
-        [
-            str(FFMPEG), "-y", "-v", "error", "-i", str(wav),
-            "-codec:a", "libmp3lame", "-ar", "44100", "-ac", "1", "-b:a", "128k",
-            str(path),
-        ],
-        check=True,
-        capture_output=True,
+        [str(FFMPEG), "-y", "-v", "error", "-i", str(wav),
+         "-codec:a", "libmp3lame", "-ar", "44100", "-ac", "1", "-b:a", "128k",
+         str(path)],
+        check=True, capture_output=True,
     )
     wav.unlink()
 
 
 def _f0_track(x):
-    """Frame-wise F0 (Hz), 0 where the frame is unvoiced/silent."""
     hop = int(HOP_SEC * SR)
     win = int(WIN_SEC * SR)
     frames = max(0, 1 + (len(x) - win) // hop)
     f0 = np.zeros(frames, dtype=np.float32)
-
     for i in range(frames):
         seg = x[i * hop: i * hop + win]
         if len(seg) < win:
@@ -89,7 +67,6 @@ def _f0_track(x):
         peak = lo + int(np.argmax(corr[lo:hi]))
         if corr[peak] > 0.32:
             f0[i] = SR / peak
-
     if not f0.any():
         return f0
     idx = np.where(f0 > 0)[0]
@@ -108,9 +85,9 @@ def _value_at(points, u):
 
 
 def _grains(f0, duration):
-    """Pitch-synchronous grain centres (seconds) and their periods."""
     centers = []
     periods = []
+    voiced = []
     t = 0.0
     while t < duration:
         index = int(t / HOP_SEC)
@@ -118,12 +95,12 @@ def _grains(f0, duration):
         period = 1.0 / freq if freq > 0 else 0.005
         centers.append(t)
         periods.append(period)
+        voiced.append(freq > 0)
         t += period
-    return np.asarray(centers, dtype=np.float32), np.asarray(periods, dtype=np.float32)
+    return np.asarray(centers), np.asarray(periods), np.asarray(voiced)
 
 
 def emphasize(path):
-    """Rewrite ``path`` so its 3rd tone falls deep, holds and then rises."""
     x = _decode(path)
     if len(x) < int(0.08 * SR):
         return False
@@ -132,9 +109,17 @@ def emphasize(path):
     duration = len(x) / SR
     target = duration * STRETCH
 
-    centers, periods = _grains(f0, duration)
+    centers, periods, voiced = _grains(f0, duration)
     if not len(centers):
         return False
+
+    # Voiced onset: where the pitch contour actually becomes audible.
+    voiced_idx = np.where(voiced)[0]
+    if len(voiced_idx):
+        onset = float(centers[voiced_idx[0]])
+    else:
+        onset = 0.0
+    voiced_span = max(0.05, duration - onset)
 
     out = np.zeros(int(target * SR) + int(0.1 * SR), dtype=np.float32)
     weight = np.zeros_like(out)
@@ -143,7 +128,6 @@ def emphasize(path):
     cursor = 0
     last = len(centers) - 1
     while out_pos < target:
-        # Content position for this output moment, snapped to a pitch period.
         wanted = out_pos / STRETCH
         while cursor < last and centers[cursor + 1] <= wanted:
             cursor += 1
@@ -161,7 +145,12 @@ def emphasize(path):
             continue
 
         grain = x[start: start + 2 * half] * np.hanning(2 * half)
-        factor = _value_at(CONTOUR, center / duration)
+        # Factor: flat during the unvoiced onset, contour on the voiced part.
+        if center < onset:
+            factor = 1.0
+        else:
+            rel = (center - onset) / voiced_span
+            factor = _value_at(CONTOUR, rel)
         at = int(out_pos * SR) - half
         if at + 2 * half > len(out):
             break

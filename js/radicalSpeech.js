@@ -3,7 +3,7 @@ import radicals, {
   hasSfxAudio,
   isPinyinCatalog,
   speechAudioDir,
-} from "./catalog.js?v=196";
+} from "./catalog.js?v=197";
 import { appAssetUrl } from "./appBase.js";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
@@ -60,7 +60,7 @@ function padId(id) {
 }
 
 /** Bump when the pinyin recordings are regenerated (busts the browser cache). */
-const PINYIN_AUDIO_REV = "2";
+const PINYIN_AUDIO_REV = "3";
 
 export function audioUrl(lang, id, tone = 1) {
   if (!hasSpeechAudio) return "";
