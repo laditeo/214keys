@@ -140,6 +140,16 @@ UI: [@laditeo](https://t.me/laditeo)
 
 ## Деплой
 
-Боевая версия — **https://spatilabs.co/214keys/** (VPS). GitHub хранит исходники и историю.
+Боевая версия — **https://spatilabs.co/214keys/** (VPS).
+
+Деплой статики по SSH-ключу (`~/.ssh/id_ed25519`):
+
+```bash
+python scripts/deploy.py
+```
+
+Скрипт пакует `index.html`, `basic/`, `pynpinyin/`, `css/`, `js/`, `data/` и `audio/pinyin/`,
+делает бэкап текущей версии на сервере (`/var/www/spatilabs/214keys.bak-<дата>`)
+и распаковывает поверх `/var/www/spatilabs/214keys`.
 
 GitHub Pages (`laditeo.github.io/214keys`) больше не основной канал. Workflow **Deploy GitHub Pages** запускается вручную, если зеркало на Pages всё же нужно.
