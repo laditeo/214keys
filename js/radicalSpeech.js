@@ -3,7 +3,7 @@ import radicals, {
   hasSfxAudio,
   isPinyinCatalog,
   speechAudioDir,
-} from "./catalog.js?v=206";
+} from "./catalog.js?v=207";
 import { appAssetUrl } from "./appBase.js";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
