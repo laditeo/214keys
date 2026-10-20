@@ -3,7 +3,7 @@ import radicals, {
   hasSfxAudio,
   isPinyinCatalog,
   speechAudioDir,
-} from "./catalog.js?v=200";
+} from "./catalog.js?v=201";
 import { appAssetUrl } from "./appBase.js";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
@@ -70,8 +70,6 @@ try {
 } catch {
   /* ignore */
 }
-
-const PINYIN_GENDER_KEY = "214keys-pinyin-voice";
 
 export function getPinyinGender() {
   return pinyinGender;
