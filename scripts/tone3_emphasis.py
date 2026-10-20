@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Exaggerate the falling-rising (3rd) tone of a pinyin recording."""
+"""Exaggerate the falling-rising (3rd) tone of a pinyin recording.
+
+Uses a smooth time-varying resample (vinyl-style): the playback speed follows
+the pitch contour, so the pitch goes down and back up without any grain
+boundaries or ring-modulation artefacts. Formants move with the pitch, exactly
+like speeding up / slowing down a tape.
+"""
 import subprocess
 import wave
 from pathlib import Path
@@ -12,12 +18,9 @@ SR = 16000
 HOP_SEC = 0.005
 WIN_SEC = 0.04
 
-STRETCH = 1.55
-GAIN = 1.35
+GAIN = 1.25
 
 # Pitch multiplier on the *voiced* part (0 = vowel onset, 1 = end):
-# a gentle fall (shallow, to keep timbre close to the original voice), a hold,
-# then the modulation ends and the original recording plays untouched.
 CONTOUR = ((0.0, 1.0), (0.10, 0.9), (0.25, 0.8), (0.45, 0.8), (0.55, 1.0), (1.0, 1.0))
 
 
@@ -84,22 +87,6 @@ def _value_at(points, u):
     return points[-1][1]
 
 
-def _grains(f0, duration):
-    centers = []
-    periods = []
-    voiced = []
-    t = 0.0
-    while t < duration:
-        index = int(t / HOP_SEC)
-        freq = float(f0[index]) if 0 <= index < len(f0) else 0.0
-        period = 1.0 / freq if freq > 0 else 0.005
-        centers.append(t)
-        periods.append(period)
-        voiced.append(freq > 0)
-        t += period
-    return np.asarray(centers), np.asarray(periods), np.asarray(voiced)
-
-
 def emphasize(path):
     x = _decode(path)
     if len(x) < int(0.08 * SR):
@@ -107,61 +94,38 @@ def emphasize(path):
 
     f0 = _f0_track(x)
     duration = len(x) / SR
-    target = duration * STRETCH
 
-    centers, periods, voiced = _grains(f0, duration)
-    if not len(centers):
-        return False
-
-    # Voiced onset: where the pitch contour actually becomes audible.
-    voiced_idx = np.where(voiced)[0]
-    if len(voiced_idx):
-        onset = float(centers[voiced_idx[0]])
+    # Voiced onset.
+    voiced_frames = np.where(f0 > 0)[0]
+    if len(voiced_frames):
+        onset = voiced_frames[0] * HOP_SEC
     else:
         onset = 0.0
     voiced_span = max(0.05, duration - onset)
 
-    out = np.zeros(int(target * SR) + int(0.1 * SR), dtype=np.float32)
-    weight = np.zeros_like(out)
+    def factor_at(t):
+        if t < onset:
+            return 1.0
+        rel = (t - onset) / voiced_span
+        return _value_at(CONTOUR, rel)
 
-    out_pos = 0.0
-    cursor = 0
-    last = len(centers) - 1
-    while out_pos < target:
-        wanted = out_pos / STRETCH
-        while cursor < last and centers[cursor + 1] <= wanted:
-            cursor += 1
-        if cursor < last and abs(centers[cursor + 1] - wanted) < abs(centers[cursor] - wanted):
-            index = cursor + 1
-        else:
-            index = cursor
+    # Vinyl resample: output time s -> input time u, with du/ds = factor(u).
+    # Integrate to get the output length (stops when u reaches duration).
+    out = []
+    u = 0.0
+    max_out = int(duration * 2.0 * SR)  # safety
+    while u < duration and len(out) < max_out:
+        i0 = int(u * SR)
+        i1 = min(i0 + 1, len(x) - 1)
+        frac = u * SR - i0
+        val = x[i0] * (1 - frac) + x[i1] * frac
+        out.append(val)
+        p = factor_at(u)
+        u += p / SR
 
-        center = float(centers[index])
-        period = float(periods[index])
-        half = max(8, int(4 * period * SR))
-        start = int(center * SR) - half
-        if start < 0 or start + 2 * half > len(x):
-            out_pos += period
-            continue
-
-        grain = x[start: start + 2 * half] * np.hanning(2 * half)
-        # Factor: flat during the unvoiced onset, contour on the voiced part.
-        if center < onset:
-            factor = 1.0
-        else:
-            rel = (center - onset) / voiced_span
-            factor = _value_at(CONTOUR, rel)
-        at = int(out_pos * SR) - half
-        if at + 2 * half > len(out):
-            break
-
-        out[at: at + 2 * half] += grain
-        weight[at: at + 2 * half] += np.hanning(2 * half)
-        out_pos += period / factor
-
-    mask = weight > 1e-3
-    out[mask] /= weight[mask]
-    out = out[: int(min(target, out_pos) * SR) + int(0.02 * SR)]
+    out = np.asarray(out, dtype=np.float32)
+    if not out.size:
+        return False
 
     rms_in = float(np.sqrt(np.mean(x ** 2)))
     rms_out = float(np.sqrt(np.mean(out ** 2))) if out.size else 0.0

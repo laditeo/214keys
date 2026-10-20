@@ -60,7 +60,7 @@ function padId(id) {
 }
 
 /** Bump when the pinyin recordings are regenerated (busts the browser cache). */
-const PINYIN_AUDIO_REV = "4";
+const PINYIN_AUDIO_REV = "5";
 
 export function audioUrl(lang, id, tone = 1) {
   if (!hasSpeechAudio) return "";
