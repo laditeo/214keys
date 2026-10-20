@@ -997,19 +997,21 @@ html[data-vowel-colors="on"] .pinyin-table__corner {
 
 .voice-toggle {
   display: inline-flex;
-  gap: 0.25rem;
+  flex-direction: column;
+  gap: 0.2rem;
   margin-top: 0.35rem;
 }
 
 .voice-toggle__btn {
   width: 1.6rem;
-  height: 1.6rem;
+  height: 1.4rem;
   padding: 0;
   border: 1px solid var(--border);
-  border-radius: 50%;
+  border-radius: 3px;
   background: var(--bg-elevated);
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 600;
   line-height: 1;
   cursor: pointer;
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
