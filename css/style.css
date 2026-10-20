@@ -1003,18 +1003,22 @@ html[data-vowel-colors="on"] .pinyin-table__corner {
 }
 
 .voice-toggle__btn {
-  width: 1.6rem;
-  height: 1.4rem;
-  padding: 0;
+  width: 2rem;
+  height: 2.6rem;
+  padding: 0.15rem 0;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: 4px;
   background: var(--bg-elevated);
-  color: var(--text-muted);
-  font-size: 0.72rem;
-  font-weight: 600;
-  line-height: 1;
+  color: var(--text);
+  font-size: 0.78rem;
+  line-height: 1.1;
   cursor: pointer;
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
 }
 
 .voice-toggle__btn:hover {
