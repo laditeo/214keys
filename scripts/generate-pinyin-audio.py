@@ -112,11 +112,6 @@ async def make_one(item, tone, force, semaphore, report):
                 seconds = audio_seconds(target)
                 if seconds is None or seconds >= MIN_SECONDS:
                     finalize(target)
-                    if tone == 3:
-                        try:
-                            emphasize(target)
-                        except Exception as err:  # noqa: BLE001 - keep the raw clip
-                            report.append(f"warn {item['id']:03d}-3 tone3 emphasis: {err}")
                     report.append(f"ok {item['id']:03d}-{tone} {text}")
                     return "ok"
             except Exception as err:  # noqa: BLE001 - report and retry
