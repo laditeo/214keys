@@ -4,8 +4,8 @@ import radicals, {
   isPinyinCatalog,
   isDevanagariCatalog,
   speechAudioDir,
-} from "./catalog.js?v=245";
-import { appAssetUrl } from "./appBase.js?v=245";
+} from "./catalog.js?v=246";
+import { appAssetUrl } from "./appBase.js?v=246";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
 const MAX_VOICES = 8;
@@ -61,7 +61,7 @@ function padId(id) {
 }
 
 /** Bump when the pinyin recordings are regenerated (busts the browser cache). */
-const PINYIN_AUDIO_REV = "8";
+const PINYIN_AUDIO_REV = "9";
 const PINYIN_GENDER_KEY = "214keys-pinyin-voice";
 const DEVANAGARI_GENDER_KEY = "214keys-devanagari-voice";
 

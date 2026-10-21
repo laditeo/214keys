@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=245";
+} from "./catalog.js?v=246";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=245";
+import "./char3dOrbit.js?v=246";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=245";
+} from "./modalChar3d.js?v=246";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=245";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=245";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=245";
+} from "./radicalSpeech.js?v=246";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=246";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=246";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=245";
+} from "./spatialCanvas.js?v=246";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -1047,10 +1047,7 @@ function navigateTableHorizontal(delta) {
   const active = grid.querySelector(".cell--active");
   if (!active) return false;
 
-  const onlyPopular = isDevanagariCatalog && popularOnlyOn;
-  const cells = [...grid.querySelectorAll(".cell")].filter(
-    (cell) => cell !== active && (!onlyPopular || cell.dataset.popular === "1"),
-  );
+  const cells = [...grid.querySelectorAll(".cell")].filter((cell) => cell !== active);
   const from = active.getBoundingClientRect();
   const y = Math.round(from.top + from.height / 2);
   let target = null;
@@ -1085,7 +1082,6 @@ function navigateTableVertical(delta) {
   const active = grid.querySelector(".cell--active");
   if (!active) return false;
 
-  const onlyPopular = isDevanagariCatalog && popularOnlyOn;
   const cells = [...grid.querySelectorAll(".cell")];
   const from = active.getBoundingClientRect();
   const x = from.left + from.width / 2;
@@ -1094,7 +1090,6 @@ function navigateTableVertical(delta) {
 
   for (const cell of cells) {
     if (cell === active) continue;
-    if (onlyPopular && cell.dataset.popular !== "1") continue;
     const rect = cell.getBoundingClientRect();
     if (Math.abs(rect.left + rect.width / 2 - x) > 2) continue;
     const dy = rect.top - from.top;
@@ -1940,12 +1935,10 @@ const graphicsModeSlider = document.getElementById("graphics-mode-slider");
 const graphicsModeValue = document.getElementById("graphics-mode-value");
 const categoryColorsToggle = document.getElementById("toggle-category-colors");
 const cellEmojiToggle = document.getElementById("toggle-cell-emoji");
-const popularOnlyToggle = document.getElementById("toggle-popular-only");
 const compactToggle = document.getElementById("toggle-compact");
 const vowelColorsToggle = document.getElementById("toggle-vowel-colors");
 
 const CELL_COLORS_KEY = "214keys-cell-colors";
-const POPULAR_ONLY_KEY = "214keys-devanagari-popular-only";
 const COMPACT_KEY = "214keys-devanagari-compact";
 const CELL_EMOJI_KEY = "214keys-cell-emoji";
 const COLOR_INK_KEY = "214keys-basic-color-ink";
@@ -1954,7 +1947,6 @@ const VOWEL_COLORS_KEY = "214keys-pinyin-vowel-colors";
 let categoryColorsOn = false;
 let cellEmojiOn = false;
 let vowelColorsOn = false;
-let popularOnlyOn = false;
 let compactOn = false;
 
 function applyCellDisplayFlags() {
@@ -1962,7 +1954,6 @@ function applyCellDisplayFlags() {
   document.documentElement.dataset.cellEmoji = cellEmojiOn ? "on" : "";
   document.documentElement.dataset.colorInk = colorInkOn ? "on" : "";
   document.documentElement.dataset.vowelColors = vowelColorsOn ? "on" : "";
-  document.documentElement.dataset.popularOnly = popularOnlyOn ? "on" : "";
   document.documentElement.dataset.compact = compactOn ? "on" : "";
   syncColorInkToggle();
 }
@@ -2025,9 +2016,6 @@ function applyCellDisplayToggles({ persist = true } = {}) {
   if (vowelColorsToggle) {
     vowelColorsToggle.checked = vowelColorsOn;
   }
-  if (popularOnlyToggle) {
-    popularOnlyToggle.checked = popularOnlyOn;
-  }
   if (compactToggle) {
     compactToggle.checked = compactOn;
   }
@@ -2038,7 +2026,6 @@ function applyCellDisplayToggles({ persist = true } = {}) {
       localStorage.setItem(CELL_EMOJI_KEY, cellEmojiOn ? "1" : "0");
       localStorage.setItem(COLOR_INK_KEY, colorInkOn ? "1" : "0");
       localStorage.setItem(VOWEL_COLORS_KEY, vowelColorsOn ? "1" : "0");
-      localStorage.setItem(POPULAR_ONLY_KEY, popularOnlyOn ? "1" : "0");
       localStorage.setItem(COMPACT_KEY, compactOn ? "1" : "0");
     } catch {
       /* ignore */
@@ -2058,11 +2045,6 @@ function setCellEmojiOn(next, options) {
 
 function setVowelColorsOn(next, options) {
   vowelColorsOn = Boolean(next);
-  applyCellDisplayToggles(options);
-}
-
-function setPopularOnlyOn(next, options) {
-  popularOnlyOn = Boolean(next);
   applyCellDisplayToggles(options);
 }
 
@@ -2281,10 +2263,6 @@ vowelColorsToggle?.addEventListener("change", () => {
   setVowelColorsOn(vowelColorsToggle.checked);
 });
 
-popularOnlyToggle?.addEventListener("change", () => {
-  setPopularOnlyOn(popularOnlyToggle.checked);
-});
-
 compactToggle?.addEventListener("change", () => {
   setCompactOn(compactToggle.checked);
 });
@@ -2335,8 +2313,6 @@ if (isPinyinCatalog || isDevanagariCatalog) {
   });
 }
 if (isDevanagariCatalog) {
-  const storedPopularOnly = readStoredToggleValue(POPULAR_ONLY_KEY);
-  setPopularOnlyOn(storedPopularOnly === null ? true : storedPopularOnly, { persist: false });
   const storedCompact = readStoredToggleValue(COMPACT_KEY);
   setCompactOn(storedCompact === null ? true : storedCompact, { persist: false });
 }

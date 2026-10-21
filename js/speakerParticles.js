@@ -1,4 +1,4 @@
-import { getRadicalEmoji } from "./catalog.js?v=245";
+import { getRadicalEmoji } from "./catalog.js?v=246";
 import {
   ensureGlyphFontsReady,
   initGlyphThreeStage,

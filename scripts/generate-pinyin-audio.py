@@ -32,6 +32,8 @@ VOICE = "zh-CN-XiaoxiaoNeural"
 CONCURRENCY = 6
 RETRIES = 3
 MIN_SECONDS = 0.12
+RATE = "+0%"
+POLISH = False
 TONES = (1, 2, 3, 4)
 
 
@@ -73,19 +75,32 @@ def audio_seconds(path):
     return 0.0
 
 
-def finalize(path):
-    """Trim leading/trailing silence and resample to 44.1 kHz for Safari/iOS."""
+def finalize(path, polish=False):
+    """Trim leading/trailing silence and resample to 44.1 kHz for Safari/iOS.
+
+    With ``polish`` the clip is also normalised (loudnorm) and gets a short
+    silence pad on both sides: a lone syllable trimmed flush against the
+    consonant onset sounds clipped and breathy.
+    """
     if not FFMPEG.exists():
         return
+    filters = [
+        "silenceremove=start_periods=1:start_duration=0:start_threshold=-45dB",
+        "areverse",
+        "silenceremove=start_periods=1:start_duration=0:start_threshold=-45dB",
+        "areverse",
+    ]
+    if polish:
+        filters += [
+            "loudnorm=I=-18:TP=-1.5:LRA=9",
+            "adelay=70:all=1",
+            "apad=pad_dur=0.09",
+        ]
     temp = path.with_suffix(".tmp.mp3")
     result = subprocess.run(
         [
             str(FFMPEG), "-y", "-v", "error", "-i", str(path),
-            "-af",
-            "silenceremove=start_periods=1:start_duration=0:start_threshold=-45dB,"
-            "areverse,"
-            "silenceremove=start_periods=1:start_duration=0:start_threshold=-45dB,"
-            "areverse",
+            "-af", ",".join(filters),
             "-codec:a", "libmp3lame", "-ar", "44100", "-ac", "1", "-b:a", "128k",
             str(temp),
         ],
@@ -98,7 +113,7 @@ def finalize(path):
 
 
 async def synthesize(text, path):
-    communicate = edge_tts.Communicate(text, VOICE)
+    communicate = edge_tts.Communicate(text, VOICE, rate=RATE)
     await communicate.save(str(path))
 
 
@@ -114,7 +129,7 @@ async def make_one(item, tone, force, semaphore, report):
                 await synthesize(text, target)
                 seconds = audio_seconds(target)
                 if seconds is None or seconds >= MIN_SECONDS:
-                    finalize(target)
+                    finalize(target, polish=POLISH)
                     report.append(f"ok {item['id']:03d}-{tone} {text}")
                     return "ok"
             except Exception as err:  # noqa: BLE001 - report and retry
@@ -147,6 +162,8 @@ async def main():
     parser.add_argument("--out-dir", default="", help="output subdirectory under audio/<audio-root>")
     parser.add_argument("--audio-root", default="pinyin", help="folder under audio/, e.g. devanagari")
     parser.add_argument("--items", default="", help="items js filename under js/, e.g. devanagariItems.js")
+    parser.add_argument("--rate", default="+0%", help="TTS rate, e.g. -18%")
+    parser.add_argument("--polish", action="store_true", help="normalise loudness and pad the clip")
     parser.add_argument("--ids", default="", help="comma separated syllable ids")
     parser.add_argument(
         "--finalize-only",
@@ -155,7 +172,9 @@ async def main():
     )
     args = parser.parse_args()
 
-    global OUT_DIR, VOICE, ITEMS_PATH
+    global OUT_DIR, VOICE, ITEMS_PATH, RATE, POLISH
+    RATE = args.rate
+    POLISH = args.polish
     if args.voice:
         VOICE = args.voice
     if args.out_dir:
