@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=239";
+} from "./catalog.js?v=244";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=239";
+import "./char3dOrbit.js?v=244";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=239";
+} from "./modalChar3d.js?v=244";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=239";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=239";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=239";
+} from "./radicalSpeech.js?v=244";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=244";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=244";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=239";
+} from "./spatialCanvas.js?v=244";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -480,16 +480,18 @@ function fillModal(item) {
   resetSpeakers();
   resetCopyButton();
 
-  fields.num.textContent = modalIndexLabel(item);
+  if (fields.num) fields.num.textContent = modalIndexLabel(item);
   fields.char.textContent = item.char;
   fields.charWrap?.setAttribute("aria-label", `Нажать на ${item.char}`);
-  fields.variants.textContent = item.variants
-    ? `варианты: ${item.variants.split(/\s+/).join(" · ")}`
-    : "";
+  if (fields.variants) {
+    fields.variants.textContent = item.variants
+      ? `варианты: ${item.variants.split(/\s+/).join(" · ")}`
+      : "";
+  }
   if (fields.jp) fields.jp.textContent = item.jp;
   if (fields.cn) fields.cn.textContent = item.cn;
   if (fields.tones) fillTones(item.tones);
-  fields.ru.textContent = item.ru;
+  if (fields.ru) fields.ru.textContent = item.ru;
   if (isDevanagariCatalog) fillDevanagariArticulation(item);
   fields.strokes.textContent = item.strokes ? strokeCompactLabel(item.strokes) : "";
   syncModalChar3dForItem(item.char);
@@ -1438,10 +1440,10 @@ function createDevanagariTableFragment(list, onCellClick) {
   // Строка самостоятельных гласных.
   const bareLabel = document.createElement("div");
   bareLabel.className = "pinyin-table__row-label deva-row-label";
-  bareLabel.innerHTML = '<span class="deva-row-label__text">'
+  bareLabel.innerHTML = '<span class="deva-row-label__main">'
     + '<span class="deva-row-label__roman">без согласной</span>'
-    + '<span class="deva-row-label__art"><span>bare vowels</span></span>'
-    + '</span>';
+    + '</span>'
+    + '<span class="deva-row-label__art"><span>bare vowels</span></span>';
   bareLabel.title = "Самостоятельные гласные · bare vowels";
   frag.appendChild(bareLabel);
   for (const key of vowelKeys) {
@@ -1476,11 +1478,11 @@ function createDevanagariTableFragment(list, onCellClick) {
       rowLabel.className = "pinyin-table__row-label deva-row-label";
       const art = Array.isArray(row.art) ? row.art : [row.art];
       rowLabel.title = `${row.initial} — ${row.roman} · ${row.ru} (${row.en}) · ${art.join(", ")}`;
-      rowLabel.innerHTML = `<span class="deva-row-label__dev">${row.initial}</span>`
-        + '<span class="deva-row-label__text">'
-        + `<span class="deva-row-label__roman">${row.roman} · ${row.ru}</span>`
-        + `<span class="deva-row-label__art">${art.map((part) => `<span>${part}</span>`).join("")}</span>`
-        + '</span>';
+      rowLabel.innerHTML = '<span class="deva-row-label__main">'
+        + `<span class="deva-row-label__dev">${row.initial}</span>`
+        + `<span class="deva-row-label__roman">${row.roman}, ${row.ru}</span>`
+        + '</span>'
+        + `<span class="deva-row-label__art">${art.map((part) => `<span>${part}</span>`).join("")}</span>`;
       frag.appendChild(rowLabel);
 
       for (const key of vowelKeys) {

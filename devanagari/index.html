@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&family=Noto+Serif+Devanagari:wght@300..700&family=Noto+Sans+Devanagari:wght@300..700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="../css/style.css?v=239">
+  <link rel="stylesheet" href="../css/style.css?v=244">
   <script>
     (function () {
-      var BUILD = "239";
+      var BUILD = "244";
       document.addEventListener("DOMContentLoaded", function () {
         var buildEl = document.getElementById("header-build");
         if (buildEl) buildEl.textContent = "v" + BUILD;
@@ -314,32 +314,12 @@
           <button type="button" class="modal__close" aria-label="Закрыть">&times;</button>
 
           <div class="modal__hero">
-            <span class="modal__num" id="modal-num"></span>
             <button type="button" class="modal__char-wrap" id="modal-char-wrap" aria-label="Нажать на знак">
               <span class="modal__char" id="modal-char"></span>
             </button>
-            <span class="modal__variants" id="modal-variants"></span>
           </div>
 
           <dl class="modal__readings">
-            <div class="modal__row modal__row--wide">
-              <dt class="modal__row-label">
-                <span class="modal__row-label-text">Слог</span>
-                <button type="button" class="modal-char3d-toggle" data-char-mode-toggle aria-pressed="false" aria-label="3D-режим знака" title="Покрутить знак в 3D">
-                  <svg class="char3d-toggle__icon" viewBox="0 0 32 32" aria-hidden="true">
-                    <g class="char3d-toggle__orbit">
-                      <ellipse cx="16" cy="16" rx="14.5" ry="6" transform="rotate(-26 16 16)"/>
-                      <circle class="char3d-toggle__sat" cx="30.5" cy="16" r="2.1" transform="rotate(-26 16 16)"/>
-                    </g>
-                    <text class="char3d-toggle__label" x="16" y="16" text-anchor="middle" dominant-baseline="central">3D</text>
-                  </svg>
-                </button>
-              </dt>
-              <dd class="modal__ru-fit">
-                <div class="modal__ru-scale" id="modal-ru"></div>
-                <div class="deva-art" id="modal-deva-art" hidden></div>
-              </dd>
-            </div>
             <div class="modal__row modal__row--wide modal__row--bare">
               <dd class="modal__reading">
                 <div class="voice-toggle voice-toggle--inline" role="group" aria-label="Голос">
@@ -365,6 +345,9 @@
                   </div>
                 </div>
               </dd>
+            </div>
+            <div class="modal__row modal__row--wide modal__row--bare">
+              <dd class="deva-art" id="modal-deva-art" hidden></dd>
             </div>
           </dl>
 
@@ -436,6 +419,6 @@
     }
   }
   </script>
-  <script type="module" src="../js/app.js?v=239"></script>
+  <script type="module" src="../js/app.js?v=244"></script>
 </body>
 </html>
