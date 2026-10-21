@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=244";
+} from "./catalog.js?v=245";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=244";
+import "./char3dOrbit.js?v=245";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=244";
+} from "./modalChar3d.js?v=245";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=244";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=244";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=244";
+} from "./radicalSpeech.js?v=245";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=245";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=245";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=244";
+} from "./spatialCanvas.js?v=245";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -284,7 +284,8 @@ function syncModalReadingWaves(item) {
 function triggerReadingPlayback(lang, tone) {
   const btn = lang === "jp" ? speakerJp : speakerCn;
   const wave = readingWaves[lang];
-  if (!btn || !wave || !activeItem || btn.disabled) return;
+  if (!wave || !activeItem) return;
+  if (btn && btn.disabled) return;
 
   const spokenTone = isPinyinCatalog && lang === "cn" ? (tone || activeTone) : 1;
   unlockSpeech();
@@ -317,7 +318,7 @@ function triggerReadingPlayback(lang, tone) {
           wave.resize();
         }
         try {
-          burstSpeakerParticles(btn, lang, item);
+          if (btn) burstSpeakerParticles(btn, lang, item);
           burstHeroGlyphWhisper(fields.charWrap, item);
         } catch {
           /* particles are optional */
@@ -352,16 +353,17 @@ function wireSpeaker(btn, lang) {
 
 function wireReadingWave(rootEl, lang) {
   const btn = lang === "jp" ? speakerJp : speakerCn;
+  const blocked = () => Boolean(btn && btn.disabled);
 
   rootEl.addEventListener("pointerdown", (e) => {
     e.stopPropagation();
-    if (rootEl.hidden || !activeItem || btn.disabled) return;
+    if (rootEl.hidden || !activeItem || blocked()) return;
     unlockSpeech();
   });
 
   rootEl.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (rootEl.hidden || !activeItem || btn.disabled) return;
+    if (rootEl.hidden || !activeItem || blocked()) return;
     triggerReadingPlayback(lang);
   });
 }

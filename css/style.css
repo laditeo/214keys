@@ -3416,22 +3416,22 @@ html[data-catalog="devanagari"] .pinyin-table__blank--void {
 
 /* —— Простой (компактный) режим: плотнее и крупнее —— */
 
-html[data-catalog="devanagari"][data-compact="on"] .grid {
+html[data-catalog="devanagari"][data-compact="on"] #grid {
   grid-template-columns: max-content repeat(var(--deva-cols, 12), minmax(4.6rem, 6rem));
   justify-content: center;
 }
 
-html[data-catalog="devanagari"][data-compact="on"] .grid > .cell {
+html[data-catalog="devanagari"][data-compact="on"] #grid > .cell {
   padding: 0.15rem 0.1rem 0.2rem;
   gap: 0.1rem;
 }
 
-html[data-catalog="devanagari"][data-compact="on"] .grid > .cell .cell__char {
+html[data-catalog="devanagari"][data-compact="on"] #grid > .cell .cell__char {
   font-size: clamp(1.5rem, 86cqi, 3.9rem);
   line-height: 1;
 }
 
-html[data-catalog="devanagari"][data-compact="on"] .grid > .cell .cell__pinyin {
+html[data-catalog="devanagari"][data-compact="on"] #grid > .cell .cell__pinyin {
   font-size: clamp(0.5rem, 20cqi, 0.85rem);
   bottom: 0.15rem;
 }
@@ -3492,4 +3492,48 @@ html[data-catalog="devanagari"] .deva-art {
   margin-top: 0.55rem;
   padding-top: 0.55rem;
   border-top: 1px solid var(--border);
+}
+
+/* Карточка деванагари: крупный знак, чтение под ним, высокая волна. */
+html[data-catalog="devanagari"] .modal__char {
+  font-size: 6.5rem;
+  line-height: 1.05;
+  padding: 0.2rem 0.4rem;
+}
+
+html[data-catalog="devanagari"] .modal__hero {
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+html[data-catalog="devanagari"] .modal__reading-text--under {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+html[data-catalog="devanagari"] .audio-wave--tall {
+  flex: 1 1 auto;
+  height: 2.9rem;
+  padding: 0 0.5rem;
+}
+
+html[data-catalog="devanagari"] .audio-wave--tall .audio-wave__canvas {
+  height: 2rem;
+}
+
+/* Миникарта в компактном режиме: столбцов и строк меньше — знак крупнее. */
+html[data-catalog="devanagari"][data-compact="on"] .modal-map__grid .cell__char {
+  font-size: 0.78rem;
+  line-height: 1.05;
+}
+
+html[data-catalog="devanagari"][data-compact="on"] .modal-map__grid > .cell {
+  min-height: 1.1rem;
+  padding: 0.05rem 0;
+}
+
+html[data-catalog="devanagari"][data-compact="on"] .modal-map__grid .pinyin-table__row-label {
+  font-size: 0.62rem;
 }
