@@ -2958,7 +2958,151 @@ html[data-catalog="devanagari"] {
 }
 
 html[data-catalog="devanagari"] .grid {
-  grid-template-columns: 2.6rem repeat(37, minmax(2.1rem, 1fr));
+  grid-template-columns: 7.5rem repeat(12, minmax(4.2rem, 1fr));
+}
+
+html[data-catalog="devanagari"] .deva-corner {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
+  font-family: var(--font-ui);
+  font-size: 0.52rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  line-height: 1.15;
+}
+
+html[data-catalog="devanagari"] .deva-corner__ru {
+  color: var(--text-muted);
+}
+
+html[data-catalog="devanagari"] .deva-corner__en {
+  color: var(--text-muted);
+  opacity: 0.7;
+  font-size: 0.46rem;
+}
+
+html[data-catalog="devanagari"] .deva-th {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.02rem;
+  padding: 0.3rem 0.15rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+html[data-catalog="devanagari"] .deva-th__dev {
+  font-family: var(--font-han);
+  font-size: 1.05rem;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+html[data-catalog="devanagari"] .deva-th__roman {
+  font-family: var(--font-ui);
+  font-size: 0.56rem;
+  line-height: 1.1;
+  color: var(--text-muted);
+}
+
+html[data-catalog="devanagari"] .deva-th__art {
+  font-family: var(--font-ui);
+  font-size: 0.46rem;
+  line-height: 1.15;
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+html[data-catalog="devanagari"] .deva-th__en {
+  font-family: var(--font-ui);
+  font-size: 0.46rem;
+  line-height: 1.15;
+  color: var(--text-muted);
+  opacity: 0.65;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  text-align: center;
+}
+
+html[data-catalog="devanagari"] .deva-row-label {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.02rem;
+  padding: 0.2rem 0.5rem;
+}
+
+html[data-catalog="devanagari"] .deva-row-label__dev {
+  font-family: var(--font-han);
+  font-size: 1.05rem;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+html[data-catalog="devanagari"] .deva-row-label__roman {
+  font-family: var(--font-ui);
+  font-size: 0.56rem;
+  line-height: 1.1;
+  color: var(--text-muted);
+}
+
+html[data-catalog="devanagari"] .deva-row-label__art {
+  font-family: var(--font-ui);
+  font-size: 0.5rem;
+  line-height: 1.15;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+html[data-catalog="devanagari"] .deva-band {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+html[data-catalog="devanagari"] .deva-band__dev {
+  font-family: var(--font-han);
+  font-size: 0.78rem;
+}
+
+html[data-catalog="devanagari"] .deva-band__ru {
+  color: var(--text-muted);
+}
+
+html[data-catalog="devanagari"] .deva-band__en {
+  color: var(--text-muted);
+  opacity: 0.7;
+  font-size: 0.6rem;
+}
+
+/* Популярные слоги: подсветка и режим «только популярные». */
+html[data-catalog="devanagari"] .grid > .cell[data-popular="1"] .cell__char {
+  position: relative;
+}
+
+html[data-catalog="devanagari"] .grid > .cell[data-popular="1"]::after {
+  content: "";
+  position: absolute;
+  top: 0.28rem;
+  right: 0.28rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: var(--speaker-active);
+  opacity: 0.75;
+}
+
+html[data-catalog="devanagari"][data-popular-only="on"] .grid > .cell[data-popular="0"] {
+  opacity: 0.16;
+}
+
+html[data-catalog="devanagari"][data-popular-only="on"] .grid > .cell[data-popular="0"]::after {
+  display: none;
 }
 
 html[data-catalog="devanagari"] .grid > .cell {
@@ -3038,7 +3182,7 @@ html[data-catalog="devanagari"] .pinyin-table__axis {
 }
 
 html[data-catalog="devanagari"] .modal-map__grid.grid {
-  grid-template-columns: minmax(0, 1.6rem) repeat(37, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 2.4rem) repeat(12, minmax(0, 1fr));
 }
 
 html[data-catalog="devanagari"] .modal-map__grid .pinyin-table__band,
@@ -3061,6 +3205,16 @@ html[data-catalog="devanagari"] .modal-map__grid .pinyin-table__th {
   text-transform: none;
 }
 
+html[data-catalog="devanagari"] .modal-map__grid .deva-th__roman,
+html[data-catalog="devanagari"] .modal-map__grid .deva-th__en,
+html[data-catalog="devanagari"] .modal-map__grid .deva-th__art,
+html[data-catalog="devanagari"] .modal-map__grid .deva-corner__ru,
+html[data-catalog="devanagari"] .modal-map__grid .deva-corner__en,
+html[data-catalog="devanagari"] .modal-map__grid .deva-row-label__roman,
+html[data-catalog="devanagari"] .modal-map__grid .deva-row-label__art {
+  display: none;
+}
+
 html[data-catalog="devanagari"] .modal-map__grid .pinyin-table__row-label {
   font-family: var(--font-han);
   font-size: 0.5rem;
@@ -3071,4 +3225,48 @@ html[data-catalog="devanagari"] .modal-map__grid .pinyin-table__row-label {
 html[data-catalog="devanagari"] .modal-char3d-toggle,
 html[data-catalog="devanagari"] .modal__footer .matcap-toggle {
   display: none;
+}
+
+/* Артикуляция в карточке деванагари. */
+.deva-art {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 0.4rem;
+  font-family: var(--font-ui);
+}
+
+.deva-art__row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.deva-art__dev {
+  font-family: var(--font-han);
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.deva-art__roman {
+  font-size: 0.82rem;
+  color: var(--text);
+  font-style: italic;
+}
+
+.deva-art__name {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.deva-art__en {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.deva-art__art {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  padding-left: 0.1rem;
 }

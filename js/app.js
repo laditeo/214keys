@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=217";
+} from "./catalog.js?v=219";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=217";
+import "./char3dOrbit.js?v=219";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=217";
+} from "./modalChar3d.js?v=219";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=217";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=217";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=217";
+} from "./radicalSpeech.js?v=219";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=219";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=219";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=217";
+} from "./spatialCanvas.js?v=219";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -490,11 +490,46 @@ function fillModal(item) {
   if (fields.cn) fields.cn.textContent = item.cn;
   if (fields.tones) fillTones(item.tones);
   fields.ru.textContent = item.ru;
+  if (isDevanagariCatalog) fillDevanagariArticulation(item);
   fields.strokes.textContent = item.strokes ? strokeCompactLabel(item.strokes) : "";
   syncModalChar3dForItem(item.char);
 
   updateModalNav();
   syncModalReadingWaves(item);
+}
+
+/* Блок артикуляции: как образуется звук (RU) и как он звучит (EN). */
+function fillDevanagariArticulation(item) {
+  const box = document.getElementById("modal-deva-art");
+  if (!box) return;
+  const cons = item.consRu
+    ? { dev: item.initial, roman: item.consRoman, ru: item.consRu, en: item.consEn, art: item.consArtRu }
+    : null;
+  const vowel = {
+    dev: item.vowelDev,
+    roman: item.vowelRoman,
+    ru: item.vowelRu,
+    en: item.vowelEn,
+    art: item.vowelArtRu,
+  };
+
+  const parts = [];
+  const block = (title, data) => {
+    if (!data) return;
+    parts.push(
+      `<div class="deva-art__row">`
+      + `<span class="deva-art__dev">${data.dev}</span>`
+      + `<span class="deva-art__roman">${data.roman}</span>`
+      + `<span class="deva-art__name">${data.ru}</span>`
+      + `<span class="deva-art__en">${data.en}</span>`
+      + `</div>`
+      + (data.art ? `<div class="deva-art__art">${data.art}</div>` : ""),
+    );
+  };
+  block("Согласная", cons);
+  block("Гласная", vowel);
+  box.innerHTML = parts.join("");
+  box.hidden = parts.length === 0;
 }
 
 function fillTones(tones) {
@@ -1141,6 +1176,11 @@ const DEVANAGARI_TABLE_SECTIONS = {
   short: "ह्रस्व", long: "दीर्घ", diphthong: "द्वय", nasal: "अनुस्वार",
 };
 
+/* Порядок колонок-пласенных — классический варнмала. */
+const DEVANAGARI_VOWEL_ORDER = [
+  "a", "aa", "i", "ii", "u", "uu", "e", "ai", "o", "au", "am", "ah",
+];
+
 function getPinyinTableInitials() {
   return isDevanagariCatalog ? DEVANAGARI_TABLE_INITIALS : PINYIN_TABLE_INITIALS;
 }
@@ -1223,6 +1263,127 @@ function buildPinyinRows(list) {
   return rows;
 }
 
+/* Таблица деванагари: строки — согласные, столбцы — гласные. */
+function createDevanagariTableFragment(list, onCellClick) {
+  const frag = document.createDocumentFragment();
+
+  const vowelMeta = new Map();
+  const vargaOrder = [];
+  const vargaMeta = new Map();
+  const bare = new Map();
+  const rows = new Map();
+
+  for (const item of list) {
+    const vowelKey = (item.group || "").split(":")[1] || item.vowelRoman || "";
+    if (!vowelMeta.has(vowelKey)) {
+      vowelMeta.set(vowelKey, {
+        key: vowelKey,
+        dev: item.vowelDev || item.char,
+        roman: item.vowelRoman || "",
+        ru: item.vowelRu || "",
+        en: item.vowelEn || "",
+        art: item.vowelArtRu || "",
+      });
+    }
+    if (!item.initial) {
+      bare.set(vowelKey, item);
+      continue;
+    }
+    if (!vargaMeta.has(item.varga)) {
+      vargaMeta.set(item.varga, item.varga);
+      vargaOrder.push(item.varga);
+    }
+    if (!rows.has(item.initial)) {
+      rows.set(item.initial, {
+        initial: item.initial,
+        roman: item.consRoman || "",
+        ru: item.consRu || "",
+        en: item.consEn || "",
+        art: item.consArtRu || "",
+        varga: item.varga,
+        cells: new Map(),
+      });
+    }
+    rows.get(item.initial).cells.set(vowelKey, item);
+  }
+
+  const vowelKeys = DEVANAGARI_VOWEL_ORDER.filter((key) => vowelMeta.has(key));
+  for (const key of vowelMeta.keys()) {
+    if (!vowelKeys.includes(key)) vowelKeys.push(key);
+  }
+
+  // Угол + шапка гласных.
+  const corner = document.createElement("div");
+  corner.className = "pinyin-table__th pinyin-table__corner deva-corner";
+  corner.innerHTML = '<span class="deva-corner__ru">согласные</span>'
+    + '<span class="deva-corner__en">consonants</span>';
+  frag.appendChild(corner);
+
+  for (const key of vowelKeys) {
+    const meta = vowelMeta.get(key);
+    const th = document.createElement("div");
+    th.className = "pinyin-table__th deva-th";
+    th.dataset.vowel = key;
+    th.title = `${meta.dev} — ${meta.roman} · ${meta.ru} (${meta.en})`;
+    th.innerHTML = `<span class="deva-th__dev">${meta.dev}</span>`
+      + `<span class="deva-th__roman">${meta.roman} · ${meta.ru}</span>`
+      + `<span class="deva-th__en">${meta.en}</span>`
+      + `<span class="deva-th__art">${meta.art}</span>`;
+    frag.appendChild(th);
+  }
+
+  // Строка самостоятельных гласных.
+  const bareLabel = document.createElement("div");
+  bareLabel.className = "pinyin-table__row-label deva-row-label";
+  bareLabel.innerHTML = '<span class="deva-row-label__dev">∅</span>'
+    + '<span class="deva-row-label__roman">без согласной</span>'
+    + '<span class="deva-row-label__art">bare vowels</span>';
+  bareLabel.title = "Самостоятельные гласные · bare vowels";
+  frag.appendChild(bareLabel);
+  for (const key of vowelKeys) {
+    const item = bare.get(key);
+    if (item) frag.appendChild(createCellButton(item, onCellClick));
+    else frag.appendChild(createDevanagariBlank());
+  }
+
+  // Согласные по варгам.
+  for (const varga of vargaOrder) {
+    const band = DEVANAGARI_BANDS.find((b) => b.id === varga);
+    const label = document.createElement("div");
+    label.className = "section-label deva-band";
+    label.innerHTML = `<span class="deva-band__dev">${band?.label ?? varga}</span>`
+      + `<span class="deva-band__ru">${band?.ru ?? ""}</span>`
+      + `<span class="deva-band__en">${band?.en ?? ""}</span>`;
+    frag.appendChild(label);
+
+    for (const row of rows.values()) {
+      if (row.varga !== varga) continue;
+      const rowLabel = document.createElement("div");
+      rowLabel.className = "pinyin-table__row-label deva-row-label";
+      rowLabel.title = `${row.initial} — ${row.roman} · ${row.ru} (${row.en}) · ${row.art}`;
+      rowLabel.innerHTML = `<span class="deva-row-label__dev">${row.initial}</span>`
+        + `<span class="deva-row-label__roman">${row.roman} · ${row.ru}</span>`
+        + `<span class="deva-row-label__art">${row.art}</span>`;
+      frag.appendChild(rowLabel);
+
+      for (const key of vowelKeys) {
+        const item = row.cells.get(key);
+        if (item) frag.appendChild(createCellButton(item, onCellClick));
+        else frag.appendChild(createDevanagariBlank());
+      }
+    }
+  }
+
+  return frag;
+}
+
+function createDevanagariBlank() {
+  const blank = document.createElement("div");
+  blank.className = "pinyin-table__blank";
+  blank.setAttribute("aria-hidden", "true");
+  return blank;
+}
+
 function createPinyinTableFragment(list, onCellClick) {
   const frag = document.createDocumentFragment();
 
@@ -1297,7 +1458,8 @@ function createPinyinTableFragment(list, onCellClick) {
 }
 
 function createItemsFragment(list, onCellClick, options) {
-  return isPinyinCatalog || isDevanagariCatalog
+  if (isDevanagariCatalog) return createDevanagariTableFragment(list, onCellClick);
+  return isPinyinCatalog
     ? createPinyinTableFragment(list, onCellClick)
     : createGridFragment(list, onCellClick, options);
 }
@@ -1646,9 +1808,11 @@ const graphicsModeSlider = document.getElementById("graphics-mode-slider");
 const graphicsModeValue = document.getElementById("graphics-mode-value");
 const categoryColorsToggle = document.getElementById("toggle-category-colors");
 const cellEmojiToggle = document.getElementById("toggle-cell-emoji");
+const popularOnlyToggle = document.getElementById("toggle-popular-only");
 const vowelColorsToggle = document.getElementById("toggle-vowel-colors");
 
 const CELL_COLORS_KEY = "214keys-cell-colors";
+const POPULAR_ONLY_KEY = "214keys-devanagari-popular-only";
 const CELL_EMOJI_KEY = "214keys-cell-emoji";
 const COLOR_INK_KEY = "214keys-basic-color-ink";
 const VOWEL_COLORS_KEY = "214keys-pinyin-vowel-colors";
@@ -1656,12 +1820,14 @@ const VOWEL_COLORS_KEY = "214keys-pinyin-vowel-colors";
 let categoryColorsOn = false;
 let cellEmojiOn = false;
 let vowelColorsOn = false;
+let popularOnlyOn = false;
 
 function applyCellDisplayFlags() {
   document.documentElement.dataset.cellColors = categoryColorsOn ? "on" : "";
   document.documentElement.dataset.cellEmoji = cellEmojiOn ? "on" : "";
   document.documentElement.dataset.colorInk = colorInkOn ? "on" : "";
   document.documentElement.dataset.vowelColors = vowelColorsOn ? "on" : "";
+  document.documentElement.dataset.popularOnly = popularOnlyOn ? "on" : "";
   syncColorInkToggle();
 }
 
@@ -1669,6 +1835,10 @@ function decorateCell(btn, item) {
   const categoryMeta = getCategoryMeta(getRadicalCategory(item));
   btn.dataset.category = categoryMeta.id;
   btn.style.setProperty("--cell-category-color", categoryMeta.color);
+  if (isDevanagariCatalog) {
+    btn.dataset.popular = item.popular ? "1" : "0";
+    if (item.popular) btn.title = `${item.cn} · ${item.ru} · частый слог`;
+  }
 
   const ink = getItemInkColor(item.id);
   if (ink) {
@@ -1719,6 +1889,9 @@ function applyCellDisplayToggles({ persist = true } = {}) {
   if (vowelColorsToggle) {
     vowelColorsToggle.checked = vowelColorsOn;
   }
+  if (popularOnlyToggle) {
+    popularOnlyToggle.checked = popularOnlyOn;
+  }
 
   if (persist) {
     try {
@@ -1726,6 +1899,7 @@ function applyCellDisplayToggles({ persist = true } = {}) {
       localStorage.setItem(CELL_EMOJI_KEY, cellEmojiOn ? "1" : "0");
       localStorage.setItem(COLOR_INK_KEY, colorInkOn ? "1" : "0");
       localStorage.setItem(VOWEL_COLORS_KEY, vowelColorsOn ? "1" : "0");
+      localStorage.setItem(POPULAR_ONLY_KEY, popularOnlyOn ? "1" : "0");
     } catch {
       /* ignore */
     }
@@ -1744,6 +1918,11 @@ function setCellEmojiOn(next, options) {
 
 function setVowelColorsOn(next, options) {
   vowelColorsOn = Boolean(next);
+  applyCellDisplayToggles(options);
+}
+
+function setPopularOnlyOn(next, options) {
+  popularOnlyOn = Boolean(next);
   applyCellDisplayToggles(options);
 }
 
@@ -1946,6 +2125,10 @@ vowelColorsToggle?.addEventListener("change", () => {
   setVowelColorsOn(vowelColorsToggle.checked);
 });
 
+popularOnlyToggle?.addEventListener("change", () => {
+  setPopularOnlyOn(popularOnlyToggle.checked);
+});
+
 graphicsModeSlider?.addEventListener("input", () => {
   applyGraphicsMode(graphicsModeSlider.value);
 });
@@ -1984,6 +2167,9 @@ setCellEmojiOn(readStoredToggle(CELL_EMOJI_KEY), { persist: false });
 if (isBasicCatalog) setColorInkOn(readStoredToggle(COLOR_INK_KEY), { persist: false });
 if (isPinyinCatalog || isDevanagariCatalog) {
   setVowelColorsOn(readStoredToggle(VOWEL_COLORS_KEY), { persist: false });
+}
+if (isDevanagariCatalog) {
+  setPopularOnlyOn(readStoredToggle(POPULAR_ONLY_KEY), { persist: false });
 }
 
 applyMatcap(getGlyphMaterialMode());

@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&family=Noto+Serif+Devanagari:wght@300..700&family=Noto+Sans+Devanagari:wght@300..700&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="../css/style.css?v=217">
+  <link rel="stylesheet" href="../css/style.css?v=219">
   <script>
     (function () {
-      var BUILD = "217";
+      var BUILD = "219";
       document.addEventListener("DOMContentLoaded", function () {
         var buildEl = document.getElementById("header-build");
         if (buildEl) buildEl.textContent = "v" + BUILD;
@@ -145,6 +145,17 @@
               <span class="display-toggle__thumb"></span>
             </span>
             <span class="display-toggle__label">Гласные и согласные</span>
+          </label>
+          <label class="display-toggle" for="toggle-popular-only">
+            <input
+              type="checkbox"
+              id="toggle-popular-only"
+              class="display-toggle__input"
+            >
+            <span class="display-toggle__track" aria-hidden="true">
+              <span class="display-toggle__thumb"></span>
+            </span>
+            <span class="display-toggle__label">Только частые слоги</span>
           </label>
         </div>
       </div>
@@ -309,6 +320,7 @@
               </dt>
               <dd class="modal__ru-fit">
                 <div class="modal__ru-scale" id="modal-ru"></div>
+                <div class="deva-art" id="modal-deva-art" hidden></div>
               </dd>
             </div>
             <div class="modal__row">
@@ -414,6 +426,6 @@
     }
   }
   </script>
-  <script type="module" src="../js/app.js?v=217"></script>
+  <script type="module" src="../js/app.js?v=219"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 import radicals from "./radicals.js";
 import basicItems from "./basicItems.js";
-import pinyinItems from "./pinyinItems.js?v=217";
-import devanagariItems from "./devanagariItems.js?v=217";
+import pinyinItems from "./pinyinItems.js?v=219";
+import devanagariItems from "./devanagariItems.js?v=219";
 import {
   RADICAL_CATEGORIES,
   getCategoryMeta as getRadicalCategoryMeta,
@@ -16,14 +16,14 @@ import {
   PINYIN_CATEGORIES,
   getPinyinCategoryMeta as getPinyinCategoryMeta,
   getPinyinCategory,
-} from "./pinyinCategories.js?v=217";
+} from "./pinyinCategories.js?v=219";
 import {
   DEVANAGARI_CATEGORIES,
   getDevanagariCategoryMeta as getDevanagariCategoryMeta,
   getDevanagariCategory,
-} from "./devanagariCategories.js?v=217";
+} from "./devanagariCategories.js?v=219";
 import { getRadicalEmoji as getKangxiEmoji } from "./radicalEmoji.js";
-import { getBasicEmoji, getBasicInkColor, getBasicInkContrast } from "./basicEmoji.js?v=217";
+import { getBasicEmoji, getBasicInkColor, getBasicInkContrast } from "./basicEmoji.js?v=219";
 
 export function getCatalogId() {
   try {
