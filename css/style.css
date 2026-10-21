@@ -2971,7 +2971,7 @@ html[data-catalog="devanagari"] {
 }
 
 html[data-catalog="devanagari"] .grid {
-  grid-template-columns: max-content repeat(12, minmax(4.2rem, 1fr));
+  grid-template-columns: max-content repeat(var(--deva-cols, 12), minmax(4.2rem, 1fr));
 }
 
 /* Уголок таблицы: диагональ делит «согласные» (слева) и «гласные» (сверху). */
@@ -3255,7 +3255,7 @@ html[data-catalog="devanagari"] .pinyin-table__axis {
 }
 
 html[data-catalog="devanagari"] .modal-map__grid.grid {
-  grid-template-columns: minmax(0, 3rem) repeat(12, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 3rem) repeat(var(--deva-cols, 12), minmax(0, 1fr));
 }
 
 html[data-catalog="devanagari"] .modal-map__grid .pinyin-table__band,
@@ -3400,4 +3400,10 @@ html[data-catalog="devanagari"] .modal__footer .matcap-toggle {
 
 .settings__body .display-toggles {
   margin-top: 0.55rem;
+}
+
+/* Компактный режим: пустые места без заливки. */
+html[data-catalog="devanagari"] .pinyin-table__blank--void {
+  background: transparent;
+  border-color: transparent;
 }

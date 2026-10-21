@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=232";
+} from "./catalog.js?v=237";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=232";
+import "./char3dOrbit.js?v=237";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=232";
+} from "./modalChar3d.js?v=237";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=232";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=232";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=232";
+} from "./radicalSpeech.js?v=237";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=237";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=237";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=232";
+} from "./spatialCanvas.js?v=237";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -1036,24 +1036,25 @@ function openModal(item) {
   });
 }
 
-/* Переход по таблице на клетку левее/правее в том же ряду. */
+/* Переход по таблице на клетку левее/правее строго в том же ряду.
+   За пределы ряда не выходим. */
 function navigateTableHorizontal(delta) {
   if (!isPinyinCatalog && !isDevanagariCatalog) return false;
   const active = grid.querySelector(".cell--active");
   if (!active) return false;
 
   const onlyPopular = isDevanagariCatalog && popularOnlyOn;
-  const cells = [...grid.querySelectorAll(".cell")];
+  const cells = [...grid.querySelectorAll(".cell")].filter(
+    (cell) => cell !== active && (!onlyPopular || cell.dataset.popular === "1"),
+  );
   const from = active.getBoundingClientRect();
-  const y = from.top + from.height / 2;
+  const y = Math.round(from.top + from.height / 2);
   let target = null;
   let best = Infinity;
 
   for (const cell of cells) {
-    if (cell === active) continue;
-    if (onlyPopular && cell.dataset.popular !== "1") continue;
     const rect = cell.getBoundingClientRect();
-    if (Math.abs(rect.top + rect.height / 2 - y) > 2) continue;
+    if (Math.abs(Math.round(rect.top + rect.height / 2) - y) > 2) continue;
     const dx = rect.left - from.left;
     if (delta < 0 && dx >= 0) continue;
     if (delta > 0 && dx <= 0) continue;
@@ -1391,9 +1392,27 @@ function createDevanagariTableFragment(list, onCellClick) {
     rows.get(item.initial).cells.set(vowelKey, item);
   }
 
-  const vowelKeys = DEVANAGARI_VOWEL_ORDER.filter((key) => vowelMeta.has(key));
+  let vowelKeys = DEVANAGARI_VOWEL_ORDER.filter((key) => vowelMeta.has(key));
   for (const key of vowelMeta.keys()) {
     if (!vowelKeys.includes(key)) vowelKeys.push(key);
+  }
+
+  // Компактный режим: оставляем только гласные, у которых есть частые слоги,
+  // и только те строки согласных, где такие слоги встречаются.
+  const compact = compactOn;
+  const popularVowels = new Set();
+  const popularConsonants = new Set();
+  for (const item of list) {
+    if (!item.popular) continue;
+    const vkey = (item.group || "").split(":")[1] || item.vowelRoman || "";
+    popularVowels.add(vkey);
+    if (item.initial) popularConsonants.add(item.initial);
+  }
+  if (compact) {
+    vowelKeys = vowelKeys.filter((key) => popularVowels.has(key));
+  }
+  for (const el of [document.getElementById("grid"), document.getElementById("modal-map-grid")]) {
+    if (el) el.style.setProperty("--deva-cols", String(vowelKeys.length || 1));
   }
 
   // Угол + шапка гласных.
@@ -1428,12 +1447,21 @@ function createDevanagariTableFragment(list, onCellClick) {
   frag.appendChild(bareLabel);
   for (const key of vowelKeys) {
     const item = bare.get(key);
-    if (item) frag.appendChild(createCellButton(item, onCellClick));
-    else frag.appendChild(createDevanagariBlank());
+    if (item && !(compact && !item.popular)) {
+      frag.appendChild(createCellButton(item, onCellClick));
+    } else {
+      frag.appendChild(createDevanagariBlank(Boolean(item)));
+    }
   }
 
   // Согласные по варгам.
   for (const varga of vargaOrder) {
+    if (compact) {
+      const hasRows = [...rows.values()].some(
+        (row) => row.varga === varga && popularConsonants.has(row.initial),
+      );
+      if (!hasRows) continue;
+    }
     const band = DEVANAGARI_BANDS.find((b) => b.id === varga);
     const label = document.createElement("div");
     label.className = "section-label deva-band";
@@ -1444,6 +1472,7 @@ function createDevanagariTableFragment(list, onCellClick) {
 
     for (const row of rows.values()) {
       if (row.varga !== varga) continue;
+      if (compact && !popularConsonants.has(row.initial)) continue;
       const rowLabel = document.createElement("div");
       rowLabel.className = "pinyin-table__row-label deva-row-label";
       const art = Array.isArray(row.art) ? row.art : [row.art];
@@ -1457,8 +1486,11 @@ function createDevanagariTableFragment(list, onCellClick) {
 
       for (const key of vowelKeys) {
         const item = row.cells.get(key);
-        if (item) frag.appendChild(createCellButton(item, onCellClick));
-        else frag.appendChild(createDevanagariBlank());
+        if (item && !(compact && !item.popular)) {
+          frag.appendChild(createCellButton(item, onCellClick));
+        } else {
+          frag.appendChild(createDevanagariBlank(compact && item));
+        }
       }
     }
   }
@@ -1466,9 +1498,9 @@ function createDevanagariTableFragment(list, onCellClick) {
   return frag;
 }
 
-function createDevanagariBlank() {
+function createDevanagariBlank(hidden = false) {
   const blank = document.createElement("div");
-  blank.className = "pinyin-table__blank";
+  blank.className = hidden ? "pinyin-table__blank pinyin-table__blank--void" : "pinyin-table__blank";
   blank.setAttribute("aria-hidden", "true");
   return blank;
 }
@@ -1772,21 +1804,22 @@ document.addEventListener("keydown", (e) => {
   if (!modal.open) return;
   if (e.ctrlKey || e.altKey || e.metaKey) return;
   if (e.key === "Escape") closeModal();
+  const tableCatalog = isPinyinCatalog || isDevanagariCatalog;
   if (e.key === "ArrowLeft") {
     e.preventDefault();
-    if (!navigateTableHorizontal(-1)) navigateModal(-1);
+    if (!navigateTableHorizontal(-1) && !tableCatalog) navigateModal(-1);
   }
   if (e.key === "ArrowRight") {
     e.preventDefault();
-    if (!navigateTableHorizontal(1)) navigateModal(1);
+    if (!navigateTableHorizontal(1) && !tableCatalog) navigateModal(1);
   }
   if (e.key === "ArrowUp") {
     e.preventDefault();
-    if (!navigateTableVertical(-1)) navigateStrokeGroup(-1);
+    if (!navigateTableVertical(-1) && !tableCatalog) navigateStrokeGroup(-1);
   }
   if (e.key === "ArrowDown") {
     e.preventDefault();
-    if (!navigateTableVertical(1)) navigateStrokeGroup(1);
+    if (!navigateTableVertical(1) && !tableCatalog) navigateStrokeGroup(1);
   }
   if (isPinyinCatalog && (e.key === "1" || e.key === "2" || e.key === "3" || e.key === "4")) {
     e.preventDefault();
@@ -1811,6 +1844,7 @@ document.addEventListener("keydown", (e) => {
     if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) return;
     e.preventDefault();
     triggerHeroCharSalute();
+    if (isDevanagariCatalog) triggerReadingPlayback("cn", 1);
   }
 });
 
@@ -1838,6 +1872,7 @@ function wireHeroChar() {
     }
     if (isModalChar3dEnabled()) return;
     triggerHeroCharSalute();
+    if (isDevanagariCatalog) triggerReadingPlayback("cn", 1);
   });
 
   fields.char.addEventListener("animationend", (e) => {
@@ -1903,10 +1938,12 @@ const graphicsModeValue = document.getElementById("graphics-mode-value");
 const categoryColorsToggle = document.getElementById("toggle-category-colors");
 const cellEmojiToggle = document.getElementById("toggle-cell-emoji");
 const popularOnlyToggle = document.getElementById("toggle-popular-only");
+const compactToggle = document.getElementById("toggle-compact");
 const vowelColorsToggle = document.getElementById("toggle-vowel-colors");
 
 const CELL_COLORS_KEY = "214keys-cell-colors";
 const POPULAR_ONLY_KEY = "214keys-devanagari-popular-only";
+const COMPACT_KEY = "214keys-devanagari-compact";
 const CELL_EMOJI_KEY = "214keys-cell-emoji";
 const COLOR_INK_KEY = "214keys-basic-color-ink";
 const VOWEL_COLORS_KEY = "214keys-pinyin-vowel-colors";
@@ -1915,6 +1952,7 @@ let categoryColorsOn = false;
 let cellEmojiOn = false;
 let vowelColorsOn = false;
 let popularOnlyOn = false;
+let compactOn = false;
 
 function applyCellDisplayFlags() {
   document.documentElement.dataset.cellColors = categoryColorsOn ? "on" : "";
@@ -1922,6 +1960,7 @@ function applyCellDisplayFlags() {
   document.documentElement.dataset.colorInk = colorInkOn ? "on" : "";
   document.documentElement.dataset.vowelColors = vowelColorsOn ? "on" : "";
   document.documentElement.dataset.popularOnly = popularOnlyOn ? "on" : "";
+  document.documentElement.dataset.compact = compactOn ? "on" : "";
   syncColorInkToggle();
 }
 
@@ -1986,6 +2025,9 @@ function applyCellDisplayToggles({ persist = true } = {}) {
   if (popularOnlyToggle) {
     popularOnlyToggle.checked = popularOnlyOn;
   }
+  if (compactToggle) {
+    compactToggle.checked = compactOn;
+  }
 
   if (persist) {
     try {
@@ -1994,6 +2036,7 @@ function applyCellDisplayToggles({ persist = true } = {}) {
       localStorage.setItem(COLOR_INK_KEY, colorInkOn ? "1" : "0");
       localStorage.setItem(VOWEL_COLORS_KEY, vowelColorsOn ? "1" : "0");
       localStorage.setItem(POPULAR_ONLY_KEY, popularOnlyOn ? "1" : "0");
+      localStorage.setItem(COMPACT_KEY, compactOn ? "1" : "0");
     } catch {
       /* ignore */
     }
@@ -2018,6 +2061,12 @@ function setVowelColorsOn(next, options) {
 function setPopularOnlyOn(next, options) {
   popularOnlyOn = Boolean(next);
   applyCellDisplayToggles(options);
+}
+
+function setCompactOn(next, options) {
+  compactOn = Boolean(next);
+  applyCellDisplayToggles(options);
+  render(visibleItems);
 }
 
 function setColorInkOn(next, options) {
@@ -2233,6 +2282,10 @@ popularOnlyToggle?.addEventListener("change", () => {
   setPopularOnlyOn(popularOnlyToggle.checked);
 });
 
+compactToggle?.addEventListener("change", () => {
+  setCompactOn(compactToggle.checked);
+});
+
 graphicsModeSlider?.addEventListener("input", () => {
   applyGraphicsMode(graphicsModeSlider.value);
 });
@@ -2281,6 +2334,8 @@ if (isPinyinCatalog || isDevanagariCatalog) {
 if (isDevanagariCatalog) {
   const storedPopularOnly = readStoredToggleValue(POPULAR_ONLY_KEY);
   setPopularOnlyOn(storedPopularOnly === null ? true : storedPopularOnly, { persist: false });
+  const storedCompact = readStoredToggleValue(COMPACT_KEY);
+  setCompactOn(storedCompact === null ? true : storedCompact, { persist: false });
 }
 
 applyMatcap(getGlyphMaterialMode());
