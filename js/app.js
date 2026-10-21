@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=216";
+} from "./catalog.js?v=217";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=216";
+import "./char3dOrbit.js?v=217";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=216";
+} from "./modalChar3d.js?v=217";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=216";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=216";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=216";
+} from "./radicalSpeech.js?v=217";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=217";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=217";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=216";
+} from "./spatialCanvas.js?v=217";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");

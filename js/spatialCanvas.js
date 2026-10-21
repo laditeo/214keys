@@ -5,7 +5,7 @@ import radicals, {
   canvasStorageKey,
   isPinyinCatalog,
   isDevanagariCatalog,
-} from "./catalog.js?v=216";
+} from "./catalog.js?v=217";
 
 const STORAGE_KEY = canvasStorageKey;
 const LEGACY_STORAGE_KEYS = STORAGE_KEY === "214keys-spatial-canvas-v12"

@@ -83,6 +83,13 @@ VOWEL_RU = {
     "e": "э", "ai": "эй", "o": "о", "au": "оу", "am": "ам", "ah": "ах",
 }
 
+VOWEL_GROUP_RU = {
+    "short": "Краткие гласные",
+    "long": "Длинные гласные",
+    "diphthong": "Двойные гласные",
+    "nasal": "Назальные гласные",
+}
+
 items = []
 idx = 1
 for vkey, vdev, vmatra, vro, vgroup in VOWELS:
@@ -92,6 +99,7 @@ for vkey, vdev, vmatra, vro, vgroup in VOWELS:
         "cn": vro,
         "ru": f"гласная {VOWEL_RU[vkey]}",
         "group": f"{vgroup}:{vkey}",
+        "groupLabel": VOWEL_GROUP_RU[vgroup],
         "category": vgroup,
         "initial": "",
         "consRoman": "",
@@ -109,6 +117,7 @@ for vkey, vdev, vmatra, vro, vgroup in VOWELS:
             "cn": trans,
             "ru": f"согласная {cru} · гласная {VOWEL_RU[vkey]}",
             "group": f"{vgroup}:{vkey}",
+            "groupLabel": VOWEL_GROUP_RU[vgroup],
             "category": vgroup,
             "initial": cdev,
             "consRoman": crom,
@@ -129,6 +138,7 @@ for it in items:
         f'"cn": "{it["cn"]}", '
         f'"ru": "{it["ru"]}", '
         f'"group": "{it["group"]}", '
+        f'"groupLabel": "{it["groupLabel"]}", '
         f'"category": "{it["category"]}", '
         f'"initial": "{it["initial"]}", '
         f'"consRoman": "{it["consRoman"]}", '
