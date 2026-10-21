@@ -3050,11 +3050,18 @@ html[data-catalog="devanagari"] .deva-row-label__roman {
 }
 
 html[data-catalog="devanagari"] .deva-row-label__art {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   font-family: var(--font-ui);
   font-size: 0.5rem;
-  line-height: 1.15;
+  line-height: 1.25;
   color: var(--text-muted);
-  opacity: 0.8;
+  opacity: 0.85;
+}
+
+html[data-catalog="devanagari"] .deva-row-label__art span {
+  white-space: nowrap;
 }
 
 html[data-catalog="devanagari"] .deva-band {
@@ -3266,6 +3273,8 @@ html[data-catalog="devanagari"] .modal__footer .matcap-toggle {
 }
 
 .deva-art__art {
+  display: flex;
+  flex-direction: column;
   font-size: 0.7rem;
   color: var(--text-muted);
   padding-left: 0.1rem;

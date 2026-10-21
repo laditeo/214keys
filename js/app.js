@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=220";
+} from "./catalog.js?v=221";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=220";
+import "./char3dOrbit.js?v=221";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=220";
+} from "./modalChar3d.js?v=221";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=220";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=220";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=220";
+} from "./radicalSpeech.js?v=221";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=221";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=221";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=220";
+} from "./spatialCanvas.js?v=221";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -503,14 +503,20 @@ function fillDevanagariArticulation(item) {
   const box = document.getElementById("modal-deva-art");
   if (!box) return;
   const cons = item.consRu
-    ? { dev: item.initial, roman: item.consRoman, ru: item.consRu, en: item.consEn, art: item.consArtRu }
+    ? {
+      dev: item.initial,
+      roman: item.consRoman,
+      ru: item.consRu,
+      en: item.consEn,
+      art: Array.isArray(item.consArtRu) ? item.consArtRu : [item.consArtRu],
+    }
     : null;
   const vowel = {
     dev: item.vowelDev,
     roman: item.vowelRoman,
     ru: item.vowelRu,
     en: item.vowelEn,
-    art: item.vowelArtRu,
+    art: Array.isArray(item.vowelArtRu) ? item.vowelArtRu : [item.vowelArtRu],
   };
 
   const parts = [];
@@ -523,7 +529,9 @@ function fillDevanagariArticulation(item) {
       + `<span class="deva-art__name">${data.ru}</span>`
       + `<span class="deva-art__en">${data.en}</span>`
       + `</div>`
-      + (data.art ? `<div class="deva-art__art">${data.art}</div>` : ""),
+      + (data.art && data.art.length
+        ? `<div class="deva-art__art">${data.art.map((part) => `<span>${part}</span>`).join("")}</div>`
+        : ""),
     );
   };
   block("Согласная", cons);
@@ -1360,10 +1368,11 @@ function createDevanagariTableFragment(list, onCellClick) {
       if (row.varga !== varga) continue;
       const rowLabel = document.createElement("div");
       rowLabel.className = "pinyin-table__row-label deva-row-label";
-      rowLabel.title = `${row.initial} — ${row.roman} · ${row.ru} (${row.en}) · ${row.art}`;
+      const art = Array.isArray(row.art) ? row.art : [row.art];
+      rowLabel.title = `${row.initial} — ${row.roman} · ${row.ru} (${row.en}) · ${art.join(", ")}`;
       rowLabel.innerHTML = `<span class="deva-row-label__dev">${row.initial}</span>`
         + `<span class="deva-row-label__roman">${row.roman} · ${row.ru}</span>`
-        + `<span class="deva-row-label__art">${row.art}</span>`;
+        + `<span class="deva-row-label__art">${art.map((part) => `<span>${part}</span>`).join("")}</span>`;
       frag.appendChild(rowLabel);
 
       for (const key of vowelKeys) {
