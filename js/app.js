@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=237";
+} from "./catalog.js?v=239";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=237";
+import "./char3dOrbit.js?v=239";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=237";
+} from "./modalChar3d.js?v=239";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=237";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=237";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=237";
+} from "./radicalSpeech.js?v=239";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=239";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=239";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=237";
+} from "./spatialCanvas.js?v=239";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -1438,8 +1438,7 @@ function createDevanagariTableFragment(list, onCellClick) {
   // Строка самостоятельных гласных.
   const bareLabel = document.createElement("div");
   bareLabel.className = "pinyin-table__row-label deva-row-label";
-  bareLabel.innerHTML = '<span class="deva-row-label__dev">∅</span>'
-    + '<span class="deva-row-label__text">'
+  bareLabel.innerHTML = '<span class="deva-row-label__text">'
     + '<span class="deva-row-label__roman">без согласной</span>'
     + '<span class="deva-row-label__art"><span>bare vowels</span></span>'
     + '</span>';

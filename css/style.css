@@ -3402,8 +3402,13 @@ html[data-catalog="devanagari"] .modal__footer .matcap-toggle {
   margin-top: 0.55rem;
 }
 
-/* Компактный режим: пустые места без заливки. */
+/* Компактный режим: пустые места без заливки, но с границами —
+   иначе у соседних клеток пропадает левая граница. */
 html[data-catalog="devanagari"] .pinyin-table__blank--void {
   background: transparent;
-  border-color: transparent;
+}
+
+/* Одиночный тогл под поиском (простой режим). */
+.display-toggle--solo {
+  margin-top: 0.7rem;
 }
