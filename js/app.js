@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=230";
+} from "./catalog.js?v=231";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=230";
+import "./char3dOrbit.js?v=231";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=230";
+} from "./modalChar3d.js?v=231";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=230";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=230";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=230";
+} from "./radicalSpeech.js?v=231";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=231";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=231";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=230";
+} from "./spatialCanvas.js?v=231";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -1036,12 +1036,14 @@ function openModal(item) {
   });
 }
 
-/* Переход по таблице на клетку выше/ниже в том же столбце. */
+/* Переход по таблице на клетку выше/ниже в том же столбце.
+   В режиме «только частые слоги» перескакиваем только по подсвеченным. */
 function navigateTableVertical(delta) {
   if (!isPinyinCatalog && !isDevanagariCatalog) return false;
   const active = grid.querySelector(".cell--active");
   if (!active) return false;
 
+  const onlyPopular = isDevanagariCatalog && popularOnlyOn;
   const cells = [...grid.querySelectorAll(".cell")];
   const from = active.getBoundingClientRect();
   const x = from.left + from.width / 2;
@@ -1050,6 +1052,7 @@ function navigateTableVertical(delta) {
 
   for (const cell of cells) {
     if (cell === active) continue;
+    if (onlyPopular && cell.dataset.popular !== "1") continue;
     const rect = cell.getBoundingClientRect();
     if (Math.abs(rect.left + rect.width / 2 - x) > 2) continue;
     const dy = rect.top - from.top;
@@ -1063,8 +1066,9 @@ function navigateTableVertical(delta) {
   }
 
   if (!target) return false;
-  const index = cells.indexOf(target);
-  const item = visibleItems[index];
+  // Порядок клеток в сетке не совпадает с порядком элементов — ищем по id.
+  const id = Number(target.dataset.id);
+  const item = items.find((entry) => entry.id === id);
   if (!item) return false;
   selectRadical(item);
   scrollActiveCellIntoView();

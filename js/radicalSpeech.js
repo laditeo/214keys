@@ -4,8 +4,8 @@ import radicals, {
   isPinyinCatalog,
   isDevanagariCatalog,
   speechAudioDir,
-} from "./catalog.js?v=230";
-import { appAssetUrl } from "./appBase.js?v=230";
+} from "./catalog.js?v=231";
+import { appAssetUrl } from "./appBase.js?v=231";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
 const MAX_VOICES = 8;
