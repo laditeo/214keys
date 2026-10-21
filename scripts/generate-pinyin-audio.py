@@ -126,6 +126,15 @@ async def make_one(item, tone, force, semaphore, report):
         return "fail"
 
 
+def write_manifest(items, tones, out_dir):
+    """Записываем id -> слог, чтобы потом проверить, что аудио совпадает с данными."""
+    lines = []
+    for item in items:
+        for tone in tones:
+            lines.append(f"{int(item['id']):03d}-{tone}\t{tone_text(item, tone)}")
+    (out_dir / "manifest.tsv").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 async def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--force", action="store_true", help="regenerate existing files")
@@ -169,6 +178,7 @@ async def main():
 
     semaphore = asyncio.Semaphore(CONCURRENCY)
     report = []
+    write_manifest(items, tones, OUT_DIR)
 
     tasks = [
         make_one(item, tone, args.force, semaphore, report)

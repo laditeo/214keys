@@ -11,6 +11,7 @@ Names come in Russian and English (articulation included); frequencies are
 from published Hindi letter-frequency tables (Wikipedia «वर्ण आवृत्ति»,
 sttmedia letter frequency) and flag the most common aksharas.
 """
+import json
 from pathlib import Path
 
 # key, independent, matra, translit, ru, en, group, matra weight
@@ -30,86 +31,86 @@ VOWELS = [
 ]
 
 VOWEL_ART = {
-    "short": "краткий",
-    "long": "длинный",
-    "diphthong": "двойной",
-    "nasal": "назальный",
+    "short": ["краткий"],
+    "long": ["длинный"],
+    "diphthong": ["двойной"],
+    "nasal": ["назальный"],
 }
 
 # glyph, translit, ru, en, varga, frequency %, артикуляция ru, en
 CONSONANTS = [
     ("क", "k", "ка", "k (throat)", "velar", 7.14,
-     "взрывной, безгласный", "plosive, unasp."),
+     ["взрывной", "безгласный"], "plosive, unasp."),
     ("ख", "kh", "кх", "kh (throat)", "velar", 0.70,
-     "взрывной, придыхательный", "plosive, asp."),
+     ["взрывной", "придыхательный"], "plosive, asp."),
     ("ग", "g", "г", "g (throat)", "velar", 1.31,
-     "взрывной, звонкий", "plosive, voiced."),
+     ["взрывной", "звонкий"], "plosive, voiced."),
     ("घ", "gh", "гх", "gh (throat)", "velar", 0.20,
-     "взрывной, звонкий придыхательный", "plosive, voiced asp."),
+     ["взрывной", "звонкий", "придыхательный"], "plosive, voiced asp."),
     ("ङ", "ṅ", "нг", "ng (throat)", "velar", 0.00,
-     "носовой, безгласный", "nasal, unasp."),
+     ["носовой", "безгласный"], "nasal, unasp."),
     ("च", "c", "ч", "ch (roof)", "palatal", 1.16,
-     "аффрикат, безгласный", "affricate, unasp."),
+     ["аффрикат", "безгласный"], "affricate, unasp."),
     ("छ", "ch", "чх", "chh (roof)", "palatal", 0.45,
-     "аффрикат, придыхательный", "affricate, asp."),
+     ["аффрикат", "придыхательный"], "affricate, asp."),
     ("ज", "j", "дж", "j (roof)", "palatal", 1.39,
-     "аффрикат, звонкий", "affricate, voiced."),
+     ["аффрикат", "звонкий"], "affricate, voiced."),
     ("झ", "jh", "джх", "jh (roof)", "palatal", 0.19,
-     "аффрикат, звонкий придыхательный", "affricate, voiced asp."),
+     ["аффрикат", "звонкий", "придыхательный"], "affricate, voiced asp."),
     ("ञ", "ñ", "нь", "ny (roof)", "palatal", 0.01,
-     "носовой", "nasal."),
+     ["носовой"], "nasal."),
     ("ट", "ṭ", "т", "ṭ (retroflex)", "retroflex", 0.57,
-     "взрывной, безгласный, церебральный", "plosive, unasp."),
+     ["взрывной", "безгласный", "церебральный"], "plosive, unasp."),
     ("ठ", "ṭh", "тх", "ṭh (retroflex)", "retroflex", 0.17,
-     "взрывной, придыхательный, церебральный", "plosive, asp."),
+     ["взрывной", "придыхательный", "церебральный"], "plosive, asp."),
     ("ड", "ḍ", "д", "ḍ (retroflex)", "retroflex", 0.75,
-     "взрывной, звонкий, церебральный", "plosive, voiced."),
+     ["взрывной", "звонкий", "церебральный"], "plosive, voiced."),
     ("ढ", "ḍh", "дх", "ḍh (retroflex)", "retroflex", 0.09,
-     "взрывной, звонкий придыхательный, церебральный", "plosive, voiced asp."),
+     ["взрывной", "звонкий", "придыхательный", "церебральный"], "plosive, voiced asp."),
     ("ण", "ṇ", "н", "ṇ (retroflex)", "retroflex", 0.13,
-     "носовой, церебральный", "nasal."),
+     ["носовой", "церебральный"], "nasal."),
     ("त", "t", "т", "t (teeth)", "dental", 2.89,
-     "взрывной, безгласный, зубной", "plosive, unasp."),
+     ["взрывной", "безгласный", "зубной"], "plosive, unasp."),
     ("थ", "th", "тх", "th (teeth)", "dental", 1.15,
-     "взрывной, придыхательный, зубной", "plosive, asp."),
+     ["взрывной", "придыхательный", "зубной"], "plosive, asp."),
     ("द", "d", "д", "d (teeth)", "dental", 1.68,
-     "взрывной, звонкий, зубной", "plosive, voiced."),
+     ["взрывной", "звонкий", "зубной"], "plosive, voiced."),
     ("ध", "dh", "дх", "dh (teeth)", "dental", 0.36,
-     "взрывной, звонкий придыхательный, зубной", "plosive, voiced asp."),
+     ["взрывной", "звонкий", "придыхательный", "зубной"], "plosive, voiced asp."),
     ("न", "n", "н", "n (teeth)", "dental", 3.48,
-     "носовой, зубной", "nasal."),
+     ["носовой", "зубной"], "nasal."),
     ("प", "p", "п", "p (lips)", "labial", 2.66,
-     "взрывной, безгласный, губной", "plosive, unasp."),
+     ["взрывной", "безгласный", "губной"], "plosive, unasp."),
     ("फ", "ph", "пх", "ph (lips)", "labial", 0.35,
-     "взрывной, придыхательный, губной", "plosive, asp."),
+     ["взрывной", "придыхательный", "губной"], "plosive, asp."),
     ("ब", "b", "б", "b (lips)", "labial", 1.78,
-     "взрывной, звонкий, губной", "plosive, voiced."),
+     ["взрывной", "звонкий", "губной"], "plosive, voiced."),
     ("भ", "bh", "бх", "bh (lips)", "labial", 0.67,
-     "взрывной, звонкий придыхательный, губной", "plosive, voiced asp."),
+     ["взрывной", "звонкий", "придыхательный", "губной"], "plosive, voiced asp."),
     ("म", "m", "м", "m (lips)", "labial", 3.28,
-     "носовой, губной", "nasal."),
+     ["носовой", "губной"], "nasal."),
     ("य", "y", "й", "y (semivowel)", "antahstha", 2.20,
-     "полугласный, небный", "approximant, palatal."),
+     ["полугласный", "небный"], "approximant, palatal."),
     ("र", "r", "р", "r (semivowel)", "antahstha", 5.91,
-     "полугласный, язычный", "approximant, apical."),
+     ["полугласный", "язычный"], "approximant, apical."),
     ("ल", "l", "л", "l (semivowel)", "antahstha", 2.45,
-     "полугласный, язычный", "approximant, dental."),
+     ["полугласный", "язычный"], "approximant, dental."),
     ("व", "v", "в", "v (semivowel)", "antahstha", 1.62,
-     "полугласный, губной", "approximant, labial."),
+     ["полугласный", "губной"], "approximant, labial."),
     ("श", "ś", "ш", "sh (sibilant)", "ushma", 0.76,
-     "фрикативный, небный", "fricative, palatal."),
+     ["фрикативный", "небный"], "fricative, palatal."),
     ("ष", "ṣ", "шь", "ṣ (sibilant)", "ushma", 0.27,
-     "фрикативный, язычный", "fricative, retroflex."),
+     ["фрикативный", "язычный"], "fricative, retroflex."),
     ("स", "s", "с", "s (sibilant)", "ushma", 3.78,
-     "фрикативный, зубной", "fricative, dental."),
+     ["фрикативный", "зубной"], "fricative, dental."),
     ("ह", "h", "х", "h (aspirate)", "ushma", 4.82,
-     "придыхательный, гортанный", "aspirate, glottal."),
+     ["придыхательный", "гортанный"], "aspirate, glottal."),
     ("ळ", "ḷ", "лл", "ḷ (rare)", "other", 0.00,
-     "полугласный, ретрозубной", "approximant, retroflex."),
+     ["полугласный", "ретрозубной"], "approximant, retroflex."),
     ("क्ष", "kṣ", "кш", "ksh (conjunct)", "other", 0.05,
-     "аффрикат, сложный", "conjunct, complex."),
+     ["аффрикат", "сложный"], "conjunct, complex."),
     ("ज्ञ", "jñ", "джн", "gy (conjunct)", "other", 0.02,
-     "аффрикат, сложный", "conjunct, complex."),
+     ["аффрикат", "сложный"], "conjunct, complex."),
 ]
 
 # varga -> (devanagari, russian, english)
@@ -143,7 +144,7 @@ for vkey, vdev, vmatra, vro, vru, ven, vgroup, vweight in VOWELS:
         idx,
         char=vdev,
         cn=vro,
-        ru=f"гласная {vru} — {VOWEL_ART[vgroup]}",
+        ru=f"гласная {vru} — {', '.join(VOWEL_ART[vgroup])}",
         group=f"{vgroup}:{vkey}",
         groupLabel="Самостоятельные гласные",
         category=vgroup,
@@ -171,7 +172,7 @@ for vkey, vdev, vmatra, vro, vru, ven, vgroup, vweight in VOWELS:
             idx,
             char=syll,
             cn=crom + vro,
-            ru=f"согласная {cru} ({crom}) — {art_ru}; гласная {vru} ({vro}) — {VOWEL_ART[vgroup]}",
+            ru=f"согласная {cru} ({crom}) — {', '.join(art_ru)}; гласная {vru} ({vro}) — {', '.join(VOWEL_ART[vgroup])}",
             group=f"{vgroup}:{vkey}",
             groupLabel="Самостоятельные гласные",
             category=vgroup,
@@ -215,13 +216,13 @@ for it in items:
         f'"consRoman": "{it["consRoman"]}", '
         f'"consRu": "{it["consRu"]}", '
         f'"consEn": "{it["consEn"]}", '
-        f'"consArtRu": "{it["consArtRu"]}", '
+        f'"consArtRu": {json.dumps(it["consArtRu"], ensure_ascii=False)}, '
         f'"consArtEn": "{it["consArtEn"]}", '
         f'"varga": "{it["varga"]}", '
         f'"vowelRoman": "{it["vowelRoman"]}", '
         f'"vowelRu": "{it["vowelRu"]}", '
         f'"vowelEn": "{it["vowelEn"]}", '
-        f'"vowelArtRu": "{it["vowelArtRu"]}", '
+        f'"vowelArtRu": {json.dumps(it["vowelArtRu"], ensure_ascii=False)}, '
         f'"vowelDev": "{it["vowelDev"]}", '
         f'"speech": "{it["speech"]}", '
         f'"freq": {it["freq"]}, '
