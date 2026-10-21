@@ -8,3 +8,5 @@ local/heroEaseDebugToggle.local.js
 
 pinyin_audio_report.txt
 pinyin_gen_summary.txt
+__pycache__/
+*.pyc
