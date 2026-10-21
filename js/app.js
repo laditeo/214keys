@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=231";
+} from "./catalog.js?v=232";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=231";
+import "./char3dOrbit.js?v=232";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=231";
+} from "./modalChar3d.js?v=232";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=231";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=231";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=231";
+} from "./radicalSpeech.js?v=232";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=232";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=232";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=231";
+} from "./spatialCanvas.js?v=232";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -1036,6 +1036,43 @@ function openModal(item) {
   });
 }
 
+/* Переход по таблице на клетку левее/правее в том же ряду. */
+function navigateTableHorizontal(delta) {
+  if (!isPinyinCatalog && !isDevanagariCatalog) return false;
+  const active = grid.querySelector(".cell--active");
+  if (!active) return false;
+
+  const onlyPopular = isDevanagariCatalog && popularOnlyOn;
+  const cells = [...grid.querySelectorAll(".cell")];
+  const from = active.getBoundingClientRect();
+  const y = from.top + from.height / 2;
+  let target = null;
+  let best = Infinity;
+
+  for (const cell of cells) {
+    if (cell === active) continue;
+    if (onlyPopular && cell.dataset.popular !== "1") continue;
+    const rect = cell.getBoundingClientRect();
+    if (Math.abs(rect.top + rect.height / 2 - y) > 2) continue;
+    const dx = rect.left - from.left;
+    if (delta < 0 && dx >= 0) continue;
+    if (delta > 0 && dx <= 0) continue;
+    const dist = Math.abs(dx);
+    if (dist < best) {
+      best = dist;
+      target = cell;
+    }
+  }
+
+  if (!target) return false;
+  const id = Number(target.dataset.id);
+  const item = items.find((entry) => entry.id === id);
+  if (!item) return false;
+  selectRadical(item);
+  scrollActiveCellIntoView();
+  return true;
+}
+
 /* Переход по таблице на клетку выше/ниже в том же столбце.
    В режиме «только частые слоги» перескакиваем только по подсвеченным. */
 function navigateTableVertical(delta) {
@@ -1737,11 +1774,11 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeModal();
   if (e.key === "ArrowLeft") {
     e.preventDefault();
-    navigateModal(-1);
+    if (!navigateTableHorizontal(-1)) navigateModal(-1);
   }
   if (e.key === "ArrowRight") {
     e.preventDefault();
-    navigateModal(1);
+    if (!navigateTableHorizontal(1)) navigateModal(1);
   }
   if (e.key === "ArrowUp") {
     e.preventDefault();
