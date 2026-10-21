@@ -12,11 +12,11 @@ import {
   itemGroupLabel,
   searchHitWord,
   modalIndexLabel,
-} from "./catalog.js?v=221";
+} from "./catalog.js?v=230";
 import { createReadingWaveform } from "./audioWaveform.js";
 import { applyPitchTint, clearPitchTint } from "./pitchTint.js";
 import { mountLocalDebug } from "./localDebug.js";
-import "./char3dOrbit.js?v=221";
+import "./char3dOrbit.js?v=230";
 import {
   burstHeroCharSalute,
   burstHeroGlyphWhisper,
@@ -39,7 +39,7 @@ import {
   syncModalChar3dForItem,
   syncCharModeButtons,
   teardownModalChar3d,
-} from "./modalChar3d.js?v=221";
+} from "./modalChar3d.js?v=230";
 import {
   getSamplePeaks,
   isSampleLoading,
@@ -53,16 +53,16 @@ import {
   setPinyinGender,
   getPinyinGender,
   unlockSpeech,
-} from "./radicalSpeech.js?v=221";
-import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=221";
-import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=221";
+} from "./radicalSpeech.js?v=230";
+import { getGlyphMaterialMode, setGlyphMaterialMode, renderGlyphMatcapPreviewDataUrl } from "./glyphExtrusion3d.js?v=230";
+import { DEVANAGARI_BANDS } from "./devanagariBands.js?v=230";
 import {
   hideSpatialCanvas,
   initSpatialCanvas,
   revealSpatialCard,
   setSpatialCanvasActive,
   showSpatialCanvas,
-} from "./spatialCanvas.js?v=221";
+} from "./spatialCanvas.js?v=230";
 
 const grid = document.getElementById("grid");
 const modal = document.getElementById("modal");
@@ -1036,6 +1036,41 @@ function openModal(item) {
   });
 }
 
+/* Переход по таблице на клетку выше/ниже в том же столбце. */
+function navigateTableVertical(delta) {
+  if (!isPinyinCatalog && !isDevanagariCatalog) return false;
+  const active = grid.querySelector(".cell--active");
+  if (!active) return false;
+
+  const cells = [...grid.querySelectorAll(".cell")];
+  const from = active.getBoundingClientRect();
+  const x = from.left + from.width / 2;
+  let target = null;
+  let best = Infinity;
+
+  for (const cell of cells) {
+    if (cell === active) continue;
+    const rect = cell.getBoundingClientRect();
+    if (Math.abs(rect.left + rect.width / 2 - x) > 2) continue;
+    const dy = rect.top - from.top;
+    if (delta < 0 && dy >= 0) continue;
+    if (delta > 0 && dy <= 0) continue;
+    const dist = Math.abs(dy);
+    if (dist < best) {
+      best = dist;
+      target = cell;
+    }
+  }
+
+  if (!target) return false;
+  const index = cells.indexOf(target);
+  const item = visibleItems[index];
+  if (!item) return false;
+  selectRadical(item);
+  scrollActiveCellIntoView();
+  return true;
+}
+
 function navigateModal(delta) {
   if (!activeItem) return;
   const index = visibleItems.findIndex((item) => item.id === activeItem.id);
@@ -1323,8 +1358,8 @@ function createDevanagariTableFragment(list, onCellClick) {
   // Угол + шапка гласных.
   const corner = document.createElement("div");
   corner.className = "pinyin-table__th pinyin-table__corner deva-corner";
-  corner.innerHTML = '<span class="deva-corner__ru">согласные</span>'
-    + '<span class="deva-corner__en">consonants</span>';
+  corner.innerHTML = '<span class="deva-corner__col">гласные<span class="deva-corner__en">vowels</span></span>'
+    + '<span class="deva-corner__row">согласные<span class="deva-corner__en">consonants</span></span>';
   frag.appendChild(corner);
 
   for (const key of vowelKeys) {
@@ -1344,8 +1379,10 @@ function createDevanagariTableFragment(list, onCellClick) {
   const bareLabel = document.createElement("div");
   bareLabel.className = "pinyin-table__row-label deva-row-label";
   bareLabel.innerHTML = '<span class="deva-row-label__dev">∅</span>'
+    + '<span class="deva-row-label__text">'
     + '<span class="deva-row-label__roman">без согласной</span>'
-    + '<span class="deva-row-label__art">bare vowels</span>';
+    + '<span class="deva-row-label__art"><span>bare vowels</span></span>'
+    + '</span>';
   bareLabel.title = "Самостоятельные гласные · bare vowels";
   frag.appendChild(bareLabel);
   for (const key of vowelKeys) {
@@ -1371,8 +1408,10 @@ function createDevanagariTableFragment(list, onCellClick) {
       const art = Array.isArray(row.art) ? row.art : [row.art];
       rowLabel.title = `${row.initial} — ${row.roman} · ${row.ru} (${row.en}) · ${art.join(", ")}`;
       rowLabel.innerHTML = `<span class="deva-row-label__dev">${row.initial}</span>`
+        + '<span class="deva-row-label__text">'
         + `<span class="deva-row-label__roman">${row.roman} · ${row.ru}</span>`
-        + `<span class="deva-row-label__art">${art.map((part) => `<span>${part}</span>`).join("")}</span>`;
+        + `<span class="deva-row-label__art">${art.map((part) => `<span>${part}</span>`).join("")}</span>`
+        + '</span>';
       frag.appendChild(rowLabel);
 
       for (const key of vowelKeys) {
@@ -1702,11 +1741,11 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.key === "ArrowUp") {
     e.preventDefault();
-    navigateStrokeGroup(-1);
+    if (!navigateTableVertical(-1)) navigateStrokeGroup(-1);
   }
   if (e.key === "ArrowDown") {
     e.preventDefault();
-    navigateStrokeGroup(1);
+    if (!navigateTableVertical(1)) navigateStrokeGroup(1);
   }
   if (isPinyinCatalog && (e.key === "1" || e.key === "2" || e.key === "3" || e.key === "4")) {
     e.preventDefault();
@@ -1953,6 +1992,16 @@ function readStoredToggle(key) {
   }
 }
 
+/** null — пользователь ещё не выбирал (в отличие от явного «выключено»). */
+function readStoredToggleValue(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw === null ? null : raw === "1";
+  } catch {
+    return null;
+  }
+}
+
 function fontWeightCssBounds() {
   return document.documentElement.dataset.font === "linear"
     ? { min: 300, max: 700 }
@@ -2158,10 +2207,9 @@ document.addEventListener("particle-profile:change", () => {
 
 try {
   const savedTheme = localStorage.getItem(THEME_KEY);
-  const defaultTheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  applyTheme(savedTheme || defaultTheme);
+  applyTheme(savedTheme || "dark");
 } catch {
-  applyTheme("light");
+  applyTheme("dark");
 }
 
 try {
@@ -2176,14 +2224,22 @@ try {
   applyFontWeight(defaultCssWeight());
 }
 
-setCategoryColorsOn(readStoredToggle(CELL_COLORS_KEY), { persist: false });
+// На странице деванагари раскраска по умолчанию включена.
+const storedCategoryColors = readStoredToggleValue(CELL_COLORS_KEY);
+setCategoryColorsOn(storedCategoryColors === null ? isDevanagariCatalog : storedCategoryColors, {
+  persist: false,
+});
 setCellEmojiOn(readStoredToggle(CELL_EMOJI_KEY), { persist: false });
 if (isBasicCatalog) setColorInkOn(readStoredToggle(COLOR_INK_KEY), { persist: false });
 if (isPinyinCatalog || isDevanagariCatalog) {
-  setVowelColorsOn(readStoredToggle(VOWEL_COLORS_KEY), { persist: false });
+  const storedVowelColors = readStoredToggleValue(VOWEL_COLORS_KEY);
+  setVowelColorsOn(storedVowelColors === null ? isDevanagariCatalog : storedVowelColors, {
+    persist: false,
+  });
 }
 if (isDevanagariCatalog) {
-  setPopularOnlyOn(readStoredToggle(POPULAR_ONLY_KEY), { persist: false });
+  const storedPopularOnly = readStoredToggleValue(POPULAR_ONLY_KEY);
+  setPopularOnlyOn(storedPopularOnly === null ? true : storedPopularOnly, { persist: false });
 }
 
 applyMatcap(getGlyphMaterialMode());

@@ -7,12 +7,12 @@
   <title>devanagari — деванагари / देवनागरी</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&family=Noto+Serif+Devanagari:wght@300..700&family=Noto+Sans+Devanagari:wght@300..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200..900&family=Noto+Sans+SC:wght@200..900&family=Noto+Serif+SC:wght@200..900&family=Zen+Kaku+Gothic+New:wght@300..900&family=Noto+Serif+Devanagari:wght@300..700&family=Noto+Sans+Devanagari:wght@300..700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="../css/style.css?v=221">
+  <link rel="stylesheet" href="../css/style.css?v=230">
   <script>
     (function () {
-      var BUILD = "221";
+      var BUILD = "230";
       document.addEventListener("DOMContentLoaded", function () {
         var buildEl = document.getElementById("header-build");
         if (buildEl) buildEl.textContent = "v" + BUILD;
@@ -30,7 +30,7 @@
           }
         }
         var saved = localStorage.getItem("214keys-theme");
-        var theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        var theme = saved || "dark";
         if (theme === "dark") document.documentElement.dataset.theme = "dark";
       } catch (e) {}
     })();
@@ -64,6 +64,9 @@
       >
       <p class="search__meta" id="search-meta" aria-live="polite"></p>
 
+      <details class="settings">
+        <summary class="settings__summary">Настройки</summary>
+        <div class="settings__body">
       <div class="theme-toggle" role="group" aria-label="Тема оформления">
         <button type="button" class="theme-toggle__btn is-active" data-theme="light" aria-pressed="true">
           <span class="theme-toggle__icon" aria-hidden="true">☀</span>
@@ -158,6 +161,8 @@
             <span class="display-toggle__label">Только частые слоги</span>
           </label>
         </div>
+        </div>
+      </details>
       </div>
     </div>
 
@@ -323,9 +328,11 @@
                 <div class="deva-art" id="modal-deva-art" hidden></div>
               </dd>
             </div>
-            <div class="modal__row">
-              <dt>Произношение</dt>
+            <div class="modal__row modal__row--wide modal__row--bare">
               <dd class="modal__reading">
+                <div class="voice-toggle voice-toggle--inline" role="group" aria-label="Голос">
+                  <button type="button" class="voice-toggle__btn is-active" data-voice="female" aria-pressed="true" title="Женский голос"><span class="voice-toggle__letter">ж</span></button>
+                </div>
                 <span id="modal-cn" class="modal__reading-text"></span>
                 <div class="modal__reading-controls">
                   <div class="speaker-slot">
@@ -346,15 +353,6 @@
                   </div>
                 </div>
               </dd>
-            </div>
-            <div class="modal__row modal__row--wide">
-              <dt class="modal__row-label">
-                <span class="modal__row-label-text">Голос</span>
-                <div class="voice-toggle" role="group" aria-label="Голос">
-                  <button type="button" class="voice-toggle__btn is-active" data-voice="female" aria-pressed="true" title="Женский голос"><span class="voice-toggle__letter">ж</span></button>
-                </div>
-              </dt>
-              <dd></dd>
             </div>
           </dl>
 
@@ -426,6 +424,6 @@
     }
   }
   </script>
-  <script type="module" src="../js/app.js?v=221"></script>
+  <script type="module" src="../js/app.js?v=230"></script>
 </body>
 </html>
