@@ -2,9 +2,10 @@ import radicals, {
   hasSpeechAudio,
   hasSfxAudio,
   isPinyinCatalog,
+  isDevanagariCatalog,
   speechAudioDir,
-} from "./catalog.js?v=209";
-import { appAssetUrl } from "./appBase.js";
+} from "./catalog.js?v=216";
+import { appAssetUrl } from "./appBase.js?v=216";
 import { getHeroSfxMaxSec, radicalSfxUrl } from "./radicalSfx.js";
 
 const MAX_VOICES = 8;
@@ -62,30 +63,46 @@ function padId(id) {
 /** Bump when the pinyin recordings are regenerated (busts the browser cache). */
 const PINYIN_AUDIO_REV = "7";
 const PINYIN_GENDER_KEY = "214keys-pinyin-voice";
+const DEVANAGARI_GENDER_KEY = "214keys-devanagari-voice";
 
 let pinyinGender = "female";
+let devanagariGender = "female";
+
+function genderStorageKey() {
+  return isDevanagariCatalog ? DEVANAGARI_GENDER_KEY : PINYIN_GENDER_KEY;
+}
+
 try {
   const saved = localStorage.getItem(PINYIN_GENDER_KEY);
   if (saved === "male" || saved === "female") pinyinGender = saved;
+  const savedDev = localStorage.getItem(DEVANAGARI_GENDER_KEY);
+  if (savedDev === "male" || savedDev === "female") devanagariGender = savedDev;
 } catch {
   /* ignore */
 }
 
 export function getPinyinGender() {
-  return pinyinGender;
+  return isDevanagariCatalog ? devanagariGender : pinyinGender;
 }
 
 export function setPinyinGender(next) {
-  pinyinGender = next === "male" ? "male" : "female";
+  const value = next === "male" ? "male" : "female";
+  if (isDevanagariCatalog) devanagariGender = value;
+  else pinyinGender = value;
   try {
-    localStorage.setItem(PINYIN_GENDER_KEY, pinyinGender);
+    localStorage.setItem(genderStorageKey(), value);
   } catch {
     /* ignore */
   }
 }
 
-export function audioUrl(lang, id, tone = 1, gender = pinyinGender) {
+export function audioUrl(lang, id, tone = 1, gender = getPinyinGender()) {
   if (!hasSpeechAudio) return "";
+  if (isDevanagariCatalog) {
+    const folder = gender === "male" ? "male" : "female";
+    const rev = `?a=${PINYIN_AUDIO_REV}`;
+    return appAssetUrl(`${speechAudioDir}/${folder}/${padId(id)}-${tone}.mp3${rev}`);
+  }
   const suffix = isPinyinCatalog ? `-${tone}` : "";
   const folder = isPinyinCatalog
     ? (gender === "male" ? "male" : "cn")
@@ -100,7 +117,7 @@ function speakKey(lang, id, tone = 1) {
 
 function speechRate() {
   // Pinyin syllables are recorded per tone, so the pitch must stay untouched.
-  return isPinyinCatalog ? 1 : randomPitchRate();
+  return isPinyinCatalog || isDevanagariCatalog ? 1 : randomPitchRate();
 }
 
 function randomPitchRate() {
@@ -278,6 +295,10 @@ function playHtmlSfx(src, id) {
 }
 
 export function playRadicalSfx(id) {
+  if (!hasSfxAudio) {
+    playPop();
+    return;
+  }
   syncUnlockAudio();
   const url = radicalSfxUrl(id);
   if (!url) {
@@ -591,7 +612,7 @@ export function initAudioPreload() {
   installGlobalAudioUnlock();
   if (hasSfxAudio) void preloadAllRadicalSfx();
   // 407 pinyin syllables are fetched on demand instead of all at once.
-  if (hasSpeechAudio && !isPinyinCatalog) void preloadAllSpeechSamples();
+  if (hasSpeechAudio && !isPinyinCatalog && !isDevanagariCatalog) void preloadAllSpeechSamples();
 }
 
 function outputLatencySec(ctx) {
@@ -784,6 +805,10 @@ export function prefetchItemAudio(item) {
     for (let tone = 1; tone <= 4; tone += 1) {
       void fetchAndDecode(audioUrl("cn", item.id, tone));
     }
+    return;
+  }
+  if (isDevanagariCatalog) {
+    void fetchAndDecode(audioUrl("cn", item.id, 1));
     return;
   }
   void fetchAndDecode(audioUrl("jp", item.id));

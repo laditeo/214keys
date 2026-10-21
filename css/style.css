@@ -910,11 +910,13 @@ html[data-catalog="pinyin"] .grid > .cell .cell__char {
 }
 
 /* «Цвет по категориям» красит иероглифы и буквы групп A / I / U / Ü. */
-html[data-catalog="pinyin"][data-cell-colors="on"] .grid > .cell .cell__char {
+html[data-catalog="pinyin"][data-cell-colors="on"] .grid > .cell .cell__char,
+html[data-catalog="devanagari"][data-cell-colors="on"] .grid > .cell .cell__char {
   color: var(--cell-category-color, var(--text));
 }
 
-html[data-catalog="pinyin"][data-cell-colors="on"] .section-label {
+html[data-catalog="pinyin"][data-cell-colors="on"] .section-label,
+html[data-catalog="devanagari"][data-cell-colors="on"] .section-label {
   color: var(--cell-category-color, var(--text-muted));
 }
 
@@ -2945,4 +2947,128 @@ html[data-theme="dark"] .modal-map__viewport {
 .modal-canvas__panel,
 .modal-canvas__toggle {
   pointer-events: auto;
+}
+
+/* —— Деванагари: азбука слогов —— */
+
+html[data-catalog="devanagari"] {
+  --font-han: "Noto Serif Devanagari", "Noto Sans Devanagari", serif;
+  --font-han-serif: "Noto Serif Devanagari", "Noto Sans Devanagari", serif;
+  --font-han-linear: "Noto Sans Devanagari", "Noto Serif Devanagari", sans-serif;
+}
+
+html[data-catalog="devanagari"] .grid {
+  grid-template-columns: 2.6rem repeat(37, minmax(2.1rem, 1fr));
+}
+
+html[data-catalog="devanagari"] .grid > .cell {
+  gap: 0.05rem;
+  padding: 0.25rem 0.1rem;
+}
+
+html[data-catalog="devanagari"] .grid > .cell .cell__char {
+  font-family: var(--font-han);
+  font-size: clamp(0.8rem, 46cqi, 1.55rem);
+  line-height: 1.15;
+  color: var(--text);
+}
+
+html[data-vowel-colors="on"] .grid > .cell .cell__pinyin .syl-vowel {
+  color: var(--vowel-ink);
+}
+
+html[data-vowel-colors="on"] .grid > .cell .cell__pinyin .syl-consonant {
+  color: var(--consonant-ink);
+}
+
+html[data-catalog="devanagari"] .grid > .cell .cell__pinyin {
+  font-size: clamp(0.42rem, 19cqi, 0.66rem);
+  letter-spacing: 0.01em;
+  color: var(--text-muted);
+}
+
+html[data-catalog="devanagari"] .pinyin-table__th {
+  font-family: var(--font-han);
+  font-size: 0.8rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[data-catalog="devanagari"] .pinyin-table__row-label {
+  font-family: var(--font-han);
+  font-size: 1rem;
+  justify-content: center;
+  letter-spacing: 0;
+}
+
+html[data-catalog="devanagari"] .pinyin-table__band-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+html[data-catalog="devanagari"] .pinyin-table__band {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.22rem 0.1rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  font-size: 0.56rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+html[data-catalog="devanagari"] .pinyin-table__axis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.22rem 0.2rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  font-size: 0.5rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+html[data-catalog="devanagari"] .modal-map__grid.grid {
+  grid-template-columns: minmax(0, 1.6rem) repeat(37, minmax(0, 1fr));
+}
+
+html[data-catalog="devanagari"] .modal-map__grid .pinyin-table__band,
+html[data-catalog="devanagari"] .modal-map__grid .pinyin-table__axis {
+  display: none;
+}
+
+html[data-catalog="devanagari"] .modal-map__grid .cell__pinyin {
+  display: none;
+}
+
+html[data-catalog="devanagari"] .modal-map__grid .cell__char {
+  font-size: 0.5rem;
+}
+
+html[data-catalog="devanagari"] .modal-map__grid .pinyin-table__th {
+  font-family: var(--font-han);
+  font-size: 0.42rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[data-catalog="devanagari"] .modal-map__grid .pinyin-table__row-label {
+  font-family: var(--font-han);
+  font-size: 0.5rem;
+  letter-spacing: 0;
+}
+
+/* Экструзия 3D не поддерживает деванагари (нет shaping), поэтому прячем её. */
+html[data-catalog="devanagari"] .modal-char3d-toggle,
+html[data-catalog="devanagari"] .modal__footer .matcap-toggle {
+  display: none;
 }

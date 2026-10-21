@@ -4,7 +4,8 @@ import radicals, {
   getRadicalCategory,
   canvasStorageKey,
   isPinyinCatalog,
-} from "./catalog.js?v=209";
+  isDevanagariCatalog,
+} from "./catalog.js?v=216";
 
 const STORAGE_KEY = canvasStorageKey;
 const LEGACY_STORAGE_KEYS = STORAGE_KEY === "214keys-spatial-canvas-v12"
@@ -24,6 +25,7 @@ const LEGACY_STORAGE_KEYS = STORAGE_KEY === "214keys-spatial-canvas-v12"
   : [];
 const CARD_SIZE = 36;
 const CARD_GLYPH_KEY = "214keys-pinyin-canvas-glyphs";
+const DEVANAGARI_CARD_GLYPH_KEY = "214keys-devanagari-canvas-glyphs";
 const FENCE_PAD = 12;
 const FENCE_LABEL_H = 22;
 const WORLD_MIN_W = 2200;
@@ -1223,7 +1225,9 @@ function createCardElement(item) {
   const card = state.cards[key];
   if (!card) return null;
 
-  const showPinyin = isPinyinCatalog && cardGlyphMode === "pinyin";
+  const showLatin = isDevanagariCatalog
+    ? cardGlyphMode === "latin"
+    : isPinyinCatalog && cardGlyphMode === "pinyin";
 
   const el = document.createElement("button");
   el.type = "button";
@@ -1234,12 +1238,12 @@ function createCardElement(item) {
   el.style.left = `${card.x}px`;
   el.style.top = `${card.y}px`;
   el.style.setProperty("--spatial-card-color", meta.color);
-  el.setAttribute("aria-label", showPinyin ? `${item.id}. ${item.cn}` : `${item.id}. ${item.char}`);
+  el.setAttribute("aria-label", showLatin ? `${item.id}. ${item.cn}` : `${item.id}. ${item.char}`);
 
   const glyph = document.createElement("span");
   glyph.className = "spatial-card__char";
-  if (showPinyin) glyph.classList.add("spatial-card__char--pinyin");
-  glyph.textContent = showPinyin ? item.cn : item.char;
+  if (showLatin) glyph.classList.add("spatial-card__char--pinyin");
+  glyph.textContent = showLatin ? item.cn : item.char;
   el.appendChild(glyph);
 
   if (item.id === activeCardId) el.classList.add("spatial-card--active");
@@ -2260,6 +2264,15 @@ function syncOrientation() {
 
 function syncGlyphButton() {
   if (!glyphBtn) return;
+  if (isDevanagariCatalog) {
+    const latin = cardGlyphMode === "latin";
+    glyphBtn.textContent = latin ? "Aa" : "क";
+    const label = latin ? "Показать деванагари" : "Показать латиницу";
+    glyphBtn.title = label;
+    glyphBtn.setAttribute("aria-label", label);
+    glyphBtn.setAttribute("aria-pressed", String(latin));
+    return;
+  }
   const pinyin = cardGlyphMode === "pinyin";
   glyphBtn.textContent = pinyin ? "拼" : "汉";
   const label = pinyin ? "Показать иероглифы" : "Показать пиньинь";
@@ -2269,23 +2282,28 @@ function syncGlyphButton() {
 }
 
 function bindGlyphToggle() {
-  if (!isPinyinCatalog) {
+  if (!isPinyinCatalog && !isDevanagariCatalog) {
     glyphBtn?.remove();
     return;
   }
+  const key = isDevanagariCatalog ? DEVANAGARI_CARD_GLYPH_KEY : CARD_GLYPH_KEY;
+  const def = isDevanagariCatalog ? "deva" : "pinyin";
   try {
-    cardGlyphMode = localStorage.getItem(CARD_GLYPH_KEY) === "char" ? "char" : "pinyin";
+    const saved = localStorage.getItem(key);
+    cardGlyphMode = saved === "char" || saved === "latin" ? saved : def;
   } catch {
-    cardGlyphMode = "pinyin";
+    cardGlyphMode = def;
   }
   syncGlyphButton();
   if (!glyphBtn) return;
   glyphBtn.addEventListener("pointerdown", (event) => event.stopPropagation());
   glyphBtn.addEventListener("click", (event) => {
     event.stopPropagation();
-    cardGlyphMode = cardGlyphMode === "pinyin" ? "char" : "pinyin";
+    cardGlyphMode = isDevanagariCatalog
+      ? (cardGlyphMode === "latin" ? "deva" : "latin")
+      : (cardGlyphMode === "pinyin" ? "char" : "pinyin");
     try {
-      localStorage.setItem(CARD_GLYPH_KEY, cardGlyphMode);
+      localStorage.setItem(key, cardGlyphMode);
     } catch {
       /* ignore */
     }

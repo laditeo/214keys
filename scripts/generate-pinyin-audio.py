@@ -43,6 +43,9 @@ def load_items():
 
 
 def tone_text(item, tone):
+    speech = item.get("speech")
+    if speech:
+        return speech
     tones = item.get("tones") or []
     if len(tones) >= tone and tones[tone - 1]:
         return tones[tone - 1]
@@ -132,7 +135,9 @@ async def main():
         help="comma separated tone numbers to regenerate, e.g. 3",
     )
     parser.add_argument("--voice", default="", help="Edge TTS voice name")
-    parser.add_argument("--out-dir", default="", help="output subdirectory under audio/pinyin")
+    parser.add_argument("--out-dir", default="", help="output subdirectory under audio/<audio-root>")
+    parser.add_argument("--audio-root", default="pinyin", help="folder under audio/, e.g. devanagari")
+    parser.add_argument("--items", default="", help="items js filename under js/, e.g. devanagariItems.js")
     parser.add_argument("--ids", default="", help="comma separated syllable ids")
     parser.add_argument(
         "--finalize-only",
@@ -141,11 +146,13 @@ async def main():
     )
     args = parser.parse_args()
 
-    global OUT_DIR, VOICE
+    global OUT_DIR, VOICE, ITEMS_PATH
     if args.voice:
         VOICE = args.voice
     if args.out_dir:
-        OUT_DIR = ROOT / "audio" / "pinyin" / args.out_dir
+        OUT_DIR = ROOT / "audio" / args.audio_root / args.out_dir
+    if args.items:
+        ITEMS_PATH = ROOT / "js" / args.items
     items = load_items()
     if args.ids:
         wanted = {int(part) for part in args.ids.split(",") if part.strip()}
@@ -176,6 +183,7 @@ async def main():
     (ROOT / "pinyin_audio_report.txt").write_text("\n".join(report), encoding="utf-8")
     print(f"generated: {ok}, skipped: {skipped}, failed: {failed}")
     if failed:
+        sys.stdout.reconfigure(encoding="utf-8")
         print("\n".join(report[-20:]))
         sys.exit(1)
 

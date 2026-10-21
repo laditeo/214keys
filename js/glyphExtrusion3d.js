@@ -27,6 +27,10 @@ const FONT_TTF_SOURCES = {
     "https://cdn.jsdelivr.net/gh/notofonts/noto-cjk@main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
   linear:
     "https://cdn.jsdelivr.net/gh/notofonts/noto-cjk@main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
+  "deva-serif":
+    "https://cdn.jsdelivr.net/gh/notofonts/notofonts.github.io/fonts/NotoSerifDevanagari/hinted/ttf/NotoSerifDevanagari-Regular.ttf",
+  "deva-linear":
+    "https://cdn.jsdelivr.net/gh/notofonts/notofonts.github.io/fonts/NotoSansDevanagari/hinted/ttf/NotoSansDevanagari-Regular.ttf",
 };
 
 /** @type {THREE.Scene | null} */
@@ -137,6 +141,14 @@ function applyEmojiBillboard(mesh, spinProgress = 0, axisSpinTurns = 0) {
 
 function readHanFontSpec() {
   const linear = document.documentElement.dataset.font === "linear";
+  const devanagari = document.documentElement.dataset.catalog === "devanagari";
+  if (devanagari) {
+    return {
+      key: linear ? "deva-linear" : "deva-serif",
+      family: linear ? "Noto Sans Devanagari" : "Noto Serif Devanagari",
+      weight: parseInt(getComputedStyle(document.documentElement).getPropertyValue("--font-han-weight"), 10) || 300,
+    };
+  }
   return {
     key: linear ? "linear" : "serif",
     family: linear ? "Zen Kaku Gothic New" : "Noto Serif SC",

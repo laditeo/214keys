@@ -13,7 +13,17 @@ REMOTE = "/var/www/spatilabs/214keys"
 LOCAL = Path(r"C:\Users\user\Documents\Github\214 keys")
 KEY = Path.home() / ".ssh" / "id_ed25519"
 
-INCLUDE = ["index.html", "basic", "pynpinyin", "css", "js", "audio/pinyin", "data"]
+INCLUDE = [
+    "index.html",
+    "basic",
+    "pynpinyin",
+    "devanagari",
+    "css",
+    "js",
+    "audio/pinyin",
+    "audio/devanagari",
+    "data",
+]
 SKIP_SUFFIXES = {".pyc"}
 SKIP_DIRS = {"__pycache__"}
 

@@ -1,6 +1,7 @@
 import radicals from "./radicals.js";
 import basicItems from "./basicItems.js";
-import pinyinItems from "./pinyinItems.js?v=209";
+import pinyinItems from "./pinyinItems.js?v=216";
+import devanagariItems from "./devanagariItems.js?v=216";
 import {
   RADICAL_CATEGORIES,
   getCategoryMeta as getRadicalCategoryMeta,
@@ -15,17 +16,24 @@ import {
   PINYIN_CATEGORIES,
   getPinyinCategoryMeta as getPinyinCategoryMeta,
   getPinyinCategory,
-} from "./pinyinCategories.js?v=209";
+} from "./pinyinCategories.js?v=216";
+import {
+  DEVANAGARI_CATEGORIES,
+  getDevanagariCategoryMeta as getDevanagariCategoryMeta,
+  getDevanagariCategory,
+} from "./devanagariCategories.js?v=216";
 import { getRadicalEmoji as getKangxiEmoji } from "./radicalEmoji.js";
-import { getBasicEmoji, getBasicInkColor, getBasicInkContrast } from "./basicEmoji.js?v=209";
+import { getBasicEmoji, getBasicInkColor, getBasicInkContrast } from "./basicEmoji.js?v=216";
 
 export function getCatalogId() {
   try {
     if (document.documentElement.dataset.catalog === "basic") return "basic";
     if (document.documentElement.dataset.catalog === "pinyin") return "pinyin";
+    if (document.documentElement.dataset.catalog === "devanagari") return "devanagari";
     const path = window.location.pathname.replace(/\/index\.html$/i, "");
     if (/(?:^|\/)basic\/?$/.test(path) || path.includes("/basic/")) return "basic";
     if (/(?:^|\/)pynpinyin\/?$/.test(path) || path.includes("/pynpinyin/")) return "pinyin";
+    if (/(?:^|\/)devanagari\/?$/.test(path) || path.includes("/devanagari/")) return "devanagari";
   } catch {
     /* ignore */
   }
@@ -35,41 +43,46 @@ export function getCatalogId() {
 export const catalogId = getCatalogId();
 export const isBasicCatalog = catalogId === "basic";
 export const isPinyinCatalog = catalogId === "pinyin";
+export const isDevanagariCatalog = catalogId === "devanagari";
 export const hasSpeechAudio = true;
-export const hasSfxAudio = !isPinyinCatalog;
+export const hasSfxAudio = !isPinyinCatalog && !isDevanagariCatalog;
 export const hasLocalAudio = hasSpeechAudio;
 export const speechAudioDir = isPinyinCatalog
   ? "audio/pinyin"
-  : (isBasicCatalog ? "audio/basic" : "audio");
+  : (isDevanagariCatalog ? "audio/devanagari" : (isBasicCatalog ? "audio/basic" : "audio"));
 export const sfxAudioDir = isBasicCatalog ? "audio/basic/sfx" : "audio/sfx";
 
-export const items = isPinyinCatalog ? pinyinItems : (isBasicCatalog ? basicItems : radicals);
-export const CATEGORIES = isPinyinCatalog ? PINYIN_CATEGORIES : (isBasicCatalog ? BASIC_CATEGORIES : RADICAL_CATEGORIES);
+export const items = isPinyinCatalog ? pinyinItems : (isDevanagariCatalog ? devanagariItems : (isBasicCatalog ? basicItems : radicals));
+export const CATEGORIES = isPinyinCatalog ? PINYIN_CATEGORIES : (isDevanagariCatalog ? DEVANAGARI_CATEGORIES : (isBasicCatalog ? BASIC_CATEGORIES : RADICAL_CATEGORIES));
 export const RADICAL_CATEGORIES_FOR_UI = CATEGORIES;
 
 export const canvasStorageKey = isPinyinCatalog
   ? "214keys-pinyin-spatial-v1"
-  : (isBasicCatalog
-    ? "214keys-basic-spatial-v1"
-    : "214keys-spatial-canvas-v12");
+  : (isDevanagariCatalog
+    ? "214keys-devanagari-spatial-v1"
+    : (isBasicCatalog
+      ? "214keys-basic-spatial-v1"
+      : "214keys-spatial-canvas-v12"));
 
 export function getItemCategory(item) {
   if (isPinyinCatalog) return getPinyinCategory(item);
+  if (isDevanagariCatalog) return getDevanagariCategory(item);
   return isBasicCatalog ? getBasicCategory(item) : getRadicalItemCategory(item);
 }
 
 export function getCategoryMeta(id) {
   if (isPinyinCatalog) return getPinyinCategoryMeta(id);
+  if (isDevanagariCatalog) return getDevanagariCategoryMeta(id);
   return isBasicCatalog ? getBasicCategoryMeta(id) : getRadicalCategoryMeta(id);
 }
 
 export function getItemEmoji(id) {
-  if (isPinyinCatalog) return "";
+  if (isPinyinCatalog || isDevanagariCatalog) return "";
   return isBasicCatalog ? getBasicEmoji(id) : getKangxiEmoji(id);
 }
 
 export function getItemInkColor(id) {
-  if (isPinyinCatalog) return "";
+  if (isPinyinCatalog || isDevanagariCatalog) return "";
   return isBasicCatalog ? getBasicInkColor(id) : "";
 }
 
@@ -87,6 +100,11 @@ export function itemGroupLabel(item) {
 }
 
 export function searchHitWord(count) {
+  if (isDevanagariCatalog) {
+    if (count === 1) return "слог";
+    if (count >= 2 && count <= 4) return "слога";
+    return "слогов";
+  }
   if (isPinyinCatalog) {
     if (count === 1) return "слог";
     if (count >= 2 && count <= 4) return "слога";
@@ -103,7 +121,7 @@ export function searchHitWord(count) {
 }
 
 export function modalIndexLabel(item) {
-  if (isPinyinCatalog) {
+  if (isPinyinCatalog || isDevanagariCatalog) {
     return `${item.cn} · ${item.char}`;
   }
   if (isBasicCatalog) {

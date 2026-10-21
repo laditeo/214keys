@@ -5,6 +5,7 @@ export function getAppBase() {
     if (isBetaChannel(path)) up.push("..");
     if (isBasicChannel(path)) up.push("..");
     if (isPinyinChannel(path)) up.push("..");
+    if (isDevanagariChannel(path)) up.push("..");
     return up.length ? `${up.join("/")}/` : "";
   } catch {
     /* ignore */
@@ -25,6 +26,11 @@ export function isBasicChannel(pathname = window.location.pathname) {
 export function isPinyinChannel(pathname = window.location.pathname) {
   const path = pathname.replace(/\/index\.html$/i, "");
   return path.includes("/pynpinyin/") || /\/pynpinyin\/?$/.test(path);
+}
+
+export function isDevanagariChannel(pathname = window.location.pathname) {
+  const path = pathname.replace(/\/index\.html$/i, "");
+  return path.includes("/devanagari/") || /\/devanagari\/?$/.test(path);
 }
 
 export function appAssetUrl(relativePath) {

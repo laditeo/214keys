@@ -30,6 +30,8 @@ let rafId = 0;
 let resizeObserver = null;
 
 function readEnabled() {
+  // Экструзия не умеет складывать деванагари (нет shaping) — там 3D выключен.
+  if (document.documentElement.dataset.catalog === "devanagari") return false;
   try {
     return localStorage.getItem(STORAGE_KEY) === "1";
   } catch {
